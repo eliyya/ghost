@@ -37,7 +37,8 @@ model procedures {
   submiter      users    @relation(fields: [submiter_id], references: [id])
   lab_id        String
   lab           labs     @relation(fields: [lab_id], references: [id])
-  date          DateTime
+  start_date    DateTime
+  end_date      DateTime
   subject       String
   practice_name String
   students      Int
