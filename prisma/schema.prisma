@@ -10,30 +10,51 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./local_database.db"
+  url      = "file:../local_database.db"
 }
 
 model users {
-  id       String    @id
-  name     String
-  password String
-  nc       String
-  labs     labs[]
-  tramits  tramits[]
+  id         String       @id
+  name       String
+  password   String
+  ne         String       @unique
+  procedures procedures[]
+  admin_labs admin_labs[]
 }
 
 model labs {
-  id       String    @id
-  name     String
-  admin_id String
-  admin    users     @relation(fields: [admin_id], references: [id])
-  tramits  tramits[]
+  id         String       @id
+  name       String       @unique
+  open_date  DateTime
+  close_date DateTime
+  procedures procedures[]
+  admin_labs admin_labs[]
 }
 
-model tramits {
-  id          String @id
-  tramiter_id String
-  tramiter    users  @relation(fields: [tramiter_id], references: [id])
-  lab_id      String
-  lab         labs   @relation(fields: [lab_id], references: [id])
+model procedures {
+  id            String   @id
+  submiter_id   String
+  submiter      users    @relation(fields: [submiter_id], references: [id])
+  lab_id        String
+  lab           labs     @relation(fields: [lab_id], references: [id])
+  date          DateTime
+  subject       String
+  practice_name String
+  students      Int
+  created_at    DateTime @default(now())
+}
+
+model subjects {
+  id      String @id
+  name    String
+  user_id String
+}
+
+model admin_labs {
+  user_id String
+  user    users  @relation(fields: [user_id], references: [id])
+  lab_id  String
+  lab     labs   @relation(fields: [lab_id], references: [id])
+
+  @@id([user_id, lab_id])
 }
