@@ -17,7 +17,7 @@ model users {
   id         String       @id
   name       String
   password   String
-  ne         String       @unique
+  username   String       @unique
   procedures procedures[]
   admin_labs admin_labs[]
 }
