@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Acerca de la aplicación web:
 
-## Getting Started
-
-First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Se busca sistemtizar el uso de laboratorio de ingenieria industrial mediante un registro de docentes donde puedan visualizar los horarios en los que se esta y no disponible el laboratorio.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Problematica a solucionar:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Dentro de la institucion educativa se mantiene el uso de laboratorio de ingenieria industrial para realizar practicas de los distintos grupos y semestres, este mismo cuenta ya con un registro (a base de pluma y papel) sin embargo los estudiantes de sistemas computacionales estamos buscando optimizarlo y actualizarlo con la nueva era. 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Algunas caracteristicas que tendra la web son:
 
-## Learn More
+- Registro de docentes.
+- Visualización del horario por dia del laboratorio. 
 
-To learn more about Next.js, take a look at the following resources:
+Se busca que sea una web facil de entender para los maestros a la hora de usarla, tanto como para futuros encargados que necesiten modificar el programa. Es un diseño intuitivo.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Requerimientos:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Node.js v20.x.x
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Despliegue de aplicación:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+cosas de equis valor 
