@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <main class="consteiner">
+        <nav>
+                <li> <a href="" class="laboratios">laboratorios</a></li>
+                <li> <a href="" class="docentes">docentes</a></li>
+        </nav>
+
+        <section>
+            <div>
+                <div class="laboratorias-vistas">
+                    <h1>laboratorio 1</h1>
+                    <p>horarios</p>
+                </div>
+            </div>
+            <div class="icon-add-laboratorios">
+                    <img src="public/test/image 9.png" alt="">
+                </div>
+        </section>
+    </main>
+
+    <style>
+        .consteiner{
+            width: 100%;
+            height: 100vh;
+            background: #b5b1b1;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .consteiner > nav {
+            list-style: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 10%;
+            background: #03abe2;
+        }
+        .consteiner > nav > li {
+            color: bisque;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .consteiner > nav > li:first-child {
+            text-decoration: none;
+            color: bisque;
+            padding: 20px 30px 20px 60px;
+            background-color :blueviolet;
+            border-top-right-radius: 30px;
+        }
+        section {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+            height: 90%;
+
+        }
+        .laboratorias-vistas {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+        .icon-add-laboratorios {
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .icon-add-laboratorios > img {
+            width: 50px;
+            height: 50px;
+            padding: 20px;
+        }
+    </style>
+</body>
+
+</html>
