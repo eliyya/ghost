@@ -1,0 +1,7 @@
+if (!process.env.NEXT_JWT_SECRET) throw new Error('NEXT_JWT_SECRET is not set in .env')
+
+export const JWT_SECRET = new TextEncoder().encode(process.env.NEXT_JWT_SECRET)
+
+export const COOKIE = {
+    SESSION: 'session'
+}

@@ -1,8 +1,7 @@
-export default async function Page() {
+export default async function LabsPage(){
     return (
         <div>
-            <p>Como llegaste aqui?</p>
-            <p>Se supone esto no deverias poder verlo</p>
+            si puedes inguinarlo puedes programarlo
         </div>
     )
 }

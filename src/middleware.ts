@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server'
-import { prisma } from '@/utils'
+import { prisma } from '@/db'
 
 export async function middleware(request: NextRequest) {
     console.log(request.nextUrl.pathname);

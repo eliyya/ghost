@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "migrate": "prisma migrate dev",
+    "generate": "prisma generate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -12,12 +13,12 @@
   "dependencies": {
     "@prisma/client": "^5.14.0",
     "next": "14.2.3",
-    "prisma": "^5.14.0",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "prisma": "^5.14.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
