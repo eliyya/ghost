@@ -18,6 +18,7 @@ model users {
   name       String
   password   String
   username   String       @unique
+
   procedures procedures[]
   admin_labs admin_labs[]
 }
@@ -27,8 +28,10 @@ model labs {
   name       String       @unique
   open_date  DateTime
   close_date DateTime
+  
   procedures procedures[]
   admin_labs admin_labs[]
+  tools      tools[]
 }
 
 model procedures {
@@ -43,6 +46,8 @@ model procedures {
   practice_name String
   students      Int
   created_at    DateTime @default(now())
+
+  tools         procedures_tools[]
 }
 
 model subjects {
@@ -58,4 +63,22 @@ model admin_labs {
   lab     labs   @relation(fields: [lab_id], references: [id])
 
   @@id([user_id, lab_id])
+}
+
+model tools {
+  id          String @id
+  name        String
+  lab_id      String
+  lab         labs   @relation(fields: [lab_id], references: [id])
+  
+  procedures  procedures_tools[]
+}
+
+model procedures_tools {
+  procedure_id String
+  procedure     procedures @relation(fields: [procedure_id], references: [id])
+  tool_id      String
+  tool         tools      @relation(fields: [tool_id], references: [id])
+
+  @@id([procedure_id, tool_id])
 }

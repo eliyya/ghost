@@ -3,12 +3,15 @@ import { LoginForm } from "./client";
 import { prisma } from "@/db";
 import { SignJWT } from "jose";
 import { JWT_SECRET } from "@/constants";
+import { compare, hash } from 'bcrypt'
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export interface SubmitProps {
     username: string;
     password: string;
 };
-export default function login() {
+export default async function login() {
     const submit = async ({ username, password }: SubmitProps) => {
         "use server";
         const user = await prisma.users.findUnique({
