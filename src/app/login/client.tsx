@@ -29,7 +29,7 @@ export function LoginForm(props: LoginFormProps) {
       method="post"
     >
       <Input type="text" name="username" placeholder="usuario" />
-      <Input type="text" name="password" placeholder="Contraseña" />
+      <Input type="password" name="password" placeholder="Contraseña" />
       <Input
         className="bg-black text-white p-2 rounded-md cursor-pointer hover:bg-gray-900"
         type="submit"

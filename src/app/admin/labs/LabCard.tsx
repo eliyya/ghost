@@ -3,6 +3,7 @@ export interface LabCardProps {
     name: string;
     open_date: Date;
     close_date: Date;
+    docentes: string[];
 }
 export function LabCard(props: LabCardProps) {
     return (
@@ -12,14 +13,12 @@ export function LabCard(props: LabCardProps) {
                 <p>Horario: {props.open_date.getUTCHours()}-{props.close_date.getUTCHours()}</p>
             </div>
             <div className="professors">
-                <div className="professor">
-                    <span className="professor-name text-slate-800">Jorge Gilberto Guerrero Ruiz</span>
-                    <span className="remove-icon">❌</span>
-                </div>
-                <div className="professor">
-                    <span className="professor-name text-slate-800">Gerardo Juarez Roman</span>
-                    <span className="remove-icon">❌</span>
-                </div>
+                {props.docentes.map(docente => (
+                    <div className="professor" key={docente}>
+                        <span className="professor-name text-slate-800">{docente}</span>
+                        <span className="remove-icon">❌</span>
+                    </div>
+                ))}
                 <div className="add-professor">
                     <span className="add-icon">➕</span>
                 </div>

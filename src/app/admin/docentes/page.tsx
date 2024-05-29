@@ -1,12 +1,41 @@
 import Link from 'next/link'
 import '../labs/estilos.css'
 import Image from 'next/image'
-import { LabCard } from '../labs/LabCard'
 import { prisma } from '@/db'
+import { cookies } from 'next/headers'
+import { COOKIE, JWT_SECRET } from '@/constants'
+import { redirect } from 'next/navigation'
+import { jwtVerify } from 'jose'
 
 export default async function AdminDocentesPage() {
+    const cookie = cookies().get(COOKIE.SESSION)?.value
+    if (!cookie) redirect('/login')
+    let user: {
+        id: string,
+        name: string,
+        username: string,
+        admin: boolean,
+    }
+    try {
+        const payload = await jwtVerify<{
+            id: string,
+            name: string,
+            username: string,
+            admin: boolean,
+            exp: number
+        }>(cookie, JWT_SECRET)
+        user = payload.payload
+    } catch (error) {
+        if (error instanceof Error && (
+            error.message.includes('JWS Protected Header is invalid') ||
+            error.message.includes('signature verification failed') ||
+            error.message.includes('timestamp check failed')
+        )) redirect('/labs')
+        else throw error
+    }
+    if (!user.admin) redirect('/labs')
 
-    const labs = await prisma.labs.findMany({})
+    const doc = await prisma.users.findMany({})
     return (
         <>
             {/* <Head>
@@ -23,21 +52,17 @@ export default async function AdminDocentesPage() {
                     </div>
                 </div>
                 <div className="content">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>juan</h2>
-                            <p>Horario: 8am-8pm</p>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>juarlos</h2>
-                            <div className='flex gap-4'>
-                                <Image src="/edit.png" alt="Picture of the author" width={20} height={20} />
-                                <span className="remove-icon">❌</span>
+                    {doc.map(d => (
+                        <div className="card" key={d.id}>
+                            <div className="card-header">
+                                <h2>{d.name}</h2>
+                                <div className='flex gap-4'>
+                                    <Image src="/edit.png" alt="Picture of the author" width={20} height={20} />
+                                    <span className="remove-icon">❌</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    ))}
                     <div className="add-professor">
                         <span className="add-icon"><Link href={"/admin/docentes/new"}>➕</Link></span>
                     </div>

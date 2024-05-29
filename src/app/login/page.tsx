@@ -6,6 +6,7 @@ import { COOKIE, JWT_SECRET } from "@/constants";
 import { compare, hash } from 'bcrypt'
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Nav } from "@/components/Nav";
 
 export interface SubmitProps {
     username: string;
@@ -51,11 +52,14 @@ export default async function login() {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen">
+        <main className="h-screen w-screen flex flex-col">
+            <Nav labs={[{id:"", name:"Login", active:true}]} />
+            <div className="flex justify-center items-center flex-1">
             <LoginForm submit={submit} />
             <div className="absolute">
                 <Image src="/img/unnamed.jpg" alt="" width={100} height={100} />
             </div>
         </div>
+        </main>
     );
 }
