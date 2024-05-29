@@ -2,7 +2,7 @@ import Image from "next/image";
 import { LoginForm } from "./client";
 import { prisma } from "@/db";
 import { SignJWT } from "jose";
-import { JWT_SECRET } from "@/constants";
+import { COOKIE, JWT_SECRET } from "@/constants";
 import { compare, hash } from 'bcrypt'
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -34,11 +34,12 @@ export default async function login() {
         expires.setDate(expires.getDate() + 1);
         cookies().set({
             expires,
-            name: "session",
+            name: COOKIE.SESSION,
             value: await new SignJWT({
                 id: user.id,
                 name: user.name,
                 username: user.username,
+                admin: user.admin,
                 exp: expires.getTime(),
             })
                 .setProtectedHeader({ alg: "HS256" })

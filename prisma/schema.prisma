@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  engineType = "binary"
 }
 
 datasource db {
@@ -14,23 +15,22 @@ datasource db {
 }
 
 model users {
-  id         String       @id
-  name       String
-  password   String
-  username   String       @unique
+  id       String   @id
+  name     String
+  password String
+  username String   @unique
+  admin    Boolean?
 
   procedures procedures[]
-  admin_labs admin_labs[]
 }
 
 model labs {
-  id         String       @id
-  name       String       @unique
+  id         String   @id
+  name       String   @unique
   open_date  DateTime
   close_date DateTime
-  
+
   procedures procedures[]
-  admin_labs admin_labs[]
   tools      tools[]
 }
 
@@ -47,7 +47,7 @@ model procedures {
   students      Int
   created_at    DateTime @default(now())
 
-  tools         procedures_tools[]
+  tools procedures_tools[]
 }
 
 model subjects {
@@ -56,27 +56,18 @@ model subjects {
   user_id String
 }
 
-model admin_labs {
-  user_id String
-  user    users  @relation(fields: [user_id], references: [id])
-  lab_id  String
-  lab     labs   @relation(fields: [lab_id], references: [id])
-
-  @@id([user_id, lab_id])
-}
-
 model tools {
-  id          String @id
-  name        String
-  lab_id      String
-  lab         labs   @relation(fields: [lab_id], references: [id])
-  
-  procedures  procedures_tools[]
+  id     String @id
+  name   String
+  lab_id String
+  lab    labs   @relation(fields: [lab_id], references: [id])
+
+  procedures procedures_tools[]
 }
 
 model procedures_tools {
   procedure_id String
-  procedure     procedures @relation(fields: [procedure_id], references: [id])
+  procedure    procedures @relation(fields: [procedure_id], references: [id])
   tool_id      String
   tool         tools      @relation(fields: [tool_id], references: [id])
 

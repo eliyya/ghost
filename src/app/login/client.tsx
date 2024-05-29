@@ -17,7 +17,7 @@ export function LoginForm(props: LoginFormProps) {
       username: formData.get("username") as string,
       password: formData.get("password") as string,
     });
-    if (r.error) {
+    if (r?.error) {
       alert(r.error);
     }
   };

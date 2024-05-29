@@ -1,6 +1,42 @@
+import { cookies } from 'next/headers'
 import './estilos.css'
+import { COOKIE, JWT_SECRET } from '@/constants'
+import { redirect } from 'next/navigation'
+import { jwtVerify } from 'jose'
+import { prisma } from '@/db'
+import { LabCard } from './LabCard'
+import Link from 'next/link'
 
 export default async function AdminLabsPage() {
+    const cookie = cookies().get(COOKIE.SESSION)?.value
+    if (!cookie) redirect('/login')
+    let user: {
+        id: string,
+        name: string,
+        username: string,
+        admin: boolean,
+    }
+    try {
+        const payload = await jwtVerify<{
+            id: string,
+            name: string,
+            username: string,
+            admin: boolean,
+            exp: number
+        }>(cookie, JWT_SECRET)
+        user = payload.payload
+    } catch (error) {
+        if (error instanceof Error && (
+            error.message.includes('JWS Protected Header is invalid') ||
+            error.message.includes('signature verification failed') ||
+            error.message.includes('timestamp check failed')
+        )) redirect('/labs')
+        else throw error
+    }
+    if (!user.admin) redirect('/labs')
+    const labs = await prisma.labs.findMany({})
+    console.log(labs);
+
     return (
         <>
             {/* <Head>
@@ -10,48 +46,20 @@ export default async function AdminLabsPage() {
             <div className="container">
                 <div className="header">
                     <div className={"tab active"}>
-                        <p>
-                            Laboratorios
-                        </p>
+                        <Link href={"/admin/labs"} >Laboratorios</Link>
                     </div>
                     <div className={`tab`}>
-                        <p>
-                            Docentes
-                        </p>
+                        <Link href={"/admin/docentes"} >Docentes</Link>
                     </div>
                 </div>
                 <div className="content">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>Laboratorio 1</h2>
-                            <p>Horario: 8am-8pm</p>
-                        </div>
-                        <div className="professors">
-                            <div className="professor">
-                                <span className="professor-name text-slate-800">Jorge Gilberto Guerrero Ruiz</span>
-                                <span className="remove-icon">❌</span>
-                            </div>
-                            <div className="professor">
-                                <span className="professor-name text-slate-800">Gerardo Juarez Roman</span>
-                                <span className="remove-icon">❌</span>
-                            </div>
-                            <div className="add-professor">
-                                <span className="add-icon">➕</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>Laboratorio 2</h2>
-                            <p>Horario: 8am-8pm</p>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>Laboratorio 3</h2>
-                            <p>Horario: 8am-8pm</p>
-                        </div>
-                    </div>
+                    {labs.map(lab => (
+                    <LabCard
+                        name={lab.name}
+                        open_date={lab.open_date}
+                        close_date={lab.close_date}
+                        key={lab.id} />
+                    ))}
                 </div>
             </div>
         </>
