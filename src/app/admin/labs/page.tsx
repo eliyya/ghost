@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers'
-import './estilos.css'
 import { COOKIE, JWT_SECRET } from '@/constants'
 import { redirect } from 'next/navigation'
 import { jwtVerify } from 'jose'
@@ -45,34 +44,32 @@ export default async function AdminLabsPage() {
                 <title>Laboratorios y Docentes</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </Head> */}
-            <div className='flex h-screen w-screen flex-col'>
-                <Nav isAdmin labs={[{id:"",name:"Admin",active:true}]} />
-                <main className='flex-1 flex justify-center align-middle items-center' >
-                    <div className="container">
-                        <div className="header">
-                            <div className={"tab active"}>
-                                <Link href={"/admin/labs"} >Laboratorios</Link>
-                            </div>
-                            <div className={`tab`}>
-                                <Link href={"/admin/docentes"} >Docentes</Link>
-                            </div>
-                        </div>
-                        <div className="content">
-                            {labs.map(lab => (
+            <Nav isAdmin labs={[{ id: "", name: "Admin", active: true }]} />
+            <main className='flex-1 flex justify-center align-middle items-center' >
+                <div className="w-11/12 max-w-5xl border border-solid border-[#ddd] rounded-xl overflow-hidden shadow-lg">
+                    <div className="flex bg-[#e74c3c] border border-solid border-[#ddd]">
+                        <Link href="/admin/labs" className="flex-1 p-4 text-center font-bold transition-colors ease-linear text-white">Laboratorios</Link>
+                        <Link href="/admin/docentes" className="flex-1 p-4 text-center font-bold transition-colors ease-linear bg-white text-[#e74c3c]" >Docentes</Link>
+                    </div>
+                    <div className="p-5">
+                        {labs.map(lab => (
                             <LabCard
                                 docentes={doc.map(d => d.name)}
                                 name={lab.name}
                                 open_date={lab.open_date}
                                 close_date={lab.close_date}
                                 key={lab.id} />
-                            ))}
-                            <div className="add-professor">
-                                <span className="add-icon"><Link href={"/admin/labs/new"}>➕</Link></span>
-                            </div>
+                        ))}
+                        <div className="flex justify-center p-1">
+                            <span
+                                className="cursor-pointer color-[#e74c3c] transition-colors ease-linear hover:text-[#c0392b]">
+                                <Link
+                                 href="/admin/labs/new">➕</Link>
+                            </span>
                         </div>
                     </div>
-                </main>
-            </div>
+                </div>
+            </main>
         </>
     )
 }
