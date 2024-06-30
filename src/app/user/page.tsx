@@ -75,7 +75,7 @@ export default async function UserPage() {
           <Input type="hidden" name="username" value={user.username}/>
           {/* <Input type='password' placeholder="nueva constraseña" />
           <Input type='password' placeholder="confirmar contraseña" /> */}
-          <SubmitInput value="Actualizar" disabled className="bg-gray-950 text-gray-400" />
+          <SubmitInput value="Actualizar" disabled className="" />
         </form>
         <form
           action="/logout"

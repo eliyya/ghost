@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { NavOptions } from "./NavOptions";
+import { prisma } from "@/db";
 
 export interface NavProps {
     isAdmin?: boolean;
     labs: {name:string,id:string,active?:boolean}[]
 }
-export function Nav(props: NavProps) {
+export async function Nav(props: NavProps) {
+    const labs = await prisma.labs.findMany({})
     
     return (
         <div className="flex justify-between items-center align-middle w-screen px-2 py-5 bg-[#333]">
@@ -17,7 +19,7 @@ export function Nav(props: NavProps) {
                 <Link href={"/"} className="text-white">Home</Link>
                 {props.isAdmin && <Link
                     className="text-white"
-                    href="/admin/labs">
+                    href={labs.length > 1 ? '/admin/labs' : '/admin/docentes'}>
                     Admin
                 </Link>}
             </div>

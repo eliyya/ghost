@@ -30,7 +30,9 @@ export function SubmitInput(props: InputProps) {
       type="submit"
       value="Submit"
       {...props}
-      className={`bg-black text-white p-2 rounded-md cursor-pointer hover:bg-gray-900 ${props.className}`}
+      className={`p-2 rounded-md cursor-pointer hover:bg-gray-900 
+        ${props.disabled ? 'bg-gray-900 text-gray-400' : 'bg-black text-white'}
+        ${props.className}`}
     />
   );
 }

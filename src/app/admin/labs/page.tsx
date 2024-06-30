@@ -47,10 +47,10 @@ export default async function AdminLabsPage() {
             <Nav isAdmin labs={[{ id: "", name: "Admin", active: true }]} />
             <main className='flex-1 flex justify-center align-middle items-center' >
                 <div className="w-11/12 max-w-5xl border border-solid border-[#ddd] rounded-xl overflow-hidden shadow-lg">
-                    <div className="flex bg-[#e74c3c] border border-solid border-[#ddd]">
+                    <header className="flex bg-[#e74c3c] border border-solid border-[#ddd]">
                         <Link href="/admin/labs" className="flex-1 p-4 text-center font-bold transition-colors ease-linear text-white">Laboratorios</Link>
                         <Link href="/admin/docentes" className="flex-1 p-4 text-center font-bold transition-colors ease-linear bg-white text-[#e74c3c]" >Docentes</Link>
-                    </div>
+                    </header>
                     <div className="p-5">
                         {labs.map(lab => (
                             <LabCard
