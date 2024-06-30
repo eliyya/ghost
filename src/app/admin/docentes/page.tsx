@@ -46,9 +46,9 @@ export default async function AdminDocentesPage() {
             </Head> */}
             <Nav isAdmin labs={[{ id: "", name: "Admin", active: true }]} />
             <main className='flex-1 flex justify-center align-middle items-center' >
-                <div className="w-11/12 max-w-5xl border border-solid border-[#ddd] rounded-xl overflow-hidden shadow-lg">
-                    <header className="flex bg-[#e74c3c] border border-solid border-[#ddd]">
-                        <Link href="/admin/labs" className="flex-1 p-4 text-center font-bold transition-colors ease-linear bg-white text-[#e74c3c]">Laboratorios</Link>
+                <div className="min-w-96 max-w-5xl border border-solid border-[#ddd] rounded-xl overflow-hidden shadow-lg">
+                    <header className="flex bg-black border border-solid border-[#ddd]">
+                        <Link href="/admin/labs" className="flex-1 p-4 text-center font-bold transition-colors ease-linear bg-white text-black">Laboratorios</Link>
                         <Link href="/admin/docentes" className="flex-1 p-4 text-center font-bold transition-colors ease-linear text-white" >Docentes</Link>
                     </header>
                     <div className="p-5">

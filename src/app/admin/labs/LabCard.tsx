@@ -8,7 +8,7 @@ export interface LabCardProps {
 export function LabCard(props: LabCardProps) {
     return (
         <div className="card">
-            <div className="card-header">
+            <div className="card-header gap-10">
                 <h2>{props.name}</h2>
                 <p>Horario: {props.open_date.getUTCHours()}-{props.close_date.getUTCHours()}</p>
             </div>
