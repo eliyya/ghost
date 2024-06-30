@@ -2,13 +2,12 @@ import { COOKIE, JWT_SECRET } from "@/constants";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { UserForm } from "./UserForm";
-import { SubmitInput } from "@/components/Input";
+import { Input, SubmitInput } from "@/components/Input";
 import { Nav } from "@/components/Nav";
+import { prisma } from "@/db";
 
 export default async function UserPage() {
   const cookie = cookies().get(COOKIE.SESSION)?.value;
-  console.log(cookie);
   if (!cookie) redirect("/login");
   let user: {
     id: string;
@@ -28,17 +27,62 @@ export default async function UserPage() {
   } catch {
     redirect("/login");
   }
+
+  const userSubmit = async (formData: FormData) => {
+    'use server'
+    
+    const oldName = formData.get('name') as string
+    const newName = formData.get('n-name') as string
+    const oldUsername = formData.get('username') as string
+    const newUsername = formData.get('n-username') as string
+
+    if (oldName === newName && oldUsername === newUsername) return
+
+    if (oldName !== newName) {
+      await prisma.users.update({
+        where: {
+          id: user.id
+        },
+        data: {
+          name: newName
+        }
+      })
+    }
+
+    prisma.users.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        name: newName,
+        username: newUsername
+      }
+    })
+  }
+
   return (
     <div className="h-screen w-screen flex flex-col">
-      <Nav labs={[{id:"", name:"Usuario", active:true}]} />
+      <Nav labs={[{ id: "", name: "Usuario", active: true }]} />
       <main className="flex justify-center items-center flex-col gap-5 flex-1">
-        <UserForm name={user.name} username={user.username} />
+        <form 
+        action={userSubmit}
+        className="w-72 p-4 border border-black rounded-lg flex flex-col" >
+          {/* Nombre */}
+          <Input type='text' name="n-name" placeholder='Nombre del Docente' defaultValue={user.name} disabled />
+          <Input type='hidden' name="name" value={user.name}/>
+          {/* Usuario */}
+          <Input type="text" placeholder="Usuario Clave" name="n-username" defaultValue={user.username} disabled />
+          <Input type="hidden" name="username" value={user.username}/>
+          {/* <Input type='password' placeholder="nueva constraseña" />
+          <Input type='password' placeholder="confirmar contraseña" /> */}
+          <SubmitInput value="Actualizar" disabled className="bg-gray-950 text-gray-400" />
+        </form>
         <form
           action="/logout"
           method="get"
           className="w-72 p-4 border border-black rounded-lg flex flex-col"
         >
-            <SubmitInput value="Cerrar Sesion"/>
+          <SubmitInput value="Cerrar Sesion" />
         </form>
       </main>
     </div>
