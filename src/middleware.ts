@@ -1,4 +1,4 @@
-import { COOKIE } from "@/constants"
+import { COOKIE } from "@/lib/constants"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function middleware(request: NextRequest) {

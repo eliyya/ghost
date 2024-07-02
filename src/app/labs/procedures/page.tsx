@@ -1,11 +1,11 @@
-import { Input, SubmitInput } from "@/components/Input"
+import { Input, SubmitPrimaryInput } from "@/components/Input"
 
 export default async function ProceduresPage() {
     return (
         <main>
             <form>
                 <Input name="" />
-                <SubmitInput value="Registrar" />
+                <SubmitPrimaryInput value="Registrar" />
             </form>
         </main>
     )

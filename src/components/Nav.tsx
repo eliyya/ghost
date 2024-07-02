@@ -11,7 +11,7 @@ export async function Nav(props: NavProps) {
     const labs = await prisma.labs.findMany({})
     
     return (
-        <div className="flex justify-between items-center align-middle w-screen px-2 py-5 bg-[#333]">
+        <div className="flex justify-between items-center align-middle w-full px-2 py-5 bg-[#333]">
             <div className="flex gap-4 items-center">
                 <Link href={"/"}>
                     <Image src={"/logo.jpg"} alt={"IISE-Logo"} height={10} width={50} />

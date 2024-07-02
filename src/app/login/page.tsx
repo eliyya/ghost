@@ -2,7 +2,7 @@ import Image from "next/image";
 import { LoginForm } from "./client";
 import { prisma } from "@/db";
 import { SignJWT } from "jose";
-import { COOKIE, JWT_SECRET } from "@/constants";
+import { COOKIE, JWT_SECRET } from "@/lib/constants";
 import { compare, hash } from 'bcrypt'
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

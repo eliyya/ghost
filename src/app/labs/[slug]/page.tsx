@@ -1,7 +1,7 @@
 import { Nav } from '@/components/Nav'
 import './estilo.css'
 import { cookies } from 'next/headers'
-import { COOKIE, JWT_SECRET } from '@/constants'
+import { COOKIE, JWT_SECRET } from '@/lib/constants'
 import { jwtVerify } from 'jose'
 import { prisma } from '@/db'
 

@@ -1,16 +1,19 @@
-import { snowflake } from "@/constants";
+import { snowflake } from "@/lib/constants";
 import { prisma } from "@/db";
 import { hash } from "bcrypt";
-import { Form } from "./Form";
+import { Form, FormSubmitFunction } from "./Form";
 import { Nav } from "@/components/Nav";
 
 export default async function UserPage() {
-  const add = async (props: {
-    name: string;
-    username: string;
-    password: string;
-  }) => {
+  const add: FormSubmitFunction = async (props) => {
     "use server";
+    // check if user exists
+    const user = await prisma.users.findFirst({
+      where: {
+        username: props.username
+      }
+    })
+    if (user) return { status: "error", message: "Usuario ya existe" }
     await prisma.users.create({
       data: {
         name: props.name,
@@ -19,11 +22,12 @@ export default async function UserPage() {
         id: snowflake.generate().toString(),
       }
     })
+    return { status: "succes", message: "Usuario creado" }
   }
   return (
     <>
-      <Nav isAdmin labs={[{ id: "", name: "Admin", active: true }]} />
-      <main className="h-screen w-screen flex justify-center items-center ">
+      <Nav isAdmin labs={[{ id: "", name: "Registro de Docentes", active: true }]} />
+      <main className="flex flex-1 justify-center items-center ">
         <Form submit={add} />
       </main>
     </>

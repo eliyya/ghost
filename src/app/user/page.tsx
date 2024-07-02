@@ -1,8 +1,8 @@
-import { COOKIE, JWT_SECRET } from "@/constants";
+import { COOKIE, JWT_SECRET } from "@/lib/constants";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Input, SubmitInput } from "@/components/Input";
+import { Input, SubmitPrimaryInput } from "@/components/Input";
 import { Nav } from "@/components/Nav";
 import { prisma } from "@/db";
 
@@ -75,14 +75,14 @@ export default async function UserPage() {
           <Input type="hidden" name="username" value={user.username}/>
           {/* <Input type='password' placeholder="nueva constraseña" />
           <Input type='password' placeholder="confirmar contraseña" /> */}
-          <SubmitInput value="Actualizar" disabled className="" />
+          <SubmitPrimaryInput value="Actualizar" disabled className="" />
         </form>
         <form
           action="/logout"
           method="get"
           className="w-72 p-4 border border-black rounded-lg flex flex-col"
         >
-          <SubmitInput value="Cerrar Sesion" />
+          <SubmitPrimaryInput value="Cerrar Sesion" />
         </form>
       </main>
     </div>

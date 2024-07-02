@@ -6,11 +6,23 @@ export interface ButtonLinkProps {
     className?: string,
     children?: ReactNode
 }
-export function ButtonLink(props: ButtonLinkProps) {
+export function ButtonPrimaryLink(props: ButtonLinkProps) {
     return (
         <Link
             {...props}
             className={`p-2 rounded-md cursor-pointer bg-black hover:bg-gray-900 flex align-middle justify-center ${props.className}`}>
+            {props.children}
+        </Link>
+    );
+}
+
+export function ButtonSecondaryLink(props: ButtonLinkProps) {
+    return (
+        <Link
+            {...props}
+            className={`p-2 rounded-md cursor-pointer border border-black flex align-middle justify-center 
+            hover:bg-gray-900 hover:text-white
+            ${props.className}`}>
             {props.children}
         </Link>
     );
