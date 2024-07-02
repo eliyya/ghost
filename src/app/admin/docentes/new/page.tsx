@@ -2,6 +2,7 @@ import { snowflake } from "@/constants";
 import { prisma } from "@/db";
 import { hash } from "bcrypt";
 import { Form } from "./Form";
+import { Nav } from "@/components/Nav";
 
 export default async function UserPage() {
   const add = async (props: {
@@ -20,8 +21,11 @@ export default async function UserPage() {
     })
   }
   return (
-    <main className="h-screen w-screen flex justify-center items-center ">
-      <Form submit={add} />
-    </main>
+    <>
+      <Nav isAdmin labs={[{ id: "", name: "Admin", active: true }]} />
+      <main className="h-screen w-screen flex justify-center items-center ">
+        <Form submit={add} />
+      </main>
+    </>
   );
 }

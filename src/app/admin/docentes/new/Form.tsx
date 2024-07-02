@@ -18,7 +18,7 @@ export function Form(props: FormProps) {
             password: { value: string },
             password2: { value: string },
         }
-        if (target.password.value != target.password2.value) return alert("contras no coinciden")
+        if (target.password.value != target.password2.value) return alert("Las contrasenias no coinciden")
         await props.submit({
             name: target.name.value,
             username: target.username.value,

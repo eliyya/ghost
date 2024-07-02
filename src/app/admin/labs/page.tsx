@@ -36,19 +36,14 @@ export default async function AdminLabsPage() {
     if (!user.admin) redirect('/labs')
     const labs = await prisma.labs.findMany({})
     const doc = await prisma.users.findMany({})
-    console.log(labs);
 
     return (
         <>
-            {/* <Head>
-                <title>Laboratorios y Docentes</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            </Head> */}
             <Nav isAdmin labs={[{ id: "", name: "Admin", active: true }]} />
             <main className='flex-1 flex justify-center align-middle items-center' >
                 <div className="min-w-96 max-w-5xl border border-solid border-[#ddd] rounded-xl overflow-hidden shadow-lg">
-                    <header className="flex bg-black border border-solid border-[#ddd]">
-                        <Link href="/admin/labs" className="flex-1 p-4 text-center font-bold transition-colors ease-linear text-white">Laboratorios</Link>
+                    <header className="flex border border-solid border-[#ddd]">
+                        <Link href="/admin/labs" className="flex-1 p-4 text-center font-bold transition-colors ease-linear bg-black text-white">Laboratorios</Link>
                         <Link href="/admin/docentes" className="flex-1 p-4 text-center font-bold transition-colors ease-linear bg-white text-black" >Docentes</Link>
                     </header>
                     <div className="p-5">
@@ -61,11 +56,8 @@ export default async function AdminLabsPage() {
                                 key={lab.id} />
                         ))}
                         <div className="flex justify-center p-1">
-                            <span
-                                className="cursor-pointer color-[#e74c3c] transition-colors ease-linear hover:text-[#c0392b]">
                                 <Link
                                  href="/admin/labs/new">➕</Link>
-                            </span>
                         </div>
                     </div>
                 </div>
