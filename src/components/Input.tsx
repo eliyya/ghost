@@ -35,11 +35,11 @@ export function Input(props: InputProps) {
           {props.prefix}
         </span>
       )}
-      {props.error && (
-        <small className="px-2 text-red-600" >
-          {props.error}
-        </small>
-      )}
+      <small 
+        className={`relative transition-all ease-in-out px-2 text-red-600 text-[0.6rem]
+        ${props.error ? '' : 'hidden'}`} >
+        {props.error ?? 'error'}
+      </small>
     </div>
   );
 }
