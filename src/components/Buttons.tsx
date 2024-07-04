@@ -10,7 +10,7 @@ export function ButtonPrimaryLink(props: ButtonLinkProps) {
     return (
         <Link
             {...props}
-            className={`p-2 rounded-md cursor-pointer bg-black hover:bg-gray-900 flex align-middle justify-center ${props.className}`}>
+            className={`p-2 rounded-md cursor-pointer bg-black hover:bg-gray-900 text-white flex align-middle justify-center ${props.className}`}>
             {props.children}
         </Link>
     );

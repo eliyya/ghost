@@ -3,7 +3,7 @@ import { jwtVerify } from "jose"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
-export async function VerifyAdmin() {
+export async function verifyAdmin() {
     const cookie = cookies().get(COOKIE.SESSION)?.value
     if (!cookie) redirect('/login')
     let user: {

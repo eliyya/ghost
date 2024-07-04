@@ -2,10 +2,10 @@ import { prisma } from '@/db'
 import { LabCard } from './LabCard'
 import Link from 'next/link'
 import { Nav } from '@/components/Nav'
-import { VerifyAdmin } from '@/lib/auth'
+import { verifyAdmin } from '@/lib/auth'
 
 export default async function AdminLabsPage() {
-    await VerifyAdmin()
+    await verifyAdmin()
     const labs = await prisma.labs.findMany({})
 
     return (

@@ -2,7 +2,7 @@ import { ButtonSecondaryLink } from "@/components/Buttons"
 import { SubmitPrimaryInput } from "@/components/Input"
 import { Nav } from "@/components/Nav"
 import { prisma } from "@/db"
-import { VerifyAdmin } from "@/lib/auth"
+import { verifyAdmin } from "@/lib/auth"
 import { redirect } from "next/navigation"
 
 interface DeleteTeacherPageProps {
@@ -11,7 +11,7 @@ interface DeleteTeacherPageProps {
     }
 }
 export default async function DeleteTeacherPage(props: DeleteTeacherPageProps) {  
-    const admin = await VerifyAdmin()
+    const admin = await verifyAdmin()
     const id = props.params.id
     if (admin.id === id) redirect('/admin/docentes')
     const user = await prisma.users.findFirst({
