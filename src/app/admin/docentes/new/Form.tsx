@@ -14,14 +14,14 @@ export interface FormProps {
     submit: FormSubmitFunction
 }
 export function Form(props: FormProps) {
-    const [usernameError, setUsernameError] = useState<string>("")
-    const [username, setUsername] = useState<string>("")
-    const [password, setPassword] = useState<string>("")
-    const [password2, setPassword2] = useState<string>("")
-    const [passwordError, setPasswordError] = useState<string>("")
-    const [password2Error, setPassword2Error] = useState<string>("")
+    const [usernameError, setUsernameError] = useState < string > ("")
+    const [username, setUsername] = useState < string > ("")
+    const [password, setPassword] = useState < string > ("")
+    const [password2, setPassword2] = useState < string > ("")
+    const [passwordError, setPasswordError] = useState < string > ("")
+    const [password2Error, setPassword2Error] = useState < string > ("")
 
-    useEffect(()=> {
+    useEffect(() => {
         console.log(username);
     }, [username])
 
@@ -51,10 +51,10 @@ export function Form(props: FormProps) {
             className="w-72 p-4 border border-black rounded-lg flex flex-col"
             onSubmit={submit}
         >
-            <Input 
-                type='text' 
-                placeholder='Nombre del Docente' 
-                name="name" 
+            <Input
+                type='text'
+                placeholder='Nombre del Docente'
+                name="name"
             />
             <Input
                 type="text"
@@ -68,9 +68,9 @@ export function Form(props: FormProps) {
                     setUsernameError("")
                 }}
             />
-            <Input 
-                type='password' 
-                placeholder="constraseña" 
+            <Input
+                type='password'
+                placeholder="constraseña"
                 name="password"
                 value={password}
                 error={passwordError}
@@ -79,10 +79,10 @@ export function Form(props: FormProps) {
                     setPasswordError("")
                 }}
             />
-            <Input 
-                type='password' 
-                placeholder="Confirmar Contraseña" 
-                name="password2" 
+            <Input
+                type='password'
+                placeholder="Confirmar Contraseña"
+                name="password2"
                 value={password2}
                 error={password2Error}
                 onChange={(e) => {

@@ -18,7 +18,7 @@ export default async function login() {
         const user = await prisma.users.findUnique({
             where: { username },
         });
-
+        console.log(user);
         if (!user) {
             return {
                 error: "invalid credentials",
