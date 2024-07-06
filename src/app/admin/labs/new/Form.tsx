@@ -1,10 +1,18 @@
 'use client';
 
 import { Input, SubmitPrimaryInput } from "@/components/Input";
-import  { useState } from "react";
+import React, { useState } from "react";
 
+export type FormSubmitFunction = (props: {
+    name: string;
+    nameAsignatura: string;
+    placticaAsignatura: string;
+    fechaInicio: string;
+    horaInicio: string;
+    horaSalida: string;
+}) => Promise<{ status: 'error' | 'success', message: string }>;
 
-export function Form() {
+export function Form({ submit }: { submit: FormSubmitFunction }) {
     const [formData, setFormData] = useState({
         name: "",
         nameAsignatura: "",
@@ -21,7 +29,7 @@ export function Form() {
         });
     };
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = {
             name: formData.name,
@@ -31,17 +39,24 @@ export function Form() {
             horaInicio: formData.horaInicio,
             horaSalida: formData.horaSalida,
         };
-        if (data.name === "" || data.nameAsignatura === "" || data.placticaAsignatura === "" || data.fechaInicio === "" || data.horaInicio === "" || data.horaSalida === "") {
+        
+        if (Object.values(data).some(field => field === "")) {
             alert("Todos los campos son requeridos");
+            return;
+        }
+        
+        const response = await submit(data);
+        if (response.status === 'success') {
+            alert("Registro exitoso");
         } else {
-            console.log(data);
+            alert(`Error: ${response.message}`);
         }
     };
-    console.log(submit);
+
     return (
         <form
             className="w-72 p-4 border border-black rounded-lg flex flex-col"
-            onSubmit={submit}
+            onSubmit={handleSubmit}
         >
             <Input
                 type='text'
