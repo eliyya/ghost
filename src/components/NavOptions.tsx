@@ -1,3 +1,4 @@
+'use client'
 export interface NavOptionsProps {
     labs: { name: string, id: string, active?: boolean }[]
 }

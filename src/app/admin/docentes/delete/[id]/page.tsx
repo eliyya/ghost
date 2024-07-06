@@ -10,7 +10,7 @@ interface DeleteTeacherPageProps {
         id: string
     }
 }
-export default async function DeleteTeacherPage(props: DeleteTeacherPageProps) {  
+export default async function DeleteTeacherPage(props: DeleteTeacherPageProps) {
     const admin = await verifyAdmin()
     const id = props.params.id
     if (admin.id === id) redirect('/admin/docentes')
