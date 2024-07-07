@@ -1,25 +1,19 @@
 'use client';
 
 import { Input, SubmitPrimaryInput } from "@/components/Input";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export type FormSubmitFunction = (props: {
     name: string;
-    nameAsignatura: string;
-    placticaAsignatura: string;
-    fechaInicio: string;
-    horaInicio: string;
-    horaSalida: string;
+    open_date: string;
+    close_date: string;
 }) => Promise<{ status: 'error' | 'success', message: string }>;
 
 export function Form({ submit }: { submit: FormSubmitFunction }) {
     const [formData, setFormData] = useState({
         name: "",
-        nameAsignatura: "",
-        placticaAsignatura: "",
-        fechaInicio: "",
-        horaInicio: "",
-        horaSalida: "",
+        open_date: "",
+        close_date: "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,25 +25,12 @@ export function Form({ submit }: { submit: FormSubmitFunction }) {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const data = {
-            name: formData.name,
-            nameAsignatura: formData.nameAsignatura,
-            placticaAsignatura: formData.placticaAsignatura,
-            fechaInicio: formData.fechaInicio,
-            horaInicio: formData.horaInicio,
-            horaSalida: formData.horaSalida,
-        };
-        
-        if (Object.values(data).some(field => field === "")) {
-            alert("Todos los campos son requeridos");
-            return;
-        }
-        
-        const response = await submit(data);
-        if (response.status === 'success') {
-            alert("Registro exitoso");
+        const response = await submit(formData);
+        if (response.status === 'error') {
+            alert(response.message);
         } else {
-            alert(`Error: ${response.message}`);
+            alert(response.message);
+            window.location.href = "/admin/labs";
         }
     };
 
@@ -60,44 +41,23 @@ export function Form({ submit }: { submit: FormSubmitFunction }) {
         >
             <Input
                 type='text'
-                placeholder='asignatura'
+                placeholder='Nombre del laboratorio'
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
             />
             <Input
-                type="text"
-                placeholder="nombre de la asignatura"
-                name="nameAsignatura"
-                value={formData.nameAsignatura}
+                type="date"
+                placeholder="Fecha de apertura"
+                name="open_date"
+                value={formData.open_date}
                 onChange={handleChange}
             />
             <Input
-                type="text"
-                placeholder="practica de la asignatura"
-                name="placticaAsignatura"
-                value={formData.placticaAsignatura}
-                onChange={handleChange}
-            />
-            <Input
-                type="month"
-                placeholder="fecha de inicio"
-                name="fechaInicio"
-                value={formData.fechaInicio}
-                onChange={handleChange}
-            />
-            <Input
-                type="time"
-                placeholder="hora de entrada"
-                name="horaInicio"
-                value={formData.horaInicio}
-                onChange={handleChange}
-            />
-            <Input
-                type="time"
-                placeholder="hora de salida"
-                name="horaSalida"
-                value={formData.horaSalida}
+                type="date"
+                placeholder="Fecha de cierre"
+                name="close_date"
+                value={formData.close_date}
                 onChange={handleChange}
             />
             <SubmitPrimaryInput value="Registrar" />
