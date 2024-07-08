@@ -22,8 +22,8 @@ export default async function UserPage() {
                 data: {
                     id: snowflake.generate().toString(),
                     name: props.name,
-                    open_date: new Date(props.open_date),
-                    close_date: new Date(props.close_date),
+                    open_date: new Date('2024-01-01T'+props.open_date+':00.000Z'),
+                    close_date: new Date('2024-01-01T'+props.close_date+':00.000Z'),
                 },
             });
             return { status: 'success', message: 'Lab creado con éxito' };

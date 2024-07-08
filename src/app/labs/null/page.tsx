@@ -3,6 +3,7 @@ import { COOKIE, JWT_SECRET } from "@/lib/constants"
 import { jwtVerify } from "jose"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import { ButtonPrimaryLink } from '@/components/Buttons'
 
 export default async function NullPage() {
     const cookie = cookies().get(COOKIE.SESSION)?.value
@@ -25,18 +26,25 @@ export default async function NullPage() {
     } catch (error) {
         throw error
     }
-    if (!user.admin) redirect('/labs')
-        console.log(user);
+    
     return (
-        <div className="w-screen h-screen ">
-            <Nav isAdmin={user.admin} labs={[]}/>
-            <main className="w-full flex  justify-center item-center">
-            <h1>Oh no</h1>
-            <p>Parece que no existen laboratorios registrados en el sistema</p>
-            <p>
-                Porfavor pidele a un administrador que registre uno antes de volver aqui
-            </p>
+        <>
+            <Nav isAdmin={user.admin} labs={[{id:'',name:'Laboratorios',active:true}]}/>
+            <main className="flex gap-1 flex-1 flex-col align-middle text-center justify-center item-center">
+                <h1 className="text-3xl" >Oh no...</h1>
+                <p className="text-xl" >Parece que no existen laboratorios registrados en el sistema</p>
+                {
+                    user.admin 
+                    ? <>
+                        <p>Para hacer uso de este sistema debe haber al menos 1 laboratorio registrado</p>
+                        <div className="flex justify-center m-3" >
+                            <ButtonPrimaryLink href="/admin/labs/new" >Registrar Laboratorio</ButtonPrimaryLink>
+                        </div>
+                    </>
+                    : <p>Porfavor pidele a un administrador que registre uno antes de volver aqui</p>
+                }
             </main>
-        </div>
+        </>
     );
 }
+//41403970903609344

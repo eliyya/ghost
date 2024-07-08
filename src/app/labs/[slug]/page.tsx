@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { COOKIE, JWT_SECRET } from '@/lib/constants'
 import { jwtVerify } from 'jose'
 import { prisma } from '@/db'
+import { redirect } from 'next/navigation'
 
 export interface LabsSlugProps {
     params: {
@@ -11,6 +12,8 @@ export interface LabsSlugProps {
     }
 }
 export default async function LabsSlug(props: LabsSlugProps) {
+    const lab = await prisma.labs.findFirst({ where: { id: props.params.slug } })
+    if (!lab) redirect('/labs')
     const cookie = cookies().get(COOKIE.SESSION)?.value
     let user: {
         id: string,

@@ -3,7 +3,7 @@ import { LoginForm } from "./client";
 import { prisma } from "@/db";
 import { SignJWT } from "jose";
 import { COOKIE, JWT_SECRET } from "@/lib/constants";
-import { compare, hash } from 'bcrypt'
+import { compare } from 'bcrypt'
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
@@ -13,6 +13,8 @@ export interface SubmitProps {
     password: string;
 };
 export default async function login() {
+    const users = await prisma.users.findMany();
+    if (users.length === 0) redirect("/admin/new")
     const submit = async ({ username, password }: SubmitProps) => {
         "use server";
         const user = await prisma.users.findUnique({
