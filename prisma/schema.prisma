@@ -50,12 +50,6 @@ model procedures {
   tools procedures_tools[]
 }
 
-model subjects {
-  id      String @id
-  name    String
-  user_id String
-}
-
 model tools {
   id     String @id
   name   String
