@@ -22,13 +22,30 @@ export default async function AdminDocentesPage() {
             <main className='flex-1 flex justify-center align-middle items-center py-4' >
                 <div className="min-w-96 max-w-5xl border border-solid border-[#ddd] rounded-xl overflow-hidden shadow-lg">
                     <header className="flex bg-black border border-solid border-[#ddd]">
-                        <Link href="/admin/labs" className="flex-1 p-4 text-center font-bold transition-colors ease-linear bg-white text-black">Laboratorios</Link>
-                        <Link href="/admin/docentes" className="flex-1 p-4 text-center font-bold transition-colors ease-linear text-white" >Docentes</Link>
+                        <Link 
+                            href="/admin/labs" 
+                            className="flex-1 p-4 text-center font-bold transition-colors ease-linear bg-white text-black"
+                        >
+                            Laboratorios
+                        </Link>
+                        <Link 
+                            href="/admin/docentes" 
+                            className="flex-1 p-4 text-center font-bold transition-colors ease-linear text-white" 
+                        >
+                            Docentes
+                        </Link>
                     </header>
                     <div className="p-5 flex flex-col gap-2">
                         {
                             teachers.length 
-                            ? teachers.map(d => <TeacherCard name={d.name} username={d.username} id={d.id} key={d.id} />)
+                            ? teachers.map(d => (
+                                <TeacherCard 
+                                    name={d.name} 
+                                    username={d.username} 
+                                    id={d.id} 
+                                    key={d.id} 
+                                />
+                            ))
                             : <p className="text-center mb-4">No hay docentes registrados</p>
                         }
                         <ButtonPrimaryLink href="/admin/docentes/new">
