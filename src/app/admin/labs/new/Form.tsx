@@ -32,7 +32,7 @@ export function Form({ submit }: { submit: FormSubmitFunction }) {
         if (response.status === 'error') {
             if (response.message.includes("Lab ya existe")) setErrorName("Lab ya existe");
             alert(response.message);
-        } else window.location.href = "/admin/labs";
+        } else window.location.href = "/admin";
     };
 
     return (
@@ -66,7 +66,7 @@ export function Form({ submit }: { submit: FormSubmitFunction }) {
                 name="close_date"
                 value={formData.close_date}
                 onChange={handleChange}
-                min={formData.open_date||"00:00"}
+                min={formData.open_date || "00:00"}
                 required
             />
             <SubmitPrimaryInput value="Registrar" />
