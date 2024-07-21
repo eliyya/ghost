@@ -24,6 +24,18 @@ export function LabCard(props: LabCardProps) {
                 </span>
             </div>
             <div className='flex gap-4 items-center'>
+                <Link
+                    className="h-5 aspect-square hover:bg-gray-200 rounded-sm"
+                    href={`/admin/labs/${props.id}/tools`}
+                >
+                    <svg viewBox="0 -0.5 21 21" >
+                        <g transform="translate(-339.000000, -560.000000)" fill="#000000">
+                            <g transform="translate(56.000000, 160.000000)">
+                                <polygon points="304 417.175248 301.033418 420 292.131575 411.524747 289.164993 414.350497 283 408.480248 285.966582 405.654497 289.164993 408.699995 292.131575 405.874245 288.928967 402.824752 291.895549 400 298.065788 405.874245 295.099206 408.699995" />
+                            </g>
+                        </g>
+                    </svg>
+                </Link>
                 <Link 
                     className="h-5 aspect-square hover:bg-gray-200 rounded-sm" 
                     href={'/admin/labs/edit/' + props.id} 
