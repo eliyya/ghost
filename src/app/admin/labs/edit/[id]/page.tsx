@@ -1,9 +1,7 @@
 import { Nav } from "@/components/Nav";
 import { prisma } from "@/db";
-import { verifyAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { EditUserForm, EditUserAction } from "./EditUserForm";
-import { hash } from "bcrypt";
+import { EditLabAction, EditLabForm } from "./EditLabForm";
 
 
 interface AdminDocentesEditPageProps {
@@ -12,27 +10,25 @@ interface AdminDocentesEditPageProps {
     }
 }
 export default async function AdminDocentesEditPage(props: AdminDocentesEditPageProps) {
-    const admin = await verifyAdmin()
     const id = props.params.id
-    if (admin.id === id) redirect('/admin/docentes')
-    const user = await prisma.users.findFirst({ where: { id } })
-    if (!user) redirect('/admin/docentes')
+    const lab = await prisma.labs.findFirst({ where: { id } })
+    if (!lab) redirect('/admin/labs')
 
-    const editUser: EditUserAction = async data => {
+    const editUser: EditLabAction = async data => {
         'use server'
         // check if user exists
-        const user = await prisma.users.findFirst({
+        const user = await prisma.labs.findFirst({
             where: {
-                username: data.username
+                name: data.name
             }
         })
-        if (user && user.id !== id) return { status: 'error', message: 'Usuario ya existe' }
-        await prisma.users.update({
+        if (user && user.id !== id) return { status: 'error', message: 'Laboratorio ya existe' }
+        await prisma.labs.update({
             where: { id },
             data: {
                 name: data.name,
-                username: data.username,
-                password: data.password ? await hash(data.password, 10) : undefined
+                open_date: data.open_date,
+                close_date: data.close_date                
             }
         })   
         
@@ -40,9 +36,9 @@ export default async function AdminDocentesEditPage(props: AdminDocentesEditPage
     } 
     return (
         <>
-            <Nav isAdmin labs={[{ id: "", name: `Editar Docente ${user.username}`, active: true }]} />
+            <Nav isAdmin labs={[{ id: "", name: `Editar Laboratorio "${lab.name}"`, active: true }]} />
             <main className='flex-1 flex justify-center align-middle items-center py-4' >
-            <EditUserForm user={user} editUser={editUser} />
+            <EditLabForm lab={lab} action={editUser} />
             </main>
         </>
     )
