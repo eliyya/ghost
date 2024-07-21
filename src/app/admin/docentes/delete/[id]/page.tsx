@@ -36,17 +36,17 @@ export default async function DeleteTeacherPage(props: DeleteTeacherPageProps) {
         <>
             <Nav isAdmin labs={[{ id: "", name: "Panel de Administracion", active: true }]} />
             <main className='flex-1 flex justify-center align-middle items-center py-4' >
-            <form
-                action={deleteUser}
-                className="w-72 p-4 border border-black rounded-lg flex flex-col justify-center items-center gap-2 align-middle text-center"
-            >
-                <p>Estas seguro de que deseas eliminar al usuario:</p>
-                <span className="mb-2">&quot;{user.name}&quot; (@{user.username})</span>
-                <div className="flex gap-2 w-full *:flex-1" >
-                    <ButtonSecondaryLink href="/admin/docentes">Cancelar</ButtonSecondaryLink>
-                    <SubmitPrimaryInput value="Eliminar" />
-                </div>
-            </form>
+                <form
+                    action={deleteUser}
+                    className="w-72 p-4 border border-black rounded-lg flex flex-col justify-center items-center gap-2 align-middle text-center"
+                >
+                    <p>Estas seguro de que deseas eliminar al usuario:</p>
+                    <span className="mb-2">&quot;{user.name}&quot; (@{user.username})</span>
+                    <div className="flex gap-2 w-full *:flex-1" >
+                        <ButtonSecondaryLink href="/admin/docentes">Cancelar</ButtonSecondaryLink>
+                        <SubmitPrimaryInput value="Eliminar" />
+                    </div>
+                </form>
             </main>
         </>
     )

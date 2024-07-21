@@ -35,6 +35,7 @@ export default async function AdminLabsPage() {
                                 name={lab.name}
                                 open_date={lab.open_date}
                                 close_date={lab.close_date}
+                                id={lab.id}
                                 key={lab.id} 
                             />
                         ))}
