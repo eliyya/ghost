@@ -54,6 +54,7 @@ model tools {
   id     String @id
   name   String
   lab_id String
+  stock  Int    @default(0)
   lab    labs   @relation(fields: [lab_id], references: [id])
 
   procedures procedures_tools[]

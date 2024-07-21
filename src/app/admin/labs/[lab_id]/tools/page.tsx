@@ -25,7 +25,6 @@ export default async function ToolsPage(prop: ToolsPageProps) {
         }
     })
 
-
     return (
         <>
             <Nav isAdmin labs={[{ id: "", name: `Herramientas de "${lab.name}"`, active: true }]} />
@@ -41,7 +40,7 @@ export default async function ToolsPage(prop: ToolsPageProps) {
                                 //     id={d.id} 
                                 //     key={d.id} 
                                 // />
-                                t.name
+                                t.name + ' x' + t.stock
                             ))
                             : <p className="text-center mb-4">No hay materiales registrados</p>
                         }
