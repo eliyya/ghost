@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export interface FormSubmitFunction {
-    (props: {
-        name: string;
-        stock?: number;
-    }): Promise<{ status: 'error' | 'succes', message: string, data?: any }>;
+    (props: FormData): Promise<{ status: 'error' | 'succes', message: string, data?: any }>;
+    // (props: {
+    //     name: string;
+    //     stock?: number;
+    //     image?: File
+    // }): Promise<{ status: 'error' | 'succes', message: string, data?: any }>;
 }
 export interface FormProps {
     action: FormSubmitFunction
@@ -20,10 +22,7 @@ export function Form(props: FormProps) {
         <form
             className="w-72 p-4 border border-black rounded-lg flex flex-col"
             action={async e => {
-                const response = await props.action({
-                    name: e.get('name') as string,
-                    stock: parseInt(e.get('stock') as string)
-                })
+                const response = await props.action(e)
                 if (response.status == 'error') {
                     return router.push(`/admin/labs/${props.lab_id}/tools/${response.data}/more`)
                 }
@@ -39,7 +38,13 @@ export function Form(props: FormProps) {
                 type="number"
                 min={1}
                 name="stock"
+                defaultValue={1}
                 placeholder="Cantidad"
+            />
+            <Input
+                type="file"
+                name="image"
+                required
             />
             <SubmitPrimaryInput value="Registrar"></SubmitPrimaryInput>
         </form>

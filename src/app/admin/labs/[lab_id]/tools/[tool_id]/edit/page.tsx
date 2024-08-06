@@ -1,6 +1,5 @@
 import { snowflake } from "@/lib/constants";
 import { prisma } from "@/db";
-import { Form, FormSubmitFunction } from "./Form";
 import { Nav } from "@/components/Nav";
 import { verifyAdmin } from "@/lib/auth";
 import { writeFile } from "fs/promises";
@@ -8,15 +7,23 @@ import { Input, SubmitPrimaryInput } from "@/components/Input";
 import { redirect } from "next/navigation";
 import { mkdir } from 'node:fs/promises'
 import { createCanvas, loadImage } from "canvas";
+import { RetornableInput } from "@/components/EditableInput";
 
 interface NewToolsPageProps {
   params: {
     lab_id: string
+    tool_id: string
   }
 }
 export default async function NewToolsPage(prop: NewToolsPageProps) {
   await verifyAdmin()
-  const { lab_id } = prop.params
+  const { lab_id, tool_id } = prop.params
+  const tool = await prisma.tools.findFirst({
+    where: {
+      id: tool_id
+    }
+  })
+  if (!tool) return redirect(`/admin/labs/${lab_id}/tools`)
 
   return (
     <>
@@ -59,17 +66,18 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
             return redirect(`/admin/labs`)
           }}
         >
-          <Input
+          <RetornableInput
             type='text'
             placeholder='Nombre del Material'
             name="name"
+            defaultValue={tool.name}
             required
           />
-          <Input
+          <RetornableInput
             type="number"
             min={1}
             name="stock"
-            defaultValue={1}
+            defaultValue={tool.stock}
             placeholder="Cantidad"
           />
           <Input
