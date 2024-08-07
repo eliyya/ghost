@@ -38,7 +38,7 @@ export default async function ToolsPage(prop: ToolsPageProps) {
                                 ? tools.map(t => (
                                     <ToolCard key={t.id} tool={t} />
                                 ))
-                                : <p className="text-center mb-4">No hay materiales registrados</p>
+                                : <p className="text-center w-full mb-4">No hay materiales registrados</p>
                             }
                         </div>
                         <ButtonPrimaryLink href={`/admin/labs/${lab_id}/tools/new`}>

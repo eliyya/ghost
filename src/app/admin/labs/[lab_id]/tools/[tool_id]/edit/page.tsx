@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { mkdir } from 'node:fs/promises'
 import { createCanvas, loadImage } from "canvas";
 import { RetornableInput } from "@/components/EditableInput";
+import { ButtonSecondaryLink } from "@/components/Buttons";
 
 interface NewToolsPageProps {
   params: {
@@ -38,22 +39,27 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
             const name = e.get('name') as string
             const tool = await prisma.tools.findFirst({
               where: {
-                name
-              }
-            })
-            if (tool) return redirect(`/admin/labs/${lab_id}/tools/${tool.id}/more`)
-            // if (['image/avif'].includes(image.type)) return redirect(`/admin/labs/${lab_id}/tools/${newTool.id}/more`)
-            // save tool
-            const newTool = await prisma.tools.create({
-              data: {
                 name,
-                lab_id,
-                stock: parseInt(e.get('stock') as string),
-                id: snowflake.generate().toString(),
+                AND: {
+                  NOT: {
+                    id: tool_id
+                  }
+                }
               },
             })
-
-            if (e.get('image')) {
+            if (tool) return redirect(`/admin/labs/${lab_id}/tools/${tool.id}/more`)
+              
+            const newTool = await prisma.tools.update({
+              where: {
+                id: tool_id
+              },
+              data: {
+                name,
+                stock: parseInt(e.get('stock') as string),
+              },
+            })
+            
+            if (e.get('image') && (e.get('image') as File).size) {
               const image = await injectBuffer(e.get('image') as File)
               await mkdir('./storage/tools', { recursive: true })
               const canvas = createCanvas(1024, 1024)
@@ -63,7 +69,7 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
               ctx.drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, 1024, 1024)
               await writeFile(`./storage/tools/${newTool.id}.png`, canvas.toBuffer())
             }
-            return redirect(`/admin/labs`)
+            return redirect(`/admin/labs/${lab_id}/tools`)
           }}
         >
           <RetornableInput
@@ -80,13 +86,16 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
             defaultValue={tool.stock}
             placeholder="Cantidad"
           />
-          <Input
+          <RetornableInput
             type="file"
             name="image"
             accept="image/png, image/jpeg, image/webp"
-            required
+            defaultValue={undefined}
           />
-          <SubmitPrimaryInput value="Registrar"></SubmitPrimaryInput>
+          <div className="flex gap-2 flex-row *:flex-1 mt-2">
+            <ButtonSecondaryLink href={`/admin/labs/${lab_id}/tools`}>Cancelar</ButtonSecondaryLink>
+            <SubmitPrimaryInput value="Registrar"></SubmitPrimaryInput>
+          </div>
         </form>
       </main>
     </>

@@ -46,7 +46,7 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
               },
             })
 
-            if (e.get('image')) {
+            if (e.get('image') && (e.get('image') as File).size) {
               const image = await injectBuffer(e.get('image') as File)
               await mkdir('./storage/tools', { recursive: true })
               const canvas = createCanvas(1024, 1024)
@@ -56,7 +56,7 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
               ctx.drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, 1024, 1024)
               await writeFile(`./storage/tools/${newTool.id}.png`, canvas.toBuffer())
             }
-            return redirect(`/admin/labs`)
+            return redirect(`/admin/labs/${lab_id}/tools`)
           }}
         >
           <Input
@@ -76,7 +76,6 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
             type="file"
             name="image"
             accept="image/png, image/jpeg, image/webp"
-            required
           />
           <SubmitPrimaryInput value="Registrar"></SubmitPrimaryInput>
         </form>

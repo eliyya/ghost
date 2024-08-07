@@ -44,9 +44,7 @@ export function EditUserForm(props: EditUserFormProps) {
                     if (password !== password2) return setPassword2Error("Las contrasenias no coinciden")
                 }
 
-                const response = await props.editUser({ name, username, password })
-                console.log(response);
-                
+                const response = await props.editUser({ name, username, password })                
                 if (response.status === 'error') {
                     if (response.message === 'Usuario ya existe') return setUsernameError('Ese usuario ya existe')
                     return alert(response.message)

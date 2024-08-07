@@ -18,15 +18,16 @@ export interface FormProps {
 }
 export function Form(props: FormProps) {
     const router = useRouter()
+    const { lab_id } = props
     return (
         <form
             className="w-72 p-4 border border-black rounded-lg flex flex-col"
             action={async e => {
                 const response = await props.action(e)
                 if (response.status == 'error') {
-                    return router.push(`/admin/labs/${props.lab_id}/tools/${response.data}/more`)
+                    return router.push(`/admin/labs/${lab_id}/tools/${response.data}/more`)
                 }
-                router.push('/admin/labs')
+                router.push(`/admin/labs/${lab_id}/tools`)
             }}
         >
             <Input
@@ -44,7 +45,6 @@ export function Form(props: FormProps) {
             <Input
                 type="file"
                 name="image"
-                required
             />
             <SubmitPrimaryInput value="Registrar"></SubmitPrimaryInput>
         </form>

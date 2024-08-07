@@ -20,10 +20,6 @@ export function NewAdminForm(props: NewAdminFormProps) {
     const [passwordError, setPasswordError] = useState < string > ("")
     const [password2Error, setPassword2Error] = useState < string > ("")
 
-    useEffect(() => {
-        console.log(username);
-    }, [username])
-
     const submit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const target = event.target as typeof event.target & { name: { value: string } }

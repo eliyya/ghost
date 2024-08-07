@@ -1,18 +1,25 @@
 import { prisma } from "@/db";
 import { verifyAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { NextResponse } from "next/server"
 import { ButtonSecondaryLink } from "@/components/Buttons"
 import { SubmitPrimaryInput } from "@/components/Input"
 import { Nav } from "@/components/Nav";
+import def from '@/images/default_tool.png';
+import Image from "next/image";
+import { rm } from 'node:fs/promises'
 
 export interface DeleteLabsPageProps {
     params: {
         tool_id: string
+        lab_id: string
     }
 }
 export default async function Deletelabs(props: DeleteLabsPageProps) {
     await verifyAdmin()
+    const { tool_id, lab_id } = props.params
+    const image = await import(`./../../../../../../../../storage/tools/${tool_id}.png`)
+        .then(d => d.default)
+        .catch(() => def);
 
     const id = props.params.tool_id
     const tool = await prisma.tools.findFirst({ where: { id } })
@@ -26,7 +33,10 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
                 id
             }
         })
-        redirect('/admin/labs')
+        try {
+            await rm(`./storage/tools/${tool_id}.png`)
+        } catch (error) {}
+        redirect(`/admin/labs/${lab_id}/tools`)
     }
     return (
         <>
@@ -34,12 +44,13 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
             <main className='flex-1 flex justify-center align-middle items-center py-4' >
                 <form 
                     action={deleteTool} 
-                    className="w-72 p-4 border border-black rounded-lg flex flex-col justify-center items-center gap-2 align-middle text-center"
+                    className="p-4 border border-black rounded-lg flex flex-col justify-center items-center gap-2 align-middle text-center"
                 >
-                    <p>Estas seguro de que deseas eliminar {tool.name}:</p>
+                    <p>Estas seguro de que deseas eliminar {tool.name}</p>
+                    <Image src={image} alt={tool.name} width={256} height={256} />
                     <div className="flex gap-2 w-full *:flex-1" >
-                        <ButtonSecondaryLink href="/admin/labs">Cancelar</ButtonSecondaryLink>
-                        <SubmitPrimaryInput value="Eliminar" onClick={deleteTool} />
+                        <ButtonSecondaryLink href={`/admin/labs/${lab_id}/tools`}>Cancelar</ButtonSecondaryLink>
+                        <SubmitPrimaryInput value="Eliminar" />
                     </div>
                 </form>
             </main>
