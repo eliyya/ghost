@@ -1,6 +1,6 @@
 
 import Link from 'next/link'
-import { prisma } from '@/db'
+import { prisma } from '@/lib/db'
 import { Nav } from '@/components/Nav'
 import { TeacherCard } from './TeacherCard'
 import { ButtonPrimaryLink } from '@/components/Buttons'

@@ -1,5 +1,5 @@
 import { snowflake } from "@/lib/constants";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { Nav } from "@/components/Nav";
 import { verifyAdmin } from "@/lib/auth";
 import { writeFile } from "fs/promises";

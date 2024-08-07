@@ -1,4 +1,4 @@
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { NewAdminForm, NewAdminFormSubmitFunction } from "./NewAdminForm";
 import { snowflake } from "@/lib/constants";

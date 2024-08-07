@@ -1,5 +1,5 @@
 import { Nav } from "@/components/Nav";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { verifyAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { EditUserForm, EditUserAction } from "./EditUserForm";

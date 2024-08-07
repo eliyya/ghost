@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Input, SubmitPrimaryInput } from "@/components/Input";
 import { Nav } from "@/components/Nav";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 
 export default async function UserPage() {
   const cookie = cookies().get(COOKIE.SESSION)?.value;

@@ -1,7 +1,7 @@
 import { ButtonSecondaryLink } from "@/components/Buttons";
 import { SubmitPrimaryInput } from "@/components/Input";
 import { Nav } from "@/components/Nav";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { verifyAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 

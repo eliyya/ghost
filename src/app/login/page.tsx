@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { LoginForm } from "./client";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { SignJWT } from "jose";
 import { COOKIE, JWT_SECRET } from "@/lib/constants";
 import { compare } from 'bcrypt'

@@ -1,5 +1,5 @@
 import { Nav } from "@/components/Nav";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { EditLabAction, EditLabForm } from "./EditLabForm";
 

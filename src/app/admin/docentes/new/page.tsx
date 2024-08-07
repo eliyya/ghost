@@ -1,5 +1,5 @@
 import { snowflake } from "@/lib/constants";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { hash } from "bcrypt";
 import { Form, FormSubmitFunction } from "./Form";
 import { Nav } from "@/components/Nav";

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 
 export default async function Home() {
   const labs = await prisma.labs.findMany({})

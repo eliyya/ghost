@@ -3,7 +3,7 @@ import './estilo.css';
 import { cookies } from 'next/headers';
 import { COOKIE, JWT_SECRET } from '@/lib/constants';
 import { jwtVerify } from 'jose';
-import { prisma } from '@/db';
+import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 
 export interface LabsSlugProps {

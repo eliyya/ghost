@@ -1,4 +1,4 @@
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { verifyAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server"

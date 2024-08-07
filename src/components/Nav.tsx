@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { NavOptions } from "./NavOptions";
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 
 export interface NavProps {
     isAdmin?: boolean;

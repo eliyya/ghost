@@ -1,4 +1,4 @@
-import { prisma } from "@/db";
+import { prisma } from "@/lib/db";
 import { Form, FormSubmitFunction } from "./Form";
 import { Nav } from "@/components/Nav";
 import { snowflake } from "@/lib/constants";
@@ -53,7 +53,7 @@ export default async function UserPage() {
 
 
 
-// import { prisma } from "@/db";
+// import { prisma } from "@/lib/db";
 // import { Form, FormSubmitFunction } from "./Form";
 // import { Nav } from "@/components/Nav";
 // import { snowflake } from "@/lib/constants";

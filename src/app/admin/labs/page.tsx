@@ -1,4 +1,4 @@
-import { prisma } from '@/db'
+import { prisma } from '@/lib/db'
 import { LabCard } from './LabCard'
 import Link from 'next/link'
 import { Nav } from '@/components/Nav'
