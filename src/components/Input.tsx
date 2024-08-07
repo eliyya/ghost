@@ -1,4 +1,6 @@
-import { ChangeEventHandler, InputHTMLAttributes } from "react";
+'use client'
+import { InputHTMLAttributes } from "react";
+import { useFormStatus } from "react-dom";
 
 export interface InputProps
   extends InputHTMLAttributes<HTMLInputElement> {
@@ -45,8 +47,10 @@ export function Input(props: InputProps) {
 }
 
 export function SubmitPrimaryInput(props: InputProps) {
+  const { pending } = useFormStatus()
   return (
     <input
+      disabled={pending}
       type="submit"
       value="Submit"
       {...props}
@@ -58,14 +62,15 @@ export function SubmitPrimaryInput(props: InputProps) {
 }
 
 export function SubmitSecondaryInput(props: InputProps) {
+  const { pending } = useFormStatus()
   return (
     <input
+      disabled={pending}
       type="submit"
       value="Submit"
       {...props}
       className={`p-2 rounded-md cursor-pointer transition-all border-black border
         hover:bg-gray-900 hover:text-white 
-        ${/*props.disabled ? 'bg-gray-900 text-gray-400' : 'bg-black text-white'*/''}
         ${props.className}`}
     />
   );
