@@ -37,7 +37,7 @@ export default async function NullPage() {
                     user.admin 
                     ? <>
                         <p>Para hacer uso de este sistema debe haber al menos 1 laboratorio registrado</p>
-                        <div className="flex justify-center m-3" >
+                        <div className="flex justify-center m-3">
                             <ButtonPrimaryLink href="/admin/labs/new" >Registrar Laboratorio</ButtonPrimaryLink>
                         </div>
                     </>
@@ -47,4 +47,3 @@ export default async function NullPage() {
         </>
     );
 }
-//41403970903609344

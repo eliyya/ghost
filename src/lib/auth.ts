@@ -37,3 +37,36 @@ export async function verifyAdmin() {
     if (!user.admin) return redirect('/labs')
     return user
 }
+
+export async function getVerifiedUser() {
+    const cookie = cookies().get(COOKIE.SESSION)?.value
+    const alcualURL = headers().get('pathname') ?? '/'
+    
+    if (!cookie) redirect('/login?redirect=' + alcualURL)
+    let user: {
+        id: string,
+        name: string,
+        username: string,
+        admin: boolean,
+    }
+    try {
+        const payload = await jwtVerify<{
+            id: string,
+            name: string,
+            username: string,
+            admin: boolean,
+            exp: number
+        }>(cookie, JWT_SECRET)
+        user = payload.payload
+    } catch (error) {
+        if (error instanceof Error && (
+            error.message.includes('JWS Protected Header is invalid') ||
+            error.message.includes('signature verification failed') ||
+            error.message.includes('timestamp check failed')
+        )) {
+            cookies().delete(COOKIE.SESSION)
+        }
+        redirect('/login?redirect=' + alcualURL)
+    }
+    return user
+}

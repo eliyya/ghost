@@ -12,8 +12,8 @@ export type FormSubmitFunction = (props: {
 export function Form({ submit }: { submit: FormSubmitFunction }) {
     const [formData, setFormData] = useState({
         name: "",
-        open_date: "",
-        close_date: "",
+        open_date: "07:00",
+        close_date: "07:00",
     });
     const [errorName, setErrorName] = useState<string>('');
 
@@ -58,11 +58,13 @@ export function Form({ submit }: { submit: FormSubmitFunction }) {
                 name="open_date"
                 value={formData.open_date}
                 onChange={handleChange}
+                step={3600000}
                 required
             />
             <Input
                 type="time"
                 placeholder="Hora de cierre"
+                step={3600000}
                 name="close_date"
                 value={formData.close_date}
                 onChange={handleChange}

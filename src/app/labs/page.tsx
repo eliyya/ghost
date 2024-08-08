@@ -8,7 +8,7 @@ export default async function LabsPage() {
 
     return (
         <div>
-            si puedes inguinarlo puedes programarlo
+            Si puedes imaginarlo puedes programarlo
         </div>
     );
 }
