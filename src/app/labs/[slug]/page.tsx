@@ -2,7 +2,7 @@ import { Nav } from '@/components/Nav';
 import { prisma } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { getVerifiedUser } from '@/lib/auth';
-import { ProcedureGrid, Schedule } from './ProcedureGrid';
+import { daysOfWeek, ProcedureGrid, Schedule } from './ProcedureGrid';
 
 export interface LabsSlugProps {
     params: {
@@ -21,7 +21,6 @@ export default async function LabsSlug(props: LabsSlugProps) {
 
     const user = await getVerifiedUser();
     const labs = await prisma.labs.findMany({});
-
     
     const actualDate = new Date()
     // domingo    
@@ -46,10 +45,22 @@ export default async function LabsSlug(props: LabsSlugProps) {
             }
         } }
     });    
-
+    const hours = lab.close_date.getHours() - lab.open_date.getHours();
+    const startHour = lab.open_date.getUTCHours();
+    const endHour = lab.close_date.getUTCHours();
+    const daysToRender: daysOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
     
     const schedule: Schedule = {
-        // sunday: {},
+        sunday: {
+            ...procedures
+                .filter(p => p.start_date.getDay() === 0)
+                .reduce((acc, p) => {
+                    const hour = p.start_date.getUTCHours();
+                    if (!acc[hour]) acc[hour] = p;
+                    return acc;
+                }
+                , {} as Record<string, typeof procedures[0]>)
+        },
         monday: {
             ...procedures
                 .filter(p => p.start_date.getDay() === 1)
@@ -100,12 +111,17 @@ export default async function LabsSlug(props: LabsSlugProps) {
                 }
                 , {} as Record<string, typeof procedures[0]>)
         },
-        // saturday: {},
+        saturday: {
+            ...procedures
+                .filter(p => p.start_date.getDay() === 6)
+                .reduce((acc, p) => {
+                    const hour = p.start_date.getUTCHours();
+                    if (!acc[hour]) acc[hour] = p;
+                    return acc;
+                }
+                , {} as Record<string, typeof procedures[0]>)
+        },
     }
-
-    const hours = lab.close_date.getHours() - lab.open_date.getHours();
-    const startHour = lab.open_date.getUTCHours();
-    const endHour = lab.close_date.getUTCHours();
 
     for (const day in schedule) {
         let currentHour = startHour;
@@ -129,7 +145,7 @@ export default async function LabsSlug(props: LabsSlugProps) {
       }
 
     
-    console.log('schedule', schedule)
+    // console.log('schedule', schedule)
 
     return (
         <>
@@ -142,11 +158,17 @@ export default async function LabsSlug(props: LabsSlugProps) {
                     }} 
                 >
                     <div className='border border-black'></div>
-                    {Object.keys(schedule).map(day => (
+                    {Object.keys(schedule).filter(d => daysToRender.includes(d as daysOfWeek)).map(day => (
                         <div className='p-2 border border-black text-center' key={day}>{day}</div>
                     ))}
                     <div className='p-2 border border-black text-right'>{`${startHour}:00`}</div>
-                    <ProcedureGrid hours={hours} schedule={schedule} startHour={startHour} />
+                    <ProcedureGrid 
+                        hours={hours} 
+                        schedule={schedule} 
+                        startHour={startHour} 
+                        firstDay={firstDay} 
+                        days={daysToRender} 
+                        />
                     {Array.from({ length: hours - 1 }).map((_, index) => (
                         <div className='p-2 border border-black text-right' key={index}>{`${startHour + index + 1}:00`}</div>
                     ))}
