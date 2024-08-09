@@ -149,7 +149,7 @@ export default async function LabsSlug(props: LabsSlugProps) {
 
     return (
         <>
-            <Nav labs={labs.map(l => ({ ...l, active: l.id === props.params.slug }))} isAdmin={user.admin} />
+            <Nav labs={labs.map(l => ({ ...l, active: l.id === props.params.slug }))} redirect='/labs/{lab_id}/new' isAdmin={user.admin} />
             <main className="flex-1 flex justify-center items-center">
                 <div 
                     className='grid grid-cols-6'
@@ -163,6 +163,7 @@ export default async function LabsSlug(props: LabsSlugProps) {
                     ))}
                     <div className='p-2 border border-black text-right'>{`${startHour}:00`}</div>
                     <ProcedureGrid 
+                        labId={lab.id}
                         hours={hours} 
                         schedule={schedule} 
                         startHour={startHour} 

@@ -1,5 +1,5 @@
 import { COOKIE, JWT_SECRET } from "@/lib/constants"
-import { jwtVerify } from "jose"
+import { jwtVerify, SignJWT } from "jose"
 import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
 
@@ -57,7 +57,19 @@ export async function getVerifiedUser() {
             admin: boolean,
             exp: number
         }>(cookie, JWT_SECRET)
-        user = payload.payload
+        const hoursleft = (payload.payload.exp - Math.floor(Date.now() / 1000)) / 3600
+        if (hoursleft < 3) {
+            const r = await refreshToken(cookie)
+            if (r) {
+                cookies().set({
+                    expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+                    name: COOKIE.SESSION,
+                    value: r.token
+                })
+                return payload.payload
+            }
+        } 
+        return payload.payload
     } catch (error) {
         if (error instanceof Error && (
             error.message.includes('JWS Protected Header is invalid') ||
@@ -68,5 +80,47 @@ export async function getVerifiedUser() {
         }
         redirect('/login?redirect=' + alcualURL)
     }
-    return user
+}
+
+async function refreshToken(cookie: string) {
+    if (!cookie) return null
+    let user: {
+        id: string,
+        name: string,
+        username: string,
+        admin: boolean,
+    } | undefined
+    let token = ''
+    try {
+        const payload = await jwtVerify<{
+            id: string,
+            name: string,
+            username: string,
+            admin: boolean,
+            exp: number
+        }>(cookie, JWT_SECRET)
+        let user = payload.payload
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 1);
+        token = await new SignJWT({
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            admin: user.admin,
+            exp: expires.getTime(),
+        })
+            .setProtectedHeader({ alg: "HS256" })
+            .setIssuedAt()
+            .setExpirationTime("1d")
+            .sign(JWT_SECRET)
+        
+        user = payload.payload
+    } catch (error) {
+        return null
+    }
+    if (!user) return null
+    return {
+        user,
+        token
+    }
 }

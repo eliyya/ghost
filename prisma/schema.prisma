@@ -25,10 +25,11 @@ model users {
 }
 
 model labs {
-  id         String   @id
-  name       String   @unique
-  open_date  DateTime
-  close_date DateTime
+  id             String   @id
+  name           String   @unique
+  open_date      DateTime
+  close_date     DateTime
+  available_days String   @default("0111110")
 
   procedures procedures[]
   tools      tools[]
@@ -51,11 +52,11 @@ model procedures {
 }
 
 model tools {
-  id     String @id
-  name   String
-  lab_id String
-  stock  Int    @default(0)
-  lab    labs   @relation(fields: [lab_id], references: [id])
+  id         String             @id
+  name       String
+  lab_id     String
+  stock      Int                @default(0)
+  lab        labs               @relation(fields: [lab_id], references: [id])
   procedures procedures_tools[]
 }
 

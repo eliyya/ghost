@@ -1,13 +1,29 @@
-import { PrismaClient } from '@prisma/client';
+import { AvailableDaysBitfield } from './BitField';
 
-let prisma: PrismaClient;
+import { PrismaClient } from '@prisma/client'
 
-if (process.env.NODE_ENV === 'production') prisma = new PrismaClient();
-else {
-    //@ts-ignore
-    if (!global.prisma) global.prisma = new PrismaClient();
-    //@ts-ignore
-    prisma = global.prisma;
+const prismaClientSingleton = () => {
+    return new PrismaClient().$extends({
+        name: 'serilized_days_lab',
+        result: {
+            labs: {
+                availableDaysBitfield: {
+                    needs: {
+                        available_days: true,
+                    },
+                    compute(data) {
+                        return new AvailableDaysBitfield(BigInt('0b0' + data.available_days));
+                    },
+                }
+            }
+        }
+    })
 }
 
+declare const globalThis: {
+    prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+} & typeof global;
+
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 export { prisma }

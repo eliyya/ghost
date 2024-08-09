@@ -6,6 +6,11 @@ import { prisma } from "@/lib/db";
 export interface NavProps {
     isAdmin?: boolean;
     labs: {name:string,id:string,active?:boolean}[]
+    /**
+     * Redirect to the selected lab
+     * use {lab_id} to replace the id of the selected lab
+     */
+    redirect?: string
 }
 export async function Nav(props: NavProps) {
     const labs = await prisma.labs.findMany({})
@@ -24,7 +29,7 @@ export async function Nav(props: NavProps) {
                 </Link>}
             </div>
             {props.labs.length === 1 && <div className="text-white">{props.labs[0].name}</div>}
-            {props.labs.length > 1 && <NavOptions labs={props.labs} />}
+            {props.labs.length > 1 && <NavOptions redirect={props.redirect} labs={props.labs} />}
             <div className="flex flex-1 justify-end justify-items-center text">
             <Link className="bg-white rounded-sm p-1" href={"/user"}>
                 <svg viewBox="0 0 60.671 60.671" className="w-8">

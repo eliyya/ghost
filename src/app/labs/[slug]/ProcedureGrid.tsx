@@ -25,8 +25,9 @@ interface ProcedureGridProps {
     hours: number;
     firstDay: Date;
     days: daysOfWeek[];
+    labId: string;
 }
-export function ProcedureGrid({ schedule, startHour, hours, firstDay, days }: ProcedureGridProps) {
+export function ProcedureGrid({ schedule, startHour, hours, firstDay, days, labId }: ProcedureGridProps) {
     return (
         <div
             className='col-start-2 grid-flow-col col-span-5 grid grid-cols-5'
@@ -56,7 +57,7 @@ export function ProcedureGrid({ schedule, startHour, hours, firstDay, days }: Pr
                                     <Link
                                         key={i}
                                         className='p-2 border border-black text-center'
-                                        href={`/labs/new/?date=${new Date(
+                                        href={`/labs/${labId}/new?date=${new Date(
                                             firstDay.getFullYear(),
                                             firstDay.getMonth(),
                                             firstDay.getDate() + indexDay,
