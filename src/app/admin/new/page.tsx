@@ -5,12 +5,12 @@ import { snowflake } from "@/lib/constants";
 import { hash } from "bcrypt";
 
 export default async function NewAdminPage() {
-    const users = await prisma.users.findMany();
+    const users = await prisma.user.findMany();
     if (users.length) redirect("/admin")
     
         const add: NewAdminFormSubmitFunction = async (props) => {
             "use server";
-            await prisma.users.create({
+            await prisma.user.create({
               data: {
                 name: props.name,
                 username: props.username,

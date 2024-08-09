@@ -9,7 +9,7 @@ import { verifyAdmin } from '@/lib/auth'
 export default async function AdminDocentesPage() {
     const admin = await verifyAdmin()
 
-    const teachers = await prisma.users.findMany({
+    const teachers = await prisma.user.findMany({
         where: {
             NOT: {
                 id: admin.id

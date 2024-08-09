@@ -14,7 +14,7 @@ export default async function DeleteTeacherPage(props: DeleteTeacherPageProps) {
     const admin = await verifyAdmin()
     const id = props.params.id
     if (admin.id === id) redirect('/admin/docentes')
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
         where: {
             id
         }
@@ -24,7 +24,7 @@ export default async function DeleteTeacherPage(props: DeleteTeacherPageProps) {
 
     const deleteUser = async () => {
         'use server'
-        await prisma.users.delete({
+        await prisma.user.delete({
             where: {
                 id
             }

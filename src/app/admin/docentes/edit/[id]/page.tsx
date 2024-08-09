@@ -15,19 +15,19 @@ export default async function AdminDocentesEditPage(props: AdminDocentesEditPage
     const admin = await verifyAdmin()
     const id = props.params.id
     if (admin.id === id) redirect('/admin/docentes')
-    const user = await prisma.users.findFirst({ where: { id } })
+    const user = await prisma.user.findFirst({ where: { id } })
     if (!user) redirect('/admin/docentes')
 
     const editUser: EditUserAction = async data => {
         'use server'
         // check if user exists
-        const user = await prisma.users.findFirst({
+        const user = await prisma.user.findFirst({
             where: {
                 username: data.username
             }
         })
         if (user && user.id !== id) return { status: 'error', message: 'Usuario ya existe' }
-        await prisma.users.update({
+        await prisma.user.update({
             where: { id },
             data: {
                 name: data.name,

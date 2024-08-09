@@ -8,13 +8,13 @@ export default async function UserPage() {
   const add: FormSubmitFunction = async (props) => {
     "use server";
     // check if user exists
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         username: props.username
       }
     })
     if (user) return { status: "error", message: "Usuario ya existe" }
-    await prisma.users.create({
+    await prisma.user.create({
       data: {
         name: props.name,
         username: props.username,

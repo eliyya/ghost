@@ -13,11 +13,11 @@ export interface SubmitProps {
     password: string;
 };
 export default async function login() {
-    const users = await prisma.users.findMany();
+    const users = await prisma.user.findMany();
     if (users.length === 0) redirect("/admin/new")
     const submit = async ({ username, password }: SubmitProps) => {
         "use server";
-        const user = await prisma.users.findUnique({
+        const user = await prisma.user.findUnique({
             where: { username },
         });
         if (!user) {

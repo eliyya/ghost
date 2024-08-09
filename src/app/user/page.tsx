@@ -39,7 +39,7 @@ export default async function UserPage() {
     if (oldName === newName && oldUsername === newUsername) return
 
     if (oldName !== newName) {
-      await prisma.users.update({
+      await prisma.user.update({
         where: {
           id: user.id
         },
@@ -49,7 +49,7 @@ export default async function UserPage() {
       })
     }
 
-    prisma.users.update({
+    prisma.user.update({
       where: {
         id: user.id
       },

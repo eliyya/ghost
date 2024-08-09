@@ -14,63 +14,52 @@ datasource db {
   url      = "file:../local_database.db"
 }
 
-model users {
+model User {
   id       String   @id
+  username String   @unique
   name     String
   password String
-  username String   @unique
   admin    Boolean?
-
   procedures Procedure[]
+  @@map("users")
 }
 
 model Laboratory {
-  id             String   @id
-  name           String   @unique
+  id             String      @id
+  name           String      @unique
   open_date      DateTime
   close_date     DateTime
-  available_days String   @default("0111110")
-
-  procedures Procedure[]
-  tools      Tool[]
+  available_days String      @default("0111110")
+  procedures     Procedure[]
+  tools          Tool[]
 
   @@map("labs")
 }
 
 model Procedure {
-  id            String   @id
+  id            String     @id
   submiter_id   String
-  submiter      users    @relation(fields: [submiter_id], references: [id])
   lab_id        String
-  lab           Laboratory     @relation(fields: [lab_id], references: [id])
   start_date    DateTime
   end_date      DateTime
   subject       String
   practice_name String
   students      Int
-  created_at    DateTime @default(now())
-
-  tools procedures_tools[]
+  created_at    DateTime   @default(now())
+  submiter      User      @relation(fields: [submiter_id], references: [id])
+  lab           Laboratory @relation(fields: [lab_id], references: [id])
+  tools         Tool[]
 
   @@map("procedures")
 }
 
 model Tool {
-  id         String             @id
+  id         String      @id
   name       String
   lab_id     String
-  stock      Int                @default(0)
-  lab        Laboratory               @relation(fields: [lab_id], references: [id])
-  procedures procedures_tools[]
+  stock      Int         @default(1)
+  lab        Laboratory  @relation(fields: [lab_id], references: [id])
+  procedures Procedure[]
 
   @@map("tools")
-}
-
-model procedures_tools {
-  procedure_id String
-  procedure    Procedure @relation(fields: [procedure_id], references: [id])
-  tool_id      String
-  tool         Tool      @relation(fields: [tool_id], references: [id])
-
-  @@id([procedure_id, tool_id])
 }
