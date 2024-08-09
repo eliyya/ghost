@@ -21,7 +21,7 @@ model users {
   username String   @unique
   admin    Boolean?
 
-  procedures procedures[]
+  procedures Procedure[]
 }
 
 model Laboratory {
@@ -31,13 +31,13 @@ model Laboratory {
   close_date     DateTime
   available_days String   @default("0111110")
 
-  procedures procedures[]
+  procedures Procedure[]
   tools      tools[]
 
   @@map("labs")
 }
 
-model procedures {
+model Procedure {
   id            String   @id
   submiter_id   String
   submiter      users    @relation(fields: [submiter_id], references: [id])
@@ -51,6 +51,8 @@ model procedures {
   created_at    DateTime @default(now())
 
   tools procedures_tools[]
+
+  @@map("procedures")
 }
 
 model tools {
@@ -64,7 +66,7 @@ model tools {
 
 model procedures_tools {
   procedure_id String
-  procedure    procedures @relation(fields: [procedure_id], references: [id])
+  procedure    Procedure @relation(fields: [procedure_id], references: [id])
   tool_id      String
   tool         tools      @relation(fields: [tool_id], references: [id])
 

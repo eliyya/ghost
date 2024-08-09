@@ -6,7 +6,7 @@ export type Schedule = Record<
     daysOfWeek,
     Record<
         string,
-        Prisma.proceduresGetPayload<{
+        Prisma.ProcedureGetPayload<{
             include: {
                 submiter: {
                     select: {

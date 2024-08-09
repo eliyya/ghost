@@ -28,7 +28,7 @@ export default async function LabsSlug(props: LabsSlugProps) {
     // sabado
     const lastDay = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate() + (6 - actualDate.getDay()), lab.close_date.getHours());
     
-    const procedures = await prisma.procedures.findMany({
+    const procedures = await prisma.procedure.findMany({
         where: {
             lab_id: lab.id,
             start_date: {
