@@ -75,3 +75,13 @@ export function SubmitSecondaryInput(props: InputProps) {
     />
   );
 }
+
+export function DropdownInputMultipleSelect() {
+  return (
+    <select multiple name="a">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+    </select>
+  );
+}

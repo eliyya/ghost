@@ -1,9 +1,15 @@
-import { Input, SubmitPrimaryInput } from "@/components/Input";
-import { Laboratory } from "@prisma/client";
+'use client'
+import { DropdownInputMultipleSelect, Input, SubmitPrimaryInput } from "@/components/Input";
+import { Laboratory, Procedure, User } from "@prisma/client";
 
+export interface NewProcedureAction {
+    (props: Omit<Procedure, 'id' | 'created_at'>): Promise<{ status: 'error' | 'succes', message: string }>;
+}
 interface NewProcedureFormProps {
     date: Date;
     lab: Laboratory
+    action: NewProcedureAction
+    user_id: User['id']
 }
 
 export function NewProcedureForm(props: NewProcedureFormProps) {
@@ -15,7 +21,19 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
     const startDate = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate(), hour);
 
     return (
-        <form action="" className="w-72 p-4 border border-black rounded-lg flex flex-col" >
+        <form action={async e => {
+            console.log(e.get('a'));
+            
+            // const response = props.action({
+            //     subject: e.get('subject') as string,
+            //     practice_name: e.get('practice_name') as string,
+            //     start_date: new Date(e.get('date') as string),
+            //     end_date: new Date(new Date(e.get('date') as string).getDate() + Number(e.get('out') as string) * 3600_000),
+            //     lab_id: props.lab.id,
+            //     submiter_id: props.user_id,
+            //     students: Number(e.get('students') as string),
+            // })
+        }} className="w-72 p-4 border border-black rounded-lg flex flex-col" >
             <Input
                 type="text"
                 name="subject"
@@ -46,6 +64,16 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 required
                 step={1}
             />
+            <Input
+                type="number"
+                name="students"
+                placeholder="Cantidad de Alumnos"
+                defaultValue={1}
+                min={1}
+                required
+                step={1}
+            />
+            <DropdownInputMultipleSelect />
             <SubmitPrimaryInput value="Reservar" />
         </form>
     )

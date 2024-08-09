@@ -152,6 +152,14 @@ export default class BitField<Flags extends string, Type extends number | bigint
     return this.bitfield;
   }
 
+  toString() {
+    return this.bitfield.toString()
+  }
+
+  toPrimitive() {
+    return this.bitfield;
+  }
+
   // @ts-ignore
   *[Symbol.iterator](...hasParams) {
     for (const bitName of Object.keys(BitField.Flags)) {
