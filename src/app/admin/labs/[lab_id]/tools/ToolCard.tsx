@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { tools } from "@prisma/client";
+import { Tool } from "@prisma/client";
 import def from '@/images/default_tool.png';
 import { ButtonPrimaryLink, ButtonSecondaryLink } from "@/components/Buttons";
 
-export async function ToolCard(props: {tool: tools}) {
+export async function ToolCard(props: {tool: Tool}) {
     const image = await import(`./../../../../../../storage/tools/${props.tool.id}.png`)
         .then(d => d.default)
         .catch(() => def);

@@ -32,7 +32,7 @@ model Laboratory {
   available_days String   @default("0111110")
 
   procedures Procedure[]
-  tools      tools[]
+  tools      Tool[]
 
   @@map("labs")
 }
@@ -55,20 +55,22 @@ model Procedure {
   @@map("procedures")
 }
 
-model tools {
+model Tool {
   id         String             @id
   name       String
   lab_id     String
   stock      Int                @default(0)
   lab        Laboratory               @relation(fields: [lab_id], references: [id])
   procedures procedures_tools[]
+
+  @@map("tools")
 }
 
 model procedures_tools {
   procedure_id String
   procedure    Procedure @relation(fields: [procedure_id], references: [id])
   tool_id      String
-  tool         tools      @relation(fields: [tool_id], references: [id])
+  tool         Tool      @relation(fields: [tool_id], references: [id])
 
   @@id([procedure_id, tool_id])
 }

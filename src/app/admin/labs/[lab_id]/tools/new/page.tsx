@@ -29,7 +29,7 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
             "use server";
             // check if tool exist
             const name = e.get('name') as string
-            const tool = await prisma.tools.findFirst({
+            const tool = await prisma.tool.findFirst({
               where: {
                 name
               }
@@ -37,7 +37,7 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
             if (tool) return redirect(`/admin/labs/${lab_id}/tools/${tool.id}/more`)
             // if (['image/avif'].includes(image.type)) return redirect(`/admin/labs/${lab_id}/tools/${newTool.id}/more`)
             // save tool
-            const newTool = await prisma.tools.create({
+            const newTool = await prisma.tool.create({
               data: {
                 name,
                 lab_id,

@@ -20,7 +20,7 @@ export default async function ToolsPage(prop: ToolsPageProps) {
         }
     })
     if (!lab) redirect('/admin/labs')
-    const tools = await prisma.tools.findMany({
+    const tools = await prisma.tool.findMany({
         where: {
             lab_id
         }

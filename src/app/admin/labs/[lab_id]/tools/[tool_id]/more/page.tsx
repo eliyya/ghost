@@ -14,7 +14,7 @@ interface NewToolsPageProps {
 export default async function ToolExistPage(prop: NewToolsPageProps) {
     await verifyAdmin()
     const { lab_id, tool_id } = prop.params
-    const tool = await prisma.tools.findFirst({
+    const tool = await prisma.tool.findFirst({
         where: {
             id: tool_id
         }
@@ -27,7 +27,7 @@ export default async function ToolExistPage(prop: NewToolsPageProps) {
                 <form
                     action={async e => {
                         'use server'
-                        await prisma.tools.update({
+                        await prisma.tool.update({
                             where: {
                                 id: tool_id
                             },

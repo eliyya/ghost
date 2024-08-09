@@ -19,7 +19,7 @@ interface NewToolsPageProps {
 export default async function NewToolsPage(prop: NewToolsPageProps) {
   await verifyAdmin()
   const { lab_id, tool_id } = prop.params
-  const tool = await prisma.tools.findFirst({
+  const tool = await prisma.tool.findFirst({
     where: {
       id: tool_id
     }
@@ -37,7 +37,7 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
             "use server";
             // check if tool exist
             const name = e.get('name') as string
-            const tool = await prisma.tools.findFirst({
+            const tool = await prisma.tool.findFirst({
               where: {
                 name,
                 AND: {
@@ -49,7 +49,7 @@ export default async function NewToolsPage(prop: NewToolsPageProps) {
             })
             if (tool) return redirect(`/admin/labs/${lab_id}/tools/${tool.id}/more`)
               
-            const newTool = await prisma.tools.update({
+            const newTool = await prisma.tool.update({
               where: {
                 id: tool_id
               },

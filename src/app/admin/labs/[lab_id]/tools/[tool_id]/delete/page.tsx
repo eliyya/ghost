@@ -22,13 +22,13 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
         .catch(() => def);
 
     const id = props.params.tool_id
-    const tool = await prisma.tools.findFirst({ where: { id } })
+    const tool = await prisma.tool.findFirst({ where: { id } })
     if (!tool) redirect('/admin/labs')
 
 
     const deleteTool = async () => {
         'use server'
-        await prisma.tools.delete({
+        await prisma.tool.delete({
             where: {
                 id
             }
