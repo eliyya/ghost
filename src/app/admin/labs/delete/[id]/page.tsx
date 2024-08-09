@@ -15,13 +15,13 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
     await verifyAdmin()
 
     const id = props.params.id
-    const lab = await prisma.labs.findFirst({ where: { id } })
+    const lab = await prisma.laboratory.findFirst({ where: { id } })
     if (!lab) redirect('/admin/labs')
 
 
     const deleteLab = async () => {
         'use server'
-        await prisma.labs.delete({
+        await prisma.laboratory.delete({
             where: {
                 id
             }

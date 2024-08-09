@@ -11,19 +11,19 @@ interface AdminDocentesEditPageProps {
 }
 export default async function AdminDocentesEditPage(props: AdminDocentesEditPageProps) {
     const id = props.params.id
-    const lab = await prisma.labs.findFirst({ where: { id } })
+    const lab = await prisma.laboratory.findFirst({ where: { id } })
     if (!lab) redirect('/admin/labs')
 
     const editUser: EditLabAction = async data => {
         'use server'
         // check if user exists
-        const user = await prisma.labs.findFirst({
+        const user = await prisma.laboratory.findFirst({
             where: {
                 name: data.name
             }
         })
         if (user && user.id !== id) return { status: 'error', message: 'Laboratorio ya existe' }
-        await prisma.labs.update({
+        await prisma.laboratory.update({
             where: { id },
             data: {
                 name: data.name,

@@ -11,14 +11,14 @@ export default async function UserPage() {
     const add: FormSubmitFunction = async (props) => {
         "use server";
         try {
-            const lab = await prisma.labs.findUnique({
+            const lab = await prisma.laboratory.findUnique({
                 where: {
                     name: props.name
                 },
             });
             if (lab) return { status: 'error', message: 'Lab ya existe' };
 
-            await prisma.labs.create({
+            await prisma.laboratory.create({
                 data: {
                     id: snowflake.generate().toString(),
                     name: props.name,

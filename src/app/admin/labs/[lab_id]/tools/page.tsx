@@ -14,7 +14,7 @@ interface ToolsPageProps {
 export default async function ToolsPage(prop: ToolsPageProps) {
     await verifyAdmin()
     const { lab_id } = prop.params
-    const lab = await prisma.labs.findUnique({
+    const lab = await prisma.laboratory.findUnique({
         where: {
             id: lab_id
         }

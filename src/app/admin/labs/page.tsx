@@ -7,7 +7,7 @@ import { ButtonPrimaryLink } from "@/components/Buttons";
 
 export default async function AdminLabsPage() {
     await verifyAdmin()
-    const labs = await prisma.labs.findMany({})
+    const labs = await prisma.laboratory.findMany({})
 
 
     return (

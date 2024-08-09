@@ -16,11 +16,11 @@ export interface LabsSlugProps {
 export default async function LabsSlug(props: LabsSlugProps) {
     // console.log('week', props.searchParams.week);
     
-    const lab = await prisma.labs.findFirst({ where: { id: props.params.slug } });
+    const lab = await prisma.laboratory.findFirst({ where: { id: props.params.slug } });
     if (!lab) redirect('/labs');
 
     const user = await getVerifiedUser();
-    const labs = await prisma.labs.findMany({});
+    const labs = await prisma.laboratory.findMany({});
     
     const actualDate = new Date()
     // domingo    

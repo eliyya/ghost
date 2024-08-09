@@ -6,7 +6,7 @@ const prismaClientSingleton = () => {
     return new PrismaClient().$extends({
         name: 'serilized_days_lab',
         result: {
-            labs: {
+            laboratory: {
                 availableDaysBitfield: {
                     needs: {
                         available_days: true,

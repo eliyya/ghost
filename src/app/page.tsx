@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 
 export default async function Home() {
-  const labs = await prisma.labs.findMany({})
+  const labs = await prisma.laboratory.findMany({})
   redirect('/labs/' + ( labs[0]?.id??'null' ))
 
   return (

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
     await verifyAdmin()
-    const labs = await prisma.labs.findMany({})
+    const labs = await prisma.laboratory.findMany({})
     if (labs.length > 1) return redirect("/admin/labs")
     return redirect("/admin/docentes")
 }

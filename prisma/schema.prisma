@@ -24,7 +24,7 @@ model users {
   procedures procedures[]
 }
 
-model labs {
+model Laboratory {
   id             String   @id
   name           String   @unique
   open_date      DateTime
@@ -33,6 +33,8 @@ model labs {
 
   procedures procedures[]
   tools      tools[]
+
+  @@map("labs")
 }
 
 model procedures {
@@ -40,7 +42,7 @@ model procedures {
   submiter_id   String
   submiter      users    @relation(fields: [submiter_id], references: [id])
   lab_id        String
-  lab           labs     @relation(fields: [lab_id], references: [id])
+  lab           Laboratory     @relation(fields: [lab_id], references: [id])
   start_date    DateTime
   end_date      DateTime
   subject       String
@@ -56,7 +58,7 @@ model tools {
   name       String
   lab_id     String
   stock      Int                @default(0)
-  lab        labs               @relation(fields: [lab_id], references: [id])
+  lab        Laboratory               @relation(fields: [lab_id], references: [id])
   procedures procedures_tools[]
 }
 

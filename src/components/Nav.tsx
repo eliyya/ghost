@@ -13,7 +13,7 @@ export interface NavProps {
     redirect?: string
 }
 export async function Nav(props: NavProps) {
-    const labs = await prisma.labs.findMany({})
+    const labs = await prisma.laboratory.findMany({})
     
     return (
         <nav className="flex justify-between items-center align-middle w-full px-2 py-5 bg-[#333]">
