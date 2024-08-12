@@ -7,12 +7,12 @@ const prismaClientSingleton = () => {
         name: 'serilized_days_lab',
         result: {
             laboratory: {
-                availableDaysBitfield: {
+                available_days_array: {
                     needs: {
                         available_days: true,
                     },
                     compute(data) {
-                        return new AvailableDaysBitfield(BigInt('0b0' + data.available_days));
+                        return new AvailableDaysBitfield(data.available_days).toArray() as (keyof AvailableDaysBitfield['Flags'])[]
                     },
                 }
             }
@@ -27,3 +27,4 @@ declare const globalThis: {
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 export { prisma }
+

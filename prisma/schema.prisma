@@ -15,12 +15,13 @@ datasource db {
 }
 
 model User {
-  id       String   @id
-  username String   @unique
-  name     String
-  password String
-  admin    Boolean?
+  id         String      @id
+  username   String      @unique
+  name       String
+  password   String
+  admin      Boolean?
   procedures Procedure[]
+
   @@map("users")
 }
 
@@ -29,7 +30,7 @@ model Laboratory {
   name           String      @unique
   open_date      DateTime
   close_date     DateTime
-  available_days String      @default("0111110")
+  available_days Int         @default(62)
   procedures     Procedure[]
   tools          Tool[]
 
@@ -46,7 +47,7 @@ model Procedure {
   practice_name String
   students      Int
   created_at    DateTime   @default(now())
-  submiter      User      @relation(fields: [submiter_id], references: [id])
+  submiter      User       @relation(fields: [submiter_id], references: [id])
   lab           Laboratory @relation(fields: [lab_id], references: [id])
   tools         Tool[]
 

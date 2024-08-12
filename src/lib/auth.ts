@@ -82,6 +82,49 @@ export async function getVerifiedUser() {
     }
 }
 
+export async function getPosibleUser() {
+    const cookie = cookies().get(COOKIE.SESSION)?.value
+    
+    if (!cookie) return null
+    let user: {
+        id: string,
+        name: string,
+        username: string,
+        admin: boolean,
+    }
+    try {
+        const payload = await jwtVerify<{
+            id: string,
+            name: string,
+            username: string,
+            admin: boolean,
+            exp: number
+        }>(cookie, JWT_SECRET)
+        const hoursleft = (payload.payload.exp - Math.floor(Date.now() / 1000)) / 3600
+        if (hoursleft < 3) {
+            const r = await refreshToken(cookie)
+            if (r) {
+                cookies().set({
+                    expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+                    name: COOKIE.SESSION,
+                    value: r.token
+                })
+                return payload.payload
+            }
+        } 
+        return payload.payload
+    } catch (error) {
+        if (error instanceof Error && (
+            error.message.includes('JWS Protected Header is invalid') ||
+            error.message.includes('signature verification failed') ||
+            error.message.includes('timestamp check failed')
+        )) {
+            cookies().delete(COOKIE.SESSION)
+        }
+        return null
+    }
+}
+
 async function refreshToken(cookie: string) {
     if (!cookie) return null
     let user: {

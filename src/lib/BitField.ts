@@ -9,11 +9,11 @@ export default class BitField<Flags extends string, Type extends number | bigint
   /**
    * Numeric bitfield flags.
    * <info>Defined in extension classes</info>
-   * @type {Object}
-   * @memberof BitField
+   * @type {Record<Flags, number|bigint>}
    * @abstract
    */
   static Flags = {};
+  Flags = {};
 
   /**
    * @type {number|bigint}
@@ -36,7 +36,16 @@ export default class BitField<Flags extends string, Type extends number | bigint
      * Bitfield of the packed bits
      * @type {number|bigint}
      */
-    this.bitfield = BitField.resolve(bits ?? BitField.DefaultBit as any);
+    // @ts-ignore
+    this.bitfield = this.constructor.resolve(bits ?? BitField.DefaultBit as any);
+  }
+  
+  /**
+   * The default bitfield for this BitField
+   */
+  get DefaultBit() {
+    // @ts-ignore
+    return this.constructor.DefaultBit;
   }
 
   /**
@@ -45,7 +54,8 @@ export default class BitField<Flags extends string, Type extends number | bigint
    * @returns {boolean}
    */
   any(bit: BitFieldResolvable<Flags, Type>): boolean {
-    return ((this.bitfield as number) & (BitField.resolve(bit) as number)) !== BitField.DefaultBit;
+    // @ts-ignore
+    return ((this.bitfield as number) & (this.constructor.resolve(bit) as number)) !== this.DefaultBit;
   }
 
   /**
@@ -54,7 +64,8 @@ export default class BitField<Flags extends string, Type extends number | bigint
    * @returns {boolean}
    */
   equals(bit: BitFieldResolvable<Flags, Type>): boolean {
-    return this.bitfield === BitField.resolve(bit);
+    // @ts-ignore
+    return this.bitfield === this.constructor.resolve(bit);
   }
 
   /**
@@ -63,7 +74,8 @@ export default class BitField<Flags extends string, Type extends number | bigint
    * @returns {boolean}
    */
   has(bit: BitFieldResolvable<Flags, Type>) {
-    const otbit = BitField.resolve(bit);
+    // @ts-ignore
+    const otbit = this.constructor.resolve(bit);
     return ((this.bitfield as number) & (otbit as number)) === otbit;
   }
 
@@ -91,10 +103,10 @@ export default class BitField<Flags extends string, Type extends number | bigint
    * @returns {BitField} These bits or new BitField if the instance is frozen.
    */
   add(...bits: BitFieldResolvable<Flags, Type>[]): BitField<Flags, Type> {
-    let total = BitField.DefaultBit;
+    let total = this.DefaultBit;
     for (const bit of bits) {
       // @ts-ignore
-      total |= BitField.resolve(bit);
+      total |= this.constructor.resolve(bit);
     }
     // @ts-ignore
     if (Object.isFrozen(this)) return new BitField(this.bitfield | total);
@@ -109,10 +121,10 @@ export default class BitField<Flags extends string, Type extends number | bigint
    * @returns {BitField} These bits or new BitField if the instance is frozen.
    */
   remove(...bits: BitFieldResolvable<Flags, Type>[]): BitField<Flags, Type> {
-    let total = BitField.DefaultBit;
+    let total = this.DefaultBit;
     for (const bit of bits) {
       // @ts-ignore
-      total |= BitField.resolve(bit);
+      total |= this.constructor.resolve(bit);
     }
     // @ts-ignore
     if (Object.isFrozen(this)) return new BitField(this.bitfield & ~total);
@@ -129,7 +141,7 @@ export default class BitField<Flags extends string, Type extends number | bigint
    */
   serialize(...hasParams: any[]): {[K in Flags]: boolean} {
     const serialized: { [K in Flags]: boolean } = {} as { [K in Flags]: boolean };
-    for (const [flag, bit] of Object.entries(BitField.Flags)) {
+    for (const [flag, bit] of Object.entries(this.Flags)) {
       if (isNaN(Number(flag))) serialized[flag as Flags] = this.has(bit as any);
     }
     return serialized;
@@ -141,7 +153,7 @@ export default class BitField<Flags extends string, Type extends number | bigint
    * @returns {string[]}
    */
   toArray(...hasParams: any[]) {
-    return [...this[Symbol.iterator](...hasParams)];
+    return [...this[Symbol.iterator]()];
   }
 
   toJSON() {
@@ -161,9 +173,9 @@ export default class BitField<Flags extends string, Type extends number | bigint
   }
 
   // @ts-ignore
-  *[Symbol.iterator](...hasParams) {
-    for (const bitName of Object.keys(BitField.Flags)) {
-      if (isNaN(Number(bitName)) && this.has(bitName as any)) yield bitName;
+  *[Symbol.iterator]() {
+    for (const bitName of Object.keys(this.Flags)) {
+      if (this.has(bitName as any)) yield bitName;
     }
   }
 
@@ -189,7 +201,6 @@ export default class BitField<Flags extends string, Type extends number | bigint
     if (Array.isArray(bit)) {
       return bit.map(bit_ => this.resolve(bit_)).reduce((prev, bit_) => BigInt(prev) | BigInt(bit_), BigInt(DefaultBit));
     }
-    console.log('bit', bit);
     if (typeof bit === 'string') {
       if (!isNaN(Number(bit))) return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
       // @ts-ignore
@@ -200,15 +211,17 @@ export default class BitField<Flags extends string, Type extends number | bigint
 }
 
 export const AvailableDaysFlags = {
-  SUNDAY: 1 << 0,
-  MONDAY: 1 << 1,
-  TUESDAY: 1 << 2,
-  WEDNESDAY: 1 << 3,
-  THURSDAY: 1 << 4,
-  FRIDAY: 1 << 5,
-  SATURDAY: 1 << 6,
+  Sunday: 1 << 0,
+  Monday: 1 << 1,
+  Tuesday: 1 << 2,
+  Wednesday: 1 << 3,
+  Thursday: 1 << 4,
+  Friday: 1 << 5,
+  Saturday: 1 << 6,
 }
 
-export class AvailableDaysBitfield<Type extends number | bigint = number> extends BitField<keyof typeof AvailableDaysFlags, Type> {
+export class AvailableDaysBitfield<Type extends number | bigint = number> 
+  extends BitField<keyof typeof AvailableDaysFlags, Type> {
   static Flags = AvailableDaysFlags;
+  Flags = AvailableDaysFlags;
 }

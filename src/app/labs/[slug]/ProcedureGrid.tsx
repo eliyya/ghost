@@ -1,7 +1,8 @@
+import { AvailableDaysBitfield } from "@/lib/BitField";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 
-export type daysOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
+export type daysOfWeek = keyof AvailableDaysBitfield['Flags'];
 export type Schedule = Record<
     daysOfWeek,
     Record<
@@ -45,7 +46,7 @@ export function ProcedureGrid({ schedule, startHour, hours, firstDay, days, labI
                                 if (act) return (
                                     <div
                                         key={i}
-                                        className='p-2 row-span-3 border border-black text-center'
+                                        className='px-2 py-1 row-span-3 border border-black text-center'
                                         style={{
                                             gridRow: `span ${act.end_date.getHours() - act.start_date.getHours()} / span ${act.end_date.getHours() - act.start_date.getHours()}`,
                                         }}
@@ -56,7 +57,7 @@ export function ProcedureGrid({ schedule, startHour, hours, firstDay, days, labI
                                 else return (
                                     <Link
                                         key={i}
-                                        className='p-2 border border-black text-center'
+                                        className='px-2 py-1 border border-black text-center'
                                         href={`/labs/${labId}/new?date=${new Date(
                                             firstDay.getFullYear(),
                                             firstDay.getMonth(),
