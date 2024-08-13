@@ -27,17 +27,18 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
 
     return (
         <form action={async e => {
-            console.log('d',e.getAll('tools'));
-            
             const response = props.action({
                 subject: e.get('subject') as string,
                 practice_name: e.get('practice_name') as string,
                 start_date: new Date(e.get('date') as string),
-                end_date: new Date(new Date(e.get('date') as string).getDate() + Number(e.get('out') as string) * 3600_000),
+                end_date: new Date(
+                    new Date(e.get('date') as string).getTime() 
+                    + (Number(e.get('out') as string) * 1000 * 60 * 60)
+                ),
                 lab_id: props.lab_id,
                 submiter_id: props.user_id,
                 students: Number(e.get('students') as string),
-                tools: e.getAll('tools').map(t => ({ id: (t as string).split('|')[0] }))
+                tools: e.getAll('tools').filter(Boolean).map(t => ({ id: (t as string).split('|')[0] }))
             })
             router.push('/labs');   
             

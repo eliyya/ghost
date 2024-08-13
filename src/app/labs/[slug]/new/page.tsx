@@ -31,6 +31,8 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
     
     const createProcedure: NewProcedureAction = async (data) => {
         'use server'
+        console.log(data.tools);
+        
         const response = await prisma.procedure.create({
             data: {
                 end_date: data.end_date,
@@ -40,11 +42,11 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
                 students: data.students,
                 subject: data.subject,
                 submiter_id: data.submiter_id,
-                tools: {
+                tools: data.tools.length ? {
                     connect: [
                         ...data.tools
                     ]
-                },
+                } : undefined,
                 id: snowflake.generate().toString(),
             }
         });
