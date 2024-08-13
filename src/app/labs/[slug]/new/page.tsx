@@ -30,9 +30,7 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
     const minimumDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), lab.open_date.getHours());
     
     const createProcedure: NewProcedureAction = async (data) => {
-        'use server'
-        console.log(data.tools);
-        
+        'use server'        
         const response = await prisma.procedure.create({
             data: {
                 end_date: data.end_date,

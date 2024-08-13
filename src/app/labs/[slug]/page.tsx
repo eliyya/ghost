@@ -37,9 +37,12 @@ export default async function LabsSlug(props: LabsSlugProps) {
     if (props.searchParams.date !== requestedDate.toLocaleDateString('es')) redirect(`/labs/${props.params.slug}?date=${requestedDate.toLocaleDateString('es')}`);
     
     const { firstDay, lastDay } = getLimitsDatesOfWeek(requestedDate);
+    console.log(firstDay.toLocaleDateString('es'), requestedDate.toLocaleDateString('es'), lastDay.toLocaleDateString('es'));
+    
     const lab = await getLaboratoryInfo({ firstDay, lastDay, id: props.params.slug });
     if (!lab) redirect('/labs');
-       
+    console.log(lab);
+    
     const hours = lab.close_date.getHours() - lab.open_date.getHours();
     const startHour = lab.open_date.getUTCHours();
     const daysToRender = lab.available_days_array;
@@ -281,9 +284,12 @@ function getLimitsDatesOfWeek(date: Date): { firstDay: Date, lastDay: Date } {
     return { firstDay, lastDay }
 }
 
+/**
+ * Returns the laboratory info with the procedures of the week
+ */
 function getLaboratoryInfo(query: { firstDay: Date, lastDay: Date, id: string }) {
     const { firstDay, lastDay, id } = query;
-    return prisma.laboratory.findFirst({ 
+    return prisma.laboratory.findFirst({
         where: { 
             id 
         }, 
@@ -309,3 +315,5 @@ function getLaboratoryInfo(query: { firstDay: Date, lastDay: Date, id: string })
         } 
     })
 }
+
+

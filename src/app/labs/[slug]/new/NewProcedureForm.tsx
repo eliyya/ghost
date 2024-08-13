@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 export interface NewProcedureAction {
     (props: Omit<Prisma.ProcedureGetPayload<{include:{tools:{select:{id: true}}}}>, 'id' | 'created_at'>): Promise<{ status: 'error' | 'succes', message: string }>;
 }
-//Pick<Tool, 'id'>
 interface NewProcedureFormProps {
     date: Date;
     open_date: Date;
@@ -26,7 +25,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
     const startDate = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate(), hour);
 
     return (
-        <form action={async e => {
+        <form action={async e => {            
             const response = props.action({
                 subject: e.get('subject') as string,
                 practice_name: e.get('practice_name') as string,
@@ -62,7 +61,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 placeholder="Fecha"
                 required
                 step={3600000}
-                defaultValue={`${startDate.getFullYear()}-${startDate.getMonth().toString().padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}T${startDate.getHours().toString().padStart(2, '0')}:00`}
+                defaultValue={`${startDate.getFullYear()}-${(startDate.getMonth()+1).toString().padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}T${startDate.getHours().toString().padStart(2, '0')}:00`}
             />
             <Input
                 type="number"
