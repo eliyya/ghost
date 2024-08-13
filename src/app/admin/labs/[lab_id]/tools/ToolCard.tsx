@@ -7,6 +7,8 @@ export async function ToolCard(props: {tool: Tool}) {
     const image = await import(`./../../../../../../storage/tools/${props.tool.id}.png`)
         .then(d => d.default)
         .catch(() => def);
+    console.log(image);
+    
     
     return (
         <div className="rounded-sm shadow-md min-w-32 flex flex-col overflow-hidden hover:-translate-y-0.5 hover:shadow-lg transition-all">

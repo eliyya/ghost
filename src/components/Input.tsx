@@ -1,6 +1,7 @@
 'use client'
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, useState } from "react";
 import { useFormStatus } from "react-dom";
+import Select from "react-select";
 
 export interface InputProps
   extends InputHTMLAttributes<HTMLInputElement> {
@@ -76,12 +77,55 @@ export function SubmitSecondaryInput(props: InputProps) {
   );
 }
 
-export function DropdownInputMultipleSelect() {
+interface DropdownInputMultipleSelectProps extends InputHTMLAttributes<HTMLInputElement> {
+  options: { label: string, options: { value: string, label: string, isDisabled?: boolean }[] }[]
+}
+export function DropdownInputMultipleSelect(props: DropdownInputMultipleSelectProps) {
+  const [options, setOptions] = useState(props.options)
+
   return (
-    <select multiple name="a">
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
+      <Select 
+        className="border-black" 
+        isMulti 
+        options={options} 
+        closeMenuOnSelect={false}
+        name={props.name} 
+        onChange={e => {
+            setOptions([...options.map(g => ({
+              ...g, 
+              options: g.options.map(o => ({
+                  ...o, 
+                  // @ts-ignore
+                  isDisabled: e.map(o => o.value.replace(/\|\d*/g,'')).some(eo => eo === o.value.replace(/\|\d*/g,''))
+                })) 
+            }))])
+        }}
+        placeholder={props.placeholder ?? props.name}
+        styles={{
+          control: (styles) => ({
+            ...styles,
+            borderColor: 'black',
+            borderRadius: '0.375rem',
+          }),
+          groupHeading: (styles, {data}) => {
+            return ({
+              ...styles,
+              padding: '0.25rem',
+              alignItems: 'center',
+              display: 'flex',
+              '::before': {
+                content: '""',
+                display: 'block',
+                height: '25px',
+                width: '25px',
+                marginRight: '0.5rem',
+                // @ts-ignore
+                backgroundImage: `url(/images/tools/${data.options[0].value.replace(/\|\d*/g,'')}.png)`,
+                backgroundSize: 'contain',
+              }
+            })
+          },
+        }}
+      />
   );
 }

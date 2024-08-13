@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { Prisma } from '@prisma/client';
 import { Nav } from '@/components/Nav';
 import { prisma } from '@/lib/db';
+import { ButtonPrimaryLink, ButtonSecondaryLink } from '@/components/Buttons';
 
 type LabWitSchedulesWithSubmiter = Prisma.LaboratoryGetPayload<{
     include: {
@@ -42,6 +43,9 @@ export default async function LabsSlug(props: LabsSlugProps) {
     const daysToRender = lab.available_days_array;
     const schedule = getSchedule(lab)
 
+    // in formar yyyy/mm/dd    
+    const weekAhead = new Date(lastDay.getTime() + 7*24*60*60*1000) // 7 days in milliseconds
+
     return (
         <>
             <Nav 
@@ -50,7 +54,32 @@ export default async function LabsSlug(props: LabsSlugProps) {
                 isAdmin={user?.admin} 
             />
             <main className="flex-1 flex justify-center items-center">
-                <div 
+                <div className='flex flex-col'>
+                    {/*  */}
+                    <div className='flex justify-between'>
+                        <ButtonSecondaryLink 
+                            href={`/labs/${lab.id}?date=${
+                                new Date(requestedDate.getTime() - 7*24*60*60*1000)
+                                    .toLocaleDateString('es')
+                                }`}
+                        >
+                            Semana Anterior
+                        </ButtonSecondaryLink>
+                        <ButtonPrimaryLink 
+                            href={`/labs/${lab.id}/new`}
+                        >
+                            New Procedure
+                        </ButtonPrimaryLink>
+                        <ButtonSecondaryLink 
+                            href={`/labs/${lab.id}?date=${
+                                new Date(requestedDate.getTime() + 7*24*60*60*1000)
+                                    .toLocaleDateString('es')
+                                }`}
+                        >
+                            Semana Siguente
+                        </ButtonSecondaryLink>
+                    </div>
+                    <div 
                     className='grid grid-cols-6'
                     style={{
                         gridTemplateRows: `repeat(${hours}, minmax(0, 1fr))`,
@@ -74,6 +103,7 @@ export default async function LabsSlug(props: LabsSlugProps) {
                             {`${startHour + index + 1}:00`}
                         </div>
                     ))}
+                </div>
                 </div>
             </main>
         </>
@@ -186,9 +216,8 @@ function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
  * If the string is not in the correct format returns actual date
  */
 function parseStartDay(toParse: string = ''): Date {
-    // check if the string is in the format yyyy/mm/dd
-    const regex = /^\d{4}\/\d{2}\/\d{2}$/;
-    if (!regex.test(toParse)) return new Date();
+    // check if the string is in the format dd/mm/yyyy
+    if (!(/^\d{4}\/\d{2}\/\d{2}$/).test(toParse)) return new Date();
     // parse the string to a Date object
     const [year, month, day] = toParse.split('/').map(Number);
     return new Date(year, month - 1, day);

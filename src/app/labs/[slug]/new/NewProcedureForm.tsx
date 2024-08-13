@@ -1,38 +1,46 @@
 'use client'
 import { DropdownInputMultipleSelect, Input, SubmitPrimaryInput } from "@/components/Input";
-import { Laboratory, Procedure, User } from "@prisma/client";
+import { Laboratory, Prisma, Procedure, Tool, User } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 export interface NewProcedureAction {
-    (props: Omit<Procedure, 'id' | 'created_at'>): Promise<{ status: 'error' | 'succes', message: string }>;
+    (props: Omit<Prisma.ProcedureGetPayload<{include:{tools:{select:{id: true}}}}>, 'id' | 'created_at'>): Promise<{ status: 'error' | 'succes', message: string }>;
 }
+//Pick<Tool, 'id'>
 interface NewProcedureFormProps {
     date: Date;
-    lab: Laboratory
+    open_date: Date;
+    close_date: Date;
     action: NewProcedureAction
     user_id: User['id']
+    tools?: Tool[]
+    lab_id: Laboratory['id']
 }
 
 export function NewProcedureForm(props: NewProcedureFormProps) {
-
+    const router = useRouter();
     let hour = props.date.getHours();
-    if (hour < props.lab.open_date.getHours()) hour = props.lab.open_date.getHours();
-    if (hour > props.lab.close_date.getHours()) hour = props.lab.close_date.getHours() - 1;
+    if (hour < props.open_date.getHours()) hour = props.open_date.getHours();
+    if (hour > props.close_date.getHours()) hour = props.close_date.getHours() - 1;
 
     const startDate = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate(), hour);
 
     return (
         <form action={async e => {
-            console.log(e.get('a'));
+            console.log('d',e.getAll('tools'));
             
-            // const response = props.action({
-            //     subject: e.get('subject') as string,
-            //     practice_name: e.get('practice_name') as string,
-            //     start_date: new Date(e.get('date') as string),
-            //     end_date: new Date(new Date(e.get('date') as string).getDate() + Number(e.get('out') as string) * 3600_000),
-            //     lab_id: props.lab.id,
-            //     submiter_id: props.user_id,
-            //     students: Number(e.get('students') as string),
-            // })
+            const response = props.action({
+                subject: e.get('subject') as string,
+                practice_name: e.get('practice_name') as string,
+                start_date: new Date(e.get('date') as string),
+                end_date: new Date(new Date(e.get('date') as string).getDate() + Number(e.get('out') as string) * 3600_000),
+                lab_id: props.lab_id,
+                submiter_id: props.user_id,
+                students: Number(e.get('students') as string),
+                tools: e.getAll('tools').map(t => ({ id: (t as string).split('|')[0] }))
+            })
+            router.push('/labs');   
+            
         }} className="w-72 p-4 border border-black rounded-lg flex flex-col" >
             <Input
                 type="text"
@@ -73,8 +81,14 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 required
                 step={1}
             />
-            <DropdownInputMultipleSelect />
-            <SubmitPrimaryInput value="Reservar" />
+            {props.tools?.length && (
+                <DropdownInputMultipleSelect 
+                    name="tools"
+                    placeholder="Herramientas"
+                    options={props.tools.map(t => ({ label: t.name, options: Array.from({ length: t.stock }, (_, i) => ({ value: `${t.id}|${i+1}`, label: `${t.name} x${i+1}` })) }))}
+                />  
+            )}
+            <SubmitPrimaryInput className="mt-2" value="Reservar" />
         </form>
     )
 }
