@@ -34,6 +34,8 @@ export interface LabsSlugProps {
 export default async function LabsSlug(props: LabsSlugProps) {  
     const user = await getPosibleUser();
     const requestedDate = validateDateRangeAdmin(parseStartDay(props.searchParams.date), user?.admin);
+    if (props.searchParams.date !== requestedDate.toLocaleDateString('es')) redirect(`/labs/${props.params.slug}?date=${requestedDate.toLocaleDateString('es')}`);
+    
     const { firstDay, lastDay } = getLimitsDatesOfWeek(requestedDate);
     const lab = await getLaboratoryInfo({ firstDay, lastDay, id: props.params.slug });
     if (!lab) redirect('/labs');
@@ -43,8 +45,11 @@ export default async function LabsSlug(props: LabsSlugProps) {
     const daysToRender = lab.available_days_array;
     const schedule = getSchedule(lab)
 
-    // in formar yyyy/mm/dd    
-    const weekAhead = new Date(lastDay.getTime() + 7*24*60*60*1000) // 7 days in milliseconds
+    // in formar yyyy/mm/dd
+    const weekAgo = new Date(requestedDate.getTime() - 7*24*60*60*1000);
+    const validateWeekAgo = validateDateRangeAdmin(weekAgo, user?.admin);
+    const weekAhead = new Date(requestedDate.getTime() + 7*24*60*60*1000);  
+    const validateWeekAhead = validateDateRangeAdmin(weekAhead, user?.admin);
 
     return (
         <>
@@ -54,27 +59,25 @@ export default async function LabsSlug(props: LabsSlugProps) {
                 isAdmin={user?.admin} 
             />
             <main className="flex-1 flex justify-center items-center">
-                <div className='flex flex-col'>
+                <div className='flex flex-col gap-2'>
                     {/*  */}
                     <div className='flex justify-between'>
                         <ButtonSecondaryLink 
-                            href={`/labs/${lab.id}?date=${
-                                new Date(requestedDate.getTime() - 7*24*60*60*1000)
-                                    .toLocaleDateString('es')
-                                }`}
+                            disabled={weekAgo.getTime() !== validateWeekAgo.getTime()}
+                            href={`/labs/${lab.id}?date=${weekAgo.toLocaleDateString('es')}`}
                         >
                             Semana Anterior
                         </ButtonSecondaryLink>
                         <ButtonPrimaryLink 
-                            href={`/labs/${lab.id}/new`}
+                            href={`/labs/${lab.id}?date=${
+                                new Date().toLocaleDateString('es')
+                                }`}
                         >
-                            New Procedure
+                            Hoy
                         </ButtonPrimaryLink>
                         <ButtonSecondaryLink 
-                            href={`/labs/${lab.id}?date=${
-                                new Date(requestedDate.getTime() + 7*24*60*60*1000)
-                                    .toLocaleDateString('es')
-                                }`}
+                            disabled={weekAhead.getTime() !== validateWeekAhead.getTime()}
+                            href={`/labs/${lab.id}?date=${weekAhead.toLocaleDateString('es')}`}
                         >
                             Semana Siguente
                         </ButtonSecondaryLink>
@@ -82,14 +85,20 @@ export default async function LabsSlug(props: LabsSlugProps) {
                     <div 
                     className='grid grid-cols-6'
                     style={{
-                        gridTemplateRows: `repeat(${hours}, minmax(0, 1fr))`,
+                        gridTemplateRows: `repeat(${hours-1}, minmax(0, 1fr))`,
                     }} 
                 >
-                    <div className='border border-black'></div>
-                    {Object.keys(schedule).filter(d => daysToRender.includes(d as daysOfWeek)).map(day => (
-                        <div className='px-2 py-1 border border-black text-center' key={day}>{day}</div>
+                    <div className='border border-black text-center px-2 py-1 capitalize'>
+                        {requestedDate.toLocaleDateString('es-MX', {
+                            month: 'long',
+                        })}
+                    </div>
+                    {Object.keys(schedule).map((d, i) => ({name: d, i })).filter(d => daysToRender.includes(d.name as daysOfWeek)).map(day => (
+                        <div className='px-2 py-1 border border-black text-center' key={day.name}>{day.name} / {
+                            new Date(new Date(firstDay).setDate(firstDay.getDate()+ day.i)).getDate()
+                        }</div>
                     ))}
-                    <div className='px-2 py-1 border border-black text-right'>{`${startHour}:00`}</div>
+                    <div className='px-2 py-1 border border-black text-center'>{`${startHour}:00`}</div>
                     <ProcedureGrid 
                         labId={lab.id}
                         hours={hours} 
@@ -99,7 +108,7 @@ export default async function LabsSlug(props: LabsSlugProps) {
                         days={daysToRender} 
                         />
                     {Array.from({ length: hours - 1 }).map((_, index) => (
-                        <div className='px-2 py-1 border border-black text-right' key={index}>
+                        <div className='px-2 py-1 border border-black text-center' key={index}>
                             {`${startHour + index + 1}:00`}
                         </div>
                     ))}
@@ -217,9 +226,9 @@ function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
  */
 function parseStartDay(toParse: string = ''): Date {
     // check if the string is in the format dd/mm/yyyy
-    if (!(/^\d{4}\/\d{2}\/\d{2}$/).test(toParse)) return new Date();
+    if (!(/^\d{1,2}\/\d{1,2}\/\d{1,4}$/).test(toParse)) return new Date();
     // parse the string to a Date object
-    const [year, month, day] = toParse.split('/').map(Number);
+    const [day, month, year] = toParse.split('/').map(Number);
     return new Date(year, month - 1, day);
 }
 
@@ -229,15 +238,15 @@ function parseStartDay(toParse: string = ''): Date {
  * if is not admin the range is 1 week from now to the future and 1 week to the past 
  * @returns the date if is in the range or the nearest date in the range
  */
-function validateDateRangeAdmin(date: Date, isAdmin = false): Date {
+function validateDateRangeAdmin(date: Date, isAdmin = false): Date {    
     if (isAdmin) return date;
     const actualDate = new Date();
     // check if the date is in the past
     if (date.getTime() <= actualDate.getTime()) {
         const sunday = new Date(
-            date.getFullYear(), // year
-            date.getMonth(), // month
-            date.getDate() - date.getDay() // day
+            actualDate.getFullYear(), // year
+            actualDate.getMonth(), // month
+            actualDate.getDate() - actualDate.getDay() - 7 // day
         )
         if (sunday.getTime() >= date.getTime()) return sunday
         return date
@@ -245,7 +254,7 @@ function validateDateRangeAdmin(date: Date, isAdmin = false): Date {
     const saturday = new Date(
         actualDate.getFullYear(), // year
         actualDate.getMonth(), // month
-        actualDate.getDate() + (6 - actualDate.getDay()) // day
+        actualDate.getDate() + (6 - actualDate.getDay()) + 7// day
     )
     if (saturday.getTime() <= date.getTime()) return saturday
     return date

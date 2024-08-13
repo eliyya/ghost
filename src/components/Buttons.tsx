@@ -5,6 +5,7 @@ export interface ButtonLinkProps {
     href: string,
     className?: string,
     children?: ReactNode
+    disabled?: boolean
 }
 export function ButtonPrimaryLink(props: ButtonLinkProps) {
     return (
@@ -17,6 +18,13 @@ export function ButtonPrimaryLink(props: ButtonLinkProps) {
 }
 
 export function ButtonSecondaryLink(props: ButtonLinkProps) {
+    if (props.disabled) return (
+        <span
+            {...props}
+            className={`p-2 rounded-md cursor-pointer border text-gray-400 border-black flex align-middle justify-center ${props.className??''}`}>
+            {props.children}
+        </span>
+    );
     return (
         <Link
             {...props}

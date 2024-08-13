@@ -78,7 +78,11 @@ export default async function UserPage() {
           <SubmitPrimaryInput value="Actualizar" disabled className="" />
         </form>
         <form
-          action="/logout"
+          action={async () => {
+            'use server'
+            cookies().delete(COOKIE.SESSION);
+            redirect("/");
+          }}
           method="get"
           className="w-72 p-4 border border-black rounded-lg flex flex-col"
         >
