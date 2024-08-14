@@ -4,7 +4,16 @@ import { Laboratory, Prisma, Procedure, Tool, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 export interface NewProcedureAction {
-    (props: Omit<Prisma.ProcedureGetPayload<{include:{tools:{select:{id: true}}}}>, 'id' | 'created_at'>): Promise<{ status: 'error' | 'succes', message: string }>;
+    (props: Omit<Prisma.ProcedureGetPayload<{
+        include:{
+            UsedTool: {
+                select: {
+                    quantity: true;
+                    tool_id: true;
+                }
+            }
+        }
+    }>, 'id' | 'created_at'>): Promise<{ status: 'error' | 'succes', message: string }>;
 }
 interface NewProcedureFormProps {
     date: Date;
@@ -37,7 +46,10 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 lab_id: props.lab_id,
                 submiter_id: props.user_id,
                 students: Number(e.get('students') as string),
-                tools: e.getAll('tools').filter(Boolean).map(t => ({ id: (t as string).split('|')[0] }))
+                UsedTool:  e.getAll('tools').filter(Boolean).map(t => ({ 
+                    tool_id: (t as string).split('|')[0], 
+                    quantity: Number((t as string).split('|')[1]) 
+                }))
             })
             router.push('/labs');   
             

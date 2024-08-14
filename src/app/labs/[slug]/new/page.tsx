@@ -40,10 +40,10 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
                 students: data.students,
                 subject: data.subject,
                 submiter_id: data.submiter_id,
-                tools: data.tools.length ? {
-                    connect: [
-                        ...data.tools
-                    ]
+                UsedTool: data.UsedTool.length ? {
+                    createMany: {
+                        data: data.UsedTool
+                    }
                 } : undefined,
                 id: snowflake.generate().toString(),
             }

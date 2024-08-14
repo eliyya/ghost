@@ -1,6 +1,7 @@
 import { AvailableDaysBitfield } from "@/lib/BitField";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
+import { ProcedureDetailsButton } from "./ProcedureDetailsButton";
 
 export type daysOfWeek = keyof AvailableDaysBitfield['Flags'];
 export type Schedule = Record<
@@ -9,6 +10,12 @@ export type Schedule = Record<
         string,
         Prisma.ProcedureGetPayload<{
             include: {
+                UsedTool: {
+                    select: {
+                        quantity: true;
+                        tool: true;
+                    }
+                }
                 submiter: {
                     select: {
                         name: true,
@@ -44,19 +51,14 @@ export function ProcedureGrid({ schedule, startHour, hours, firstDay, days, labI
                             {Object.values(day).map((_, i) => {
                                 const act = day[startHour + i]
                                 if (act) return (
-                                    <div
-                                        key={i}
-                                        className='px-2 py-1 row-span-3 border border-black text-center'
-                                        style={{
-                                            gridRow: `span ${act.end_date.getHours() - act.start_date.getHours()} / span ${act.end_date.getHours() - act.start_date.getHours()}`,
-                                        }}
-                                    >
-                                        {act.practice_name}
-                                    </div>
+                                    <ProcedureDetailsButton
+                                        key={act.id}
+                                        procedure={act}
+                                    />
                                 )
                                 else return (
                                     <Link
-                                        key={i}
+                                        key={indexDay+'-'+i}
                                         className='px-2 py-1 border border-black text-center'
                                         href={`/labs/${labId}/new?date=${new Date(
                                             firstDay.getFullYear(),

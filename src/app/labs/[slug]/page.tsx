@@ -10,6 +10,12 @@ type LabWitSchedulesWithSubmiter = Prisma.LaboratoryGetPayload<{
     include: {
         procedures: {
             include: {
+                UsedTool: {
+                    select: {
+                        quantity: true;
+                        tool: true;
+                    }
+                };
                 submiter: {
                     select: {
                         name: true,
@@ -36,12 +42,9 @@ export default async function LabsSlug(props: LabsSlugProps) {
     const requestedDate = validateDateRangeAdmin(parseStartDay(props.searchParams.date), user?.admin);
     if (props.searchParams.date !== requestedDate.toLocaleDateString('es')) redirect(`/labs/${props.params.slug}?date=${requestedDate.toLocaleDateString('es')}`);
     
-    const { firstDay, lastDay } = getLimitsDatesOfWeek(requestedDate);
-    console.log(firstDay.toLocaleDateString('es'), requestedDate.toLocaleDateString('es'), lastDay.toLocaleDateString('es'));
-    
+    const { firstDay, lastDay } = getLimitsDatesOfWeek(requestedDate);    
     const lab = await getLaboratoryInfo({ firstDay, lastDay, id: props.params.slug });
     if (!lab) redirect('/labs');
-    console.log(lab);
     
     const hours = lab.close_date.getHours() - lab.open_date.getHours();
     const startHour = lab.open_date.getUTCHours();
@@ -302,6 +305,12 @@ function getLaboratoryInfo(query: { firstDay: Date, lastDay: Date, id: string })
                     }
                 }, 
                 include: {
+                    UsedTool: {
+                        select: {
+                            quantity: true,
+                            tool: true,
+                        }
+                    },
                     submiter: {
                         select: {
                             name: true,
