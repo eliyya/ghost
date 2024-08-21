@@ -146,8 +146,8 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
             {/* Selección de herramientas muchos detalles planificando estilos*/}
             {props.tools?.length && (
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                        <select value={selectedTool} onChange={(e) => setSelectedTool(e.target.value)}>
+                    <div className="flex  items-center gap-2">
+                        <select className="min-w-40" value={selectedTool} onChange={(e) => setSelectedTool(e.target.value)}>
                             <option value="" disabled>Selecciona una herramienta</option>
                             {props.tools.map(tool => (
                                 <option key={tool.id} value={`${tool.id}|1`}>
@@ -158,14 +158,14 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                         <button type="button" onClick={handleAddTool} className="px-2 py-1 bg-blue-500 text-white rounded">Añadir</button>
                     </div>
 
-                    {/* Lista de herramientas seleccionadas ay detalles solociones en proceso */}
+                    {/* Lista de herramientas seleccionadas ay detalles soluciones en proceso */}
                     {formData.tools.length > 0 && (
                         <div className="mt-4">
                             <h4 className="font-semibold mb-2">Herramientas seleccionadas:</h4>
                             <ul>
                                 {formData.tools.map((tool, index) => (
                                     <li key={index} className="flex justify-between items-center mb-1">
-                                        {props.tools.find(t => t.id === tool.split('|')[0])?.name} x{tool.split('|')[1]}
+                                        {props.tools.find(t => t.id === tool.split('|')[0])?.name} x {tool.split('|')[1]}
                                         <button type="button" onClick={() => handleRemoveTool(tool)} className="ml-4 text-red-500">Eliminar</button>
                                     </li>
                                 ))}
