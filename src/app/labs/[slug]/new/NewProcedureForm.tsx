@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 import { DropdownInputMultipleSelect, Input, SubmitPrimaryInput } from "@/components/Input";
 import { Laboratory, Prisma, Procedure, Tool, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -30,8 +30,16 @@ interface NewProcedureFormProps {
 }
 
 export function NewProcedureForm(props: NewProcedureFormProps) {
+    const tools = props.tools ? props.tools.map(t => ({ label: t.name, options: Array.from({ length: t.stock }, (_, i) => ({ value: `${t.id}|${i + 1}`, label: `${t.name} x${i + 1}` })) })) : []
     const router = useRouter();
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{
+        subject: string
+        practice_name: string
+        date: string
+        out: number
+        students: number
+        tools: typeof tools
+    }>({
         subject: "",
         practice_name: "",
         date: "",
@@ -47,7 +55,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
 
     const startDate = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate(), hour);
 
-    const handleInputChange = (e) => {
+    const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -71,31 +79,29 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
         });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await props.action({
-            subject: formData.subject,
-            practice_name: formData.practice_name,
-            start_date: new Date(formData.date),
-            end_date: new Date(new Date(formData.date).getTime() + (formData.out * 1000 * 60 * 60)),
-            lab_id: props.lab_id,
-            submiter_id: props.user_id,
-            students: formData.students,
-            UsedTool: formData.tools.map(tool => ({
-                tool_id: tool.split('|')[0],
-                quantity: Number(tool.split('|')[1])
-            }))
-        });
-
-        if (response.status === 'success') {
-            router.push('/labs');
-        } else {
-            alert('Error al enviar el formulario');
-        }
-    };
 
     return (
-        <form onSubmit={handleSubmit} className="w-72 p-4 border border-black rounded-lg flex flex-col">
+        <form action={async (e) => {
+            const response = await props.action({
+                subject: formData.subject,
+                practice_name: formData.practice_name,
+                start_date: new Date(formData.date),
+                end_date: new Date(new Date(formData.date).getTime() + (formData.out * 1000 * 60 * 60)),
+                lab_id: props.lab_id,
+                submiter_id: props.user_id,
+                students: formData.students,
+                UsedTool: formData.tools.map(tool => ({
+                    tool_id: tool.split('|')[0],
+                    quantity: Number(tool.split('|')[1])
+                }))
+            });
+    
+            if (response.status === 'success') {
+                router.push('/labs');
+            } else {
+                alert('Error al enviar el formulario');
+            }
+        }} className="w-72 p-4 border border-black rounded-lg flex flex-col">
             <Input
                 type="text"
                 name="subject"
