@@ -68,7 +68,6 @@ export function Form({ submit }: { submit: FormSubmitFunction }) {
                 name="close_date"
                 value={formData.close_date}
                 onChange={handleChange}
-                min={formData.open_date || "00:00"}
                 required
             />
             <SubmitPrimaryInput value="Registrar" />

@@ -8,44 +8,88 @@ export interface InputProps
   error?: string
   prefix?: string
 }
+
 export function Input(props: InputProps) {
+  const id = props.id || `input-${Math.random().toString(36).substring(2)}`; // Generar un id si no existe
   const bg = props.className?.match(/(bg-[^\ ])/g)?.[0] ?? 'bg-white'
+
   return (
-    <div
-      className={`my-2 flex flex-col z-10 ${bg} ${props.disabled ? 'border-opacity-50' : ''}
-      ${props.className ?? ''}
-      ${props.type === 'hidden' ? 'hidden' : ''}`} >
+    <div className={`my-2 flex flex-col z-10 ${bg} ${props.disabled ? 'border-opacity-50' : ''} ${props.className ?? ''}`}>
       <input
+        id={id}
         className={`p-2 w-full bg-transparent border border-black rounded-md peer z-10 
           ${props.disabled ? 'text-gray-700' : ''}
           ${props.error ? 'border-red-600' : ''}
           ${props.prefix ? 'pl-6' : ''}`}
         {...props}
         placeholder=" "
+        aria-invalid={!!props.error}
+        aria-describedby={props.error ? `${id}-error` : undefined}
       />
-      <label className={`
-          absolute transition-all ${bg} leading-3  ${props.disabled ? 'text-gray-700' : ''}
-          p-0 ml-1 -translate-y-2 z-10 text-sm rounded-sm
-          peer-placeholder-shown:translate-y-0 peer-placeholder-shown:p-2 peer-placeholder-shown:z-0 peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:rounded-md
-          ${props.error ? 'text-red-600' : ''}`} >
+      <label
+        htmlFor={id}
+        className={`absolute transition-all ${bg} leading-3 
+          ${props.disabled ? 'text-gray-700' : ''} p-0 ml-1 -translate-y-2 z-10 text-sm rounded-sm
+          peer-placeholder-shown:translate-y-0 peer-placeholder-shown:p-2 peer-placeholder-shown:z-0
+          peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:rounded-md
+          ${props.error ? 'text-red-600' : ''}`}
+      >
         {props.placeholder ?? props.name}
       </label>
       {props.prefix && (
-        <span 
-          className={`absolute py-2 pl-2 text-gray-700
-          peer-placeholder-shown:hidden`} 
-        >
+        <span className="absolute py-2 pl-2 text-gray-700 peer-placeholder-shown:hidden">
           {props.prefix}
         </span>
       )}
-      <small 
-        className={`relative transition-all ease-in-out px-2 text-red-600 text-[0.6rem]
-        ${props.error ? '' : 'hidden'}`} >
-        {props.error ?? 'error'}
-      </small>
+      {props.error && (
+        <small id={`${id}-error`} className="relative transition-all ease-in-out px-2 text-red-600 text-[0.6rem]">
+          {props.error}
+        </small>
+      )}
     </div>
   );
 }
+
+
+
+// export function Input(props: InputProps) {
+//   const bg = props.className?.match(/(bg-[^\ ])/g)?.[0] ?? 'bg-white'
+//   return (
+//     <div
+//       className={`my-2 flex flex-col z-10 ${bg} ${props.disabled ? 'border-opacity-50' : ''}
+//       ${props.className ?? ''}
+//       ${props.type === 'hidden' ? 'hidden' : ''}`} >
+//       <input
+//         className={`p-2 w-full bg-transparent border border-black rounded-md peer z-10 
+//           ${props.disabled ? 'text-gray-700' : ''}
+//           ${props.error ? 'border-red-600' : ''}
+//           ${props.prefix ? 'pl-6' : ''}`}
+//         {...props}
+//         placeholder=" "
+//       />
+//       <label className={`
+//           absolute transition-all ${bg} leading-3  ${props.disabled ? 'text-gray-700' : ''}
+//           p-0 ml-1 -translate-y-2 z-10 text-sm rounded-sm
+//           peer-placeholder-shown:translate-y-0 peer-placeholder-shown:p-2 peer-placeholder-shown:z-0 peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:rounded-md
+//           ${props.error ? 'text-red-600' : ''}`} >
+//         {props.placeholder ?? props.name}
+//       </label>
+//       {props.prefix && (
+//         <span
+//           className={`absolute py-2 pl-2 text-gray-700
+//           peer-placeholder-shown:hidden`}
+//         >
+//           {props.prefix}
+//         </span>
+//       )}
+//       <small
+//         className={`relative transition-all ease-in-out px-2 text-red-600 text-[0.6rem]
+//         ${props.error ? '' : 'hidden'}`} >
+//         {props.error ?? 'error'}
+//       </small>
+//     </div>
+//   );
+// }
 
 export function SubmitPrimaryInput(props: InputProps) {
   const { pending } = useFormStatus()
@@ -77,55 +121,105 @@ export function SubmitSecondaryInput(props: InputProps) {
   );
 }
 
-interface DropdownInputMultipleSelectProps extends InputHTMLAttributes<HTMLInputElement> {
-  options: { label: string, options: { value: string, label: string, isDisabled?: boolean }[] }[]
-}
 export function DropdownInputMultipleSelect(props: DropdownInputMultipleSelectProps) {
-  const [options, setOptions] = useState(props.options)
+  const [options, setOptions] = useState(props.options);
+
+  const handleChange = (selectedOptions: any) => {
+    const selectedValues = selectedOptions.map((option: any) => option.value.replace(/\|\d*/g, ''));
+    setOptions(options.map(group => ({
+      ...group,
+      options: group.options.map(option => ({
+        ...option,
+        isDisabled: selectedValues.some(value => value === option.value.replace(/\|\d*/g, ''))
+      }))
+    })));
+  };
 
   return (
-      <Select 
-        className="border-black" 
-        isMulti 
-        options={options} 
-        closeMenuOnSelect={false}
-        name={props.name} 
-        onChange={e => {
-            setOptions([...options.map(g => ({
-              ...g, 
-              options: g.options.map(o => ({
-                  ...o, 
-                  // @ts-ignore
-                  isDisabled: e.map(o => o.value.replace(/\|\d*/g,'')).some(eo => eo === o.value.replace(/\|\d*/g,''))
-                })) 
-            }))])
-        }}
-        placeholder={props.placeholder ?? props.name}
-        styles={{
-          control: (styles) => ({
-            ...styles,
-            borderColor: 'black',
-            borderRadius: '0.375rem',
-          }),
-          groupHeading: (styles, {data}) => {
-            return ({
-              ...styles,
-              padding: '0.25rem',
-              alignItems: 'center',
-              display: 'flex',
-              '::before': {
-                content: '""',
-                display: 'block',
-                height: '25px',
-                width: '25px',
-                marginRight: '0.5rem',
-                // @ts-ignore
-                backgroundImage: `url(/images/tools/${data.options[0].value.replace(/\|\d*/g,'')}.png)`,
-                backgroundSize: 'contain',
-              }
-            })
+    <Select
+      className="border-black"
+      isMulti
+      options={options}
+      closeMenuOnSelect={false}
+      name={props.name}
+      onChange={handleChange}
+      placeholder={props.placeholder ?? props.name}
+      styles={{
+        control: (styles) => ({
+          ...styles,
+          borderColor: 'black',
+          borderRadius: '0.375rem',
+        }),
+        groupHeading: (styles, { data }) => ({
+          ...styles,
+          padding: '0.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          '::before': {
+            content: '""',
+            display: 'block',
+            height: '25px',
+            width: '25px',
+            marginRight: '0.5rem',
+            backgroundImage: `url(/images/tools/${data.options[0].value.replace(/\|\d*/g, '')}.png)`,
+            backgroundSize: 'contain',
           },
-        }}
-      />
+        }),
+      }}
+    />
   );
 }
+
+
+// interface DropdownInputMultipleSelectProps extends InputHTMLAttributes<HTMLInputElement> {
+//   options: { label: string, options: { value: string, label: string, isDisabled?: boolean }[] }[]
+// }
+// export function DropdownInputMultipleSelect(props: DropdownInputMultipleSelectProps) {
+//   const [options, setOptions] = useState(props.options)
+
+//   return (
+//     <Select
+//       className="border-black"
+//       isMulti
+//       options={options}
+//       closeMenuOnSelect={false}
+//       name={props.name}
+//       onChange={e => {
+//         setOptions([...options.map(g => ({
+//           ...g,
+//           options: g.options.map(o => ({
+//             ...o,
+//             // @ts-ignore
+//             isDisabled: e.map(o => o.value.replace(/\|\d*/g, '')).some(eo => eo === o.value.replace(/\|\d*/g, ''))
+//           }))
+//         }))])
+//       }}
+//       placeholder={props.placeholder ?? props.name}
+//       styles={{
+//         control: (styles) => ({
+//           ...styles,
+//           borderColor: 'black',
+//           borderRadius: '0.375rem',
+//         }),
+//         groupHeading: (styles, { data }) => {
+//           return ({
+//             ...styles,
+//             padding: '0.25rem',
+//             alignItems: 'center',
+//             display: 'flex',
+//             '::before': {
+//               content: '""',
+//               display: 'block',
+//               height: '25px',
+//               width: '25px',
+//               marginRight: '0.5rem',
+//               // @ts-ignore
+//               backgroundImage: `url(/images/tools/${data.options[0].value.replace(/\|\d*/g, '')}.png)`,
+//               backgroundSize: 'contain',
+//             }
+//           })
+//         },
+//       }}
+//     />
+//   );
+// }
