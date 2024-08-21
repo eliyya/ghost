@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "strict": true,
+    "module": "esnext",
+    "isolatedModules": true,
+    "incremental": true,
+    "target": "ESNext",
+    "moduleResolution": "node",
+  },
+  "include": [
+    "cli/*.mts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
