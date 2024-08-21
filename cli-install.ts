@@ -11,7 +11,7 @@ const program = new Command()
     .name('ghost install')
     .description('Install the Ghost app in your system')
     .parse(process.argv);
-const log = (message) => process.stdout.write(`${message}\n`);
+const log = (message: string) => process.stdout.write(`${message}\n`);
 const clearLastLine = () => {
     process.stdout.moveCursor(0, -1); // up one line
     process.stdout.clearLine(1); // from cursor to end
@@ -53,7 +53,7 @@ log(chalk.cyan('System requirements met'));
 log(`- Checking Node.js version: ${chalk.cyan(`Node.js ${process.versions.node} detected`)}`);
 log(`- Checking git: ${chalk.cyan(`${gitVersion} detected`)}`);
 const dirnameApp = platform === 'Windows' ? 'GhostApp' : '.ghostapp';
-async function getInstalationPath(defaultPathToInstall) {
+async function getInstalationPath(defaultPathToInstall: string) {
     const res = await confirm({
         message: `Installing Ghost app in ${defaultPathToInstall}`,
     });
@@ -66,7 +66,7 @@ async function getInstalationPath(defaultPathToInstall) {
     });
     return await getInstalationPath(join(filePath, dirnameApp));
 }
-const pathToInstall = await getInstalationPath(platform == 'Windows' ? join(process.env.ProgramFiles, dirnameApp) : '~/.ghostapp');
+const pathToInstall = await getInstalationPath(platform == 'Windows' ? join(process.env.ProgramFiles!, dirnameApp) : '~/.ghostapp');
 async function download() {
     try {
         execSync(`git clone https://github.com/eliyya/ghost "${pathToInstall}"`);
@@ -100,7 +100,7 @@ log('Configuring Ghost app...');
 const envText = await readFile(join(pathToInstall, 'example.env'), 'utf-8');
 const env = parse(envText);
 env.NEXT_JWT_SECRET = Array(64).fill(0).map(() => Math.random().toString(36).charAt(2)).join('');
-env.GHOST_APP_DATA = platform === 'Windows' ? join(process.env.APPDATA, 'GhostApp') : join(process.env.HOME, '.config', '.ghostapp');
+env.GHOST_APP_DATA = platform === 'Windows' ? join(process.env.APPDATA!, 'GhostApp') : join(process.env.HOME!, '.config', '.ghostapp');
 env.DB_PATH = join(env.GHOST_APP_DATA, 'database.db');
 await writeFile(join(pathToInstall, '.env'), Object.entries(env).map(([key, value]) => `${key}="${value}"`).join('\n'));
 clearLastLine();
