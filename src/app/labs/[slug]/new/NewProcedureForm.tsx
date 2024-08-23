@@ -156,7 +156,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     <div className="flex  items-center gap-2">
                         <select className="min-w-40" value={selectedTool} onChange={(e) => setSelectedTool(e.target.value)}>
                             <option value="" disabled>Selecciona una herramienta</option>
-                            {tools.flatMap(tool => tool.options).map(tool => (
+                            {tools.flatMap(tool => tool.options).filter(t => !formData.tools.map(t => t.split('|')[0]).includes(t.value.split('|')[0])).map(tool => (
                                 <option key={tool.value} value={tool.value}>
                                 {tool.label}
                             </option>
