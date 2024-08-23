@@ -156,10 +156,10 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     <div className="flex  items-center gap-2">
                         <select className="min-w-40" value={selectedTool} onChange={(e) => setSelectedTool(e.target.value)}>
                             <option value="" disabled>Selecciona una herramienta</option>
-                            {tools.map(tool => (
-                                <option key={tool.id} value={`${tool.id}|1`}>
-                                    {tool.name}
-                                </option>
+                            {tools.flatMap(tool => tool.options).map(tool => (
+                                <option key={tool.value} value={tool.value}>
+                                {tool.label}
+                            </option>
                             ))}
                         </select>
                         <button type="button" onClick={handleAddTool} className="px-2 py-1 bg-blue-500 text-white rounded">Añadir</button>
