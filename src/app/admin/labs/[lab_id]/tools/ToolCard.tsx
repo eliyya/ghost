@@ -1,16 +1,11 @@
 import Image from "next/image";
 import { Tool } from "@prisma/client";
-import def from '@/images/default_tool.png';
 import { ButtonPrimaryLink, ButtonSecondaryLink } from "@/components/Buttons";
 
 export async function ToolCard(props: {tool: Tool}) {
-    const image = await import(`./../../../../../../storage/tools/${props.tool.id}.png`)
-        .then(d => d.default)
-        .catch(() => def);    
-    
     return (
         <div className="rounded-sm shadow-md min-w-32 flex flex-col overflow-hidden hover:-translate-y-0.5 hover:shadow-lg transition-all">
-            <Image src={image} alt={props.tool.name} width={256} height={256} />
+            <Image src={`/images/tools/${props.tool.id}.png`} alt={props.tool.name} width={256} height={256} />
             <div className="p-2 max-w-32 flex-1">
                 <p>{props.tool.name} x{props.tool.stock}</p>
             </div>

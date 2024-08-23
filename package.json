@@ -1,21 +1,30 @@
 {
   "name": "ghost",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
     "dev": "next dev --turbo",
     "build": "next build",
+    "build:cli": "tsc -p tsconfig.cli.json",
     "start": "next start",
     "lint": "next lint"
   },
+  "bin": {
+    "ghost": "./cli/cli.mjs"
+  },
   "dependencies": {
+    "@eliyya/type-routes": "github:eliyya/type-routes",
+    "@inquirer/prompts": "^5.3.8",
     "@prisma/client": "^5.18.0",
     "@sapphire/snowflake": "^3.5.3",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
     "canvas": "^2.11.2",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "inquirer-fs-selector": "file:../inquirer-fs-selector",
     "jose": "^5.6.3",
     "next": "15.0.0-rc.0",
     "react": "19.0.0-rc-f994737d14-20240522",
