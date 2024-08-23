@@ -31,15 +31,16 @@ interface NewProcedureFormProps {
 
 export function NewProcedureForm(props: NewProcedureFormProps) {
     const tools = props.tools ? props.tools.map(t => ({ label: t.name, options: Array.from({ length: t.stock }, (_, i) => ({ value: `${t.id}|${i + 1}`, label: `${t.name} x${i + 1}` })) })) : []
+    console.log(JSON.stringify(tools,null,4))
     const router = useRouter();
-    const [formData, setFormData] = useState<{
+    const [formData, setFormData] = useState < {
         subject: string
         practice_name: string
         date: string
         out: number
         students: number
-        tools: typeof tools
-    }>({
+        tools: string[]
+    } > ({
         subject: "",
         practice_name: "",
         date: "",
@@ -72,10 +73,10 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
         }
     };
 
-    const handleRemoveTool = (tool) => {
+    const handleRemoveTool = (tools: string) => {
         setFormData({
             ...formData,
-            tools: formData.tools.filter(t => t !== tool) // Remueve la lista
+            tools: formData.tools.filter(t => t !== tools) // Remueve la lista
         });
     };
 
@@ -89,14 +90,14 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 end_date: new Date(new Date(formData.date).getTime() + (formData.out * 1000 * 60 * 60)),
                 lab_id: props.lab_id,
                 submiter_id: props.user_id,
-                students: formData.students,
+                students: Number(formData.students) ,
                 UsedTool: formData.tools.map(tool => ({
                     tool_id: tool.split('|')[0],
                     quantity: Number(tool.split('|')[1])
                 }))
             });
-    
-            if (response.status === 'success') {
+
+            if (response.status === 'succes') {
                 router.push('/labs');
             } else {
                 alert('Error al enviar el formulario');
@@ -155,7 +156,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     <div className="flex  items-center gap-2">
                         <select className="min-w-40" value={selectedTool} onChange={(e) => setSelectedTool(e.target.value)}>
                             <option value="" disabled>Selecciona una herramienta</option>
-                            {props.tools.map(tool => (
+                            {tools.map(tool => (
                                 <option key={tool.id} value={`${tool.id}|1`}>
                                     {tool.name}
                                 </option>
@@ -171,7 +172,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                             <ul>
                                 {formData.tools.map((tool, index) => (
                                     <li key={index} className="flex justify-between items-center mb-1">
-                                        {props.tools.find(t => t.id === tool.split('|')[0])?.name} x {tool.split('|')[1]}
+                                        {(props.tools || []).find(t => t.id === tool.split('|')[0])?.name} x {tool.split('|')[1]}
                                         <button type="button" onClick={() => handleRemoveTool(tool)} className="ml-4 text-red-500">Eliminar</button>
                                     </li>
                                 ))}
