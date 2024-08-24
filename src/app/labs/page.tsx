@@ -9,7 +9,11 @@ export default async function LabsPage() {
         select: { name: true },
     })
     if (labs.length === 1)
-        redirect(`/labs/${labs[0].name.replace(/\s/g, '-').toLowerCase()}`)
+        redirect(
+            `/labs/${labs[0].name
+                .replace(/\s/g, '-')
+                .toLowerCase()}/${new Date().toLocaleDateString('es')}`,
+        )
     const user = await getPosibleUser()
 
     return (
