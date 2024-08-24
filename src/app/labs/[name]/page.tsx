@@ -346,7 +346,6 @@ async function getLaboratoryInfo(query: {
         l => l.name.trim().replace(/-+/g, ' ').toLowerCase() === formatedName,
     )
     if (!lab) return null
-    console.log(name, formatedName, lab?.name, lab.id)
     return await prisma.laboratory.findFirst({
         where: {
             id: lab.id,
