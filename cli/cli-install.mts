@@ -3,7 +3,7 @@ import { Command } from 'commander'
 import { execSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { confirm } from '@inquirer/prompts'
-import fileSelector from 'inquirer-fs-selector'
+import fileSelector from '@eliyya/inquirer-fs-selector'
 import chalk from 'chalk'
 import { parse } from 'dotenv'
 import { readFile, rm, writeFile } from 'node:fs/promises'
@@ -22,7 +22,9 @@ log('Installing Ghost app...')
 log('Checking platform...')
 if (!['win32', 'linux'].includes(process.platform)) {
     log(
-        `Sorry, ${chalk.red('Ghost app is only supported on Windows and Linux at the moment')}`,
+        `Sorry, ${chalk.red(
+            'Ghost app is only supported on Windows and Linux at the moment',
+        )}`,
     )
     process.exit(1)
 }
@@ -38,7 +40,9 @@ if (major < 20 || (major === 20 && minor < 11)) {
 }
 clearLastLine()
 log(
-    `- Checking Node.js version: ${chalk.cyan(`Node.js ${process.versions.node} detected`)}`,
+    `- Checking Node.js version: ${chalk.cyan(
+        `Node.js ${process.versions.node} detected`,
+    )}`,
 )
 log('- Checking git ...')
 let gitVersion
@@ -48,9 +52,9 @@ try {
     log(`Sorry, ${chalk.red('Ghost app requires git to be installed')}`)
     log(
         `Please install git from ${
-            platform === 'Windows' ?
-                'https://git-scm.com/download/win'
-            :   'https://git-scm.com/download/linux'
+            platform === 'Windows'
+                ? 'https://git-scm.com/download/win'
+                : 'https://git-scm.com/download/linux'
         } and try again`,
     )
     process.exit(1)
@@ -62,7 +66,9 @@ clearLastLine()
 clearLastLine()
 log(chalk.cyan('System requirements met'))
 log(
-    `- Checking Node.js version: ${chalk.cyan(`Node.js ${process.versions.node} detected`)}`,
+    `- Checking Node.js version: ${chalk.cyan(
+        `Node.js ${process.versions.node} detected`,
+    )}`,
 )
 log(`- Checking git: ${chalk.cyan(`${gitVersion} detected`)}`)
 const dirnameApp = platform === 'Windows' ? 'GhostApp' : '.ghostapp'
@@ -79,9 +85,9 @@ async function getInstalationPath(defaultPathToInstall: string) {
     return await getInstalationPath(join(filePath, dirnameApp))
 }
 const pathToInstall = await getInstalationPath(
-    platform == 'Windows' ?
-        join(process.env.ProgramFiles as string, dirnameApp)
-    :   '~/.ghostapp',
+    platform == 'Windows'
+        ? join(process.env.ProgramFiles as string, dirnameApp)
+        : '~/.ghostapp',
 )
 async function download() {
     try {
@@ -89,7 +95,9 @@ async function download() {
     } catch (error) {
         if (`${error}`.includes('Permission denied')) {
             log(
-                `${chalk.red('Permission denied')}. Try running the command ${platform === 'Windows' ? 'as administrator' : 'with sudo'}`,
+                `${chalk.red('Permission denied')}. Try running the command ${
+                    platform === 'Windows' ? 'as administrator' : 'with sudo'
+                }`,
             )
         } else if (`${error}`.includes('already exists')) {
             const res = await confirm({
@@ -124,9 +132,9 @@ env.NEXT_JWT_SECRET = Array(64)
     .map(() => Math.random().toString(36).charAt(2))
     .join('')
 env.GHOST_APP_DATA =
-    platform === 'Windows' ?
-        join(process.env.APPDATA!, 'GhostApp')
-    :   join(process.env.HOME!, '.config', '.ghostapp')
+    platform === 'Windows'
+        ? join(process.env.APPDATA!, 'GhostApp')
+        : join(process.env.HOME!, '.config', '.ghostapp')
 env.DB_PATH = join(env.GHOST_APP_DATA, 'database.db')
 await writeFile(
     join(pathToInstall, '.env'),
@@ -146,7 +154,9 @@ try {
 } catch (error) {
     if (`${error}`.includes('Permission denied')) {
         log(
-            `${chalk.red('Permission denied')}. Try running the command ${platform === 'Windows' ? 'as administrator' : 'with sudo'}`,
+            `${chalk.red('Permission denied')}. Try running the command ${
+                platform === 'Windows' ? 'as administrator' : 'with sudo'
+            }`,
         )
     } else if (`${error}`.includes('already exists')) {
         const res = await confirm({

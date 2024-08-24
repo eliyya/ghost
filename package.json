@@ -15,6 +15,7 @@
     "ghost": "./cli/cli.mjs"
   },
   "dependencies": {
+    "@eliyya/inquirer-fs-selector": "^0.3.2",
     "@inquirer/prompts": "^5.3.8",
     "@prisma/client": "^5.18.0",
     "@sapphire/snowflake": "^3.5.3",
@@ -23,7 +24,7 @@
     "canvas": "^2.11.2",
     "chalk": "^5.3.0",
     "dotenv": "^16.4.5",
-    "inquirer-fs-selector": "file:../inquirer-fs-selector",
+    "inquirer-fs-selector": "github:eliyya/inquirer-fs-selector",
     "jose": "^5.6.3",
     "next": "15.0.0-rc.0",
     "react": "19.0.0-rc-f994737d14-20240522",
