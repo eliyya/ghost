@@ -91,16 +91,16 @@ export default async function LabsNamePage(props: LabsNameProps) {
                             disabled={
                                 weekAgo.getTime() !== validateWeekAgo.getTime()
                             }
-                            href={`/labs/${
-                                lab.id
-                            }?date=${weekAgo.toLocaleDateString('es')}`}
+                            href={`/labs/${lab.id}/${weekAgo.toLocaleDateString(
+                                'es',
+                            )}`}
                         >
                             Semana Anterior
                         </ButtonSecondaryLink>
                         <ButtonPrimaryLink
                             href={`/labs/${
                                 lab.id
-                            }?date=${new Date().toLocaleDateString('es')}`}
+                            }/${new Date().toLocaleDateString('es')}`}
                         >
                             Hoy
                         </ButtonPrimaryLink>
@@ -111,7 +111,7 @@ export default async function LabsNamePage(props: LabsNameProps) {
                             }
                             href={`/labs/${
                                 lab.id
-                            }?date=${weekAhead.toLocaleDateString('es')}`}
+                            }/${weekAhead.toLocaleDateString('es')}`}
                         >
                             Semana Siguente
                         </ButtonSecondaryLink>
