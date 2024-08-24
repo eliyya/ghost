@@ -15,7 +15,6 @@
     "ghost": "./cli/cli.mjs"
   },
   "dependencies": {
-    "@eliyya/type-routes": "github:eliyya/type-routes",
     "@inquirer/prompts": "^5.3.8",
     "@prisma/client": "^5.18.0",
     "@sapphire/snowflake": "^3.5.3",
@@ -28,10 +27,10 @@
     "jose": "^5.6.3",
     "next": "15.0.0-rc.0",
     "react": "19.0.0-rc-f994737d14-20240522",
-    "react-dom": "19.0.0-rc-f994737d14-20240522",
-    "react-select": "^5.8.0"
+    "react-dom": "19.0.0-rc-f994737d14-20240522"
   },
   "devDependencies": {
+    "@eliyya/type-routes": "^1.0.0",
     "@types/node": "^20.14.14",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

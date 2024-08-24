@@ -1,13 +1,12 @@
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { redirect } from 'next/navigation'
+import { prisma } from '@/lib/db'
+import { root } from '@eliyya/type-routes'
 
 export default async function Home() {
-  const labs = await prisma.laboratory.findMany({})
-  redirect('/labs/' + ( labs[0]?.id??'null' ))
-
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      esta pagina no debe existir
-    </main>
-  );
+    const [lab] = await prisma.laboratory.findMany({
+        take: 1,
+        select: { name: true },
+    })
+    if (lab) return redirect(root.labs.$name(lab.name))
+    return redirect(root.labs())
 }
