@@ -150,7 +150,10 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 step={1}
             />
 
-            {/* Selección de herramientas muchos detalles planificando estilos*/}
+            {
+                tools.length > 0 &&
+                <>
+                    {/* Selección de herramientas muchos detalles planificando estilos*/}
             {props.tools?.length && (
                 <div className="flex flex-col gap-2">
                     <div className="flex  items-center gap-2">
@@ -181,6 +184,8 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     )}
                 </div>
             )}
+                </>
+            }
 
             <SubmitPrimaryInput className="mt-2" value="Reservar" />
         </form>
