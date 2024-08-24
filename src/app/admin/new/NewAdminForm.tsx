@@ -70,7 +70,8 @@ export function NewAdminForm(props: NewAdminFormProps) {
                 placeholder="Nombre del Administrador"
                 name="name"
                 value={name}
-                onChange={e => setName(parseName(e.target.value))}
+                onChange={e => setName(e.target.value)}
+                onBlur={e => setName(parseName(e.target.value))}
             />
             <Input
                 type="text"
@@ -78,7 +79,8 @@ export function NewAdminForm(props: NewAdminFormProps) {
                 placeholder="Usuario Clave"
                 prefix="@"
                 value={username}
-                onChange={e =>
+                onChange={e => setUsername(e.target.value)}
+                onBlur={e =>
                     setUsername(
                         e.target.value.toLowerCase().replace(/[@ \!\\\/]/g, ''),
                     )

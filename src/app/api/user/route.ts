@@ -1,10 +1,10 @@
-import { COOKIE, JWT_SECRET } from '@/lib/constants'
+import { COOKIES, JWT_SECRET } from '@/lib/constants'
 import { prisma } from '@/lib/db'
 import { jwtVerify } from 'jose'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
-    const authorization = request.cookies.get(COOKIE.SESSION)?.value
+    const authorization = request.cookies.get(COOKIES.SESSION)?.value
     if (!authorization)
         return new NextResponse(
             JSON.stringify({ status: 401, message: 'Unauthorized' }),

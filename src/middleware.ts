@@ -1,17 +1,17 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server'
-import { COOKIE, JWT_SECRET } from './lib/constants'
+import { COOKIES, HEADERS, JWT_SECRET } from './lib/constants'
 import { jwtVerify } from 'jose'
 import { root } from '@eliyya/type-routes'
 
 function redirect(request: NextRequest, url: string) {
     return injectPathname(
         request,
-        NextResponse.redirect(new URL(url, location.origin)),
+        NextResponse.redirect(new URL(url, request.nextUrl)),
     )
 }
 
 function injectPathname(request: NextRequest, response: NextResponse) {
-    response.headers.set('pathname', request.nextUrl.pathname)
+    response.headers.set(HEADERS.PATHNAME, request.nextUrl.pathname)
     return response
 }
 
@@ -38,25 +38,25 @@ async function haandlerAdminRoute(request: NextRequest) {
             const response = NextResponse.redirect(
                 new URL(root.login(), request.nextUrl),
             )
-            response.headers.set('pathname', request.nextUrl.pathname)
+            response.headers.set(HEADERS.PATHNAME, request.nextUrl.pathname)
             return response
         } else return next()
     }
-    const req = await fetch(new URL(root.api.user()))
+    const req = await fetch(new URL(root.api.user(), request.nextUrl))
     if (req.status !== 200) {
         const response = redirect(request, root.login())
-        response.cookies.delete(COOKIE.SESSION)
+        response.cookies.delete(COOKIES.SESSION)
         return response
     }
     const user = await req.json()
     if (user.admin) return next()
     const response = redirect(request, root.login())
-    response.cookies.delete(COOKIE.SESSION)
+    response.cookies.delete(COOKIES.SESSION)
     return response
 }
 
 async function handlerUserRoute(request: NextRequest) {
-    const authorization = request.cookies.get(COOKIE.SESSION)?.value
+    const authorization = request.cookies.get(COOKIES.SESSION)?.value
     const next = () => injectPathname(request, NextResponse.next())
     if (!authorization) {
         const response = redirect(request, root.login())
@@ -79,7 +79,7 @@ async function handlerUserRoute(request: NextRequest) {
             )
                 console.log(error)
             const response = redirect(request, root.login())
-            response.cookies.delete(COOKIE.SESSION)
+            response.cookies.delete(COOKIES.SESSION)
             return response
         })
 }

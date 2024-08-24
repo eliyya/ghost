@@ -1,10 +1,10 @@
-import { COOKIE, JWT_SECRET } from '@/lib/constants'
+import { COOKIES, JWT_SECRET } from '@/lib/constants'
 import { jwtVerify, SignJWT } from 'jose'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function verifyAdmin() {
-    const cookie = cookies().get(COOKIE.SESSION)?.value
+    const cookie = cookies().get(COOKIES.SESSION)?.value
     const alcualURL = headers().get('pathname') ?? '/admin'
 
     if (!cookie) redirect('/login?redirect=' + alcualURL)
@@ -30,7 +30,7 @@ export async function verifyAdmin() {
                 error.message.includes('signature verification failed') ||
                 error.message.includes('timestamp check failed'))
         ) {
-            cookies().delete(COOKIE.SESSION)
+            cookies().delete(COOKIES.SESSION)
             redirect('/labs')
         } else throw error
     }
@@ -39,7 +39,7 @@ export async function verifyAdmin() {
 }
 
 export async function getVerifiedUser() {
-    const cookie = cookies().get(COOKIE.SESSION)?.value
+    const cookie = cookies().get(COOKIES.SESSION)?.value
     const alcualURL = headers().get('pathname') ?? '/'
 
     if (!cookie) redirect('/login?redirect=' + alcualURL)
@@ -64,7 +64,7 @@ export async function getVerifiedUser() {
             if (r) {
                 cookies().set({
                     expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-                    name: COOKIE.SESSION,
+                    name: COOKIES.SESSION,
                     value: r.token,
                 })
                 return payload.payload
@@ -78,14 +78,14 @@ export async function getVerifiedUser() {
                 error.message.includes('signature verification failed') ||
                 error.message.includes('timestamp check failed'))
         ) {
-            cookies().delete(COOKIE.SESSION)
+            cookies().delete(COOKIES.SESSION)
         }
         redirect('/login?redirect=' + alcualURL)
     }
 }
 
 export async function getPosibleUser(cookie?: string) {
-    cookie ??= cookies().get(COOKIE.SESSION)?.value
+    cookie ??= cookies().get(COOKIES.SESSION)?.value
 
     if (!cookie) return null
     let user: {
@@ -109,7 +109,7 @@ export async function getPosibleUser(cookie?: string) {
             if (r) {
                 cookies().set({
                     expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-                    name: COOKIE.SESSION,
+                    name: COOKIES.SESSION,
                     value: r.token,
                 })
                 return payload.payload
@@ -123,7 +123,7 @@ export async function getPosibleUser(cookie?: string) {
                 error.message.includes('signature verification failed') ||
                 error.message.includes('timestamp check failed'))
         ) {
-            cookies().delete(COOKIE.SESSION)
+            cookies().delete(COOKIES.SESSION)
         }
         return null
     }

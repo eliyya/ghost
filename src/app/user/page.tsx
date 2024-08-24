@@ -1,4 +1,4 @@
-import { COOKIE, JWT_SECRET } from '@/lib/constants'
+import { COOKIES, JWT_SECRET } from '@/lib/constants'
 import { jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -80,7 +80,7 @@ export default async function UserPage() {
                 <form
                     action={async () => {
                         'use server'
-                        cookies().delete(COOKIE.SESSION)
+                        cookies().delete(COOKIES.SESSION)
                         redirect(root())
                     }}
                     method="get"
