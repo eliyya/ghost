@@ -6,7 +6,7 @@ import { NewProcedureForm } from './NewProcedureForm'
 
 interface LabsNewPageProps {
     params: {
-        slug: string
+        name: string
     }
     searchParams: {
         date?: string
@@ -14,15 +14,22 @@ interface LabsNewPageProps {
 }
 export default async function LabsNewPage(props: LabsNewPageProps) {
     const labs = await prisma.laboratory.findMany({})
-    const lab = await prisma.laboratory.findFirst({
+    const formatedName = props.params.name
+        .trim()
+        .replace(/-+/g, ' ')
+        .toLowerCase()
+    const id = labs.find(
+        l => l.name.trim().replace(/-+/g, ' ').toLowerCase() === formatedName,
+    )?.id
+    if (!id) redirect('/labs')
+    const lab = (await prisma.laboratory.findFirst({
         where: {
-            id: props.params.slug,
+            id,
         },
         include: {
             tools: true,
         },
-    })
-    if (!lab) redirect('/labs')
+    }))!
     const user = await getVerifiedUser()
     const today = new Date()
     const searchDate = new Date(parseInt(props.searchParams.date!) || today)
@@ -38,7 +45,9 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
             <Nav
                 labs={labs.map(l => ({
                     ...l,
-                    active: l.id === props.params.slug,
+                    active:
+                        l.name.trim().replace(/-+/g, ' ').toLowerCase() ===
+                        formatedName,
                 }))}
                 isAdmin={user.admin}
             />

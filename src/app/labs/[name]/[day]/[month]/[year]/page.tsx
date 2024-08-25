@@ -149,7 +149,7 @@ export default async function LabsNamePage(props: LabsNameProps) {
                             ))}
                         <div className="px-2 py-1 border border-black text-center">{`${startHour}:00`}</div>
                         <ProcedureGrid
-                            labId={lab.id}
+                            labRouteName={props.params.name}
                             hours={hours}
                             schedule={schedule}
                             startHour={startHour}

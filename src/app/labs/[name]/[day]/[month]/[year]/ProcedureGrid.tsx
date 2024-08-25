@@ -34,7 +34,7 @@ interface ProcedureGridProps {
     hours: number
     firstDay: Date
     days: daysOfWeek[]
-    labId: string
+    labRouteName: string
 }
 export function ProcedureGrid({
     schedule,
@@ -42,7 +42,7 @@ export function ProcedureGrid({
     hours,
     firstDay,
     days,
-    labId,
+    labRouteName,
 }: ProcedureGridProps) {
     return (
         <div
@@ -70,7 +70,7 @@ export function ProcedureGrid({
                                         <Link
                                             key={indexDay + '-' + i}
                                             className="px-2 py-1 border border-black text-center"
-                                            href={`/labs/${labId}/new?date=${new Date(
+                                            href={`/labs/${labRouteName}/new?date=${new Date(
                                                 firstDay.getFullYear(),
                                                 firstDay.getMonth(),
                                                 firstDay.getDate() + indexDay,
