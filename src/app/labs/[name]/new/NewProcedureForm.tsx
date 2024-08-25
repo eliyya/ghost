@@ -2,48 +2,27 @@
 
 import { ChangeEventHandler, useState } from 'react'
 import { Input, SubmitPrimaryInput } from '@/components/Input'
-import { Laboratory, Prisma, Tool, User } from '@prisma/client'
+import { Laboratory, Tool, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
-
-export interface NewProcedureAction {
-    (
-        props: Omit<
-            Prisma.ProcedureGetPayload<{
-                include: {
-                    UsedTool: {
-                        select: {
-                            quantity: true
-                            tool_id: true
-                        }
-                    }
-                }
-            }>,
-            'id' | 'created_at'
-        >,
-    ): Promise<{ status: 'error' | 'succes'; message: string }>
-}
+import { registerProcedure } from '@/actions/labs'
 
 interface NewProcedureFormProps {
     date: Date
     open_date: Date
     close_date: Date
-    action: NewProcedureAction
     user_id: User['id']
     tools?: Tool[]
     lab_id: Laboratory['id']
 }
 
 export function NewProcedureForm(props: NewProcedureFormProps) {
-    const tools = props.tools
-        ? props.tools.map(t => ({
-              label: t.name,
-              options: Array.from({ length: t.stock }, (_, i) => ({
-                  value: `${t.id}|${i + 1}`,
-                  label: `${t.name} x${i + 1}`,
-              })),
-          }))
-        : []
-    console.log(JSON.stringify(tools, null, 4))
+    const tools = (props.tools || []).map(t => ({
+        label: t.name,
+        options: Array.from({ length: t.stock }, (_, i) => ({
+            value: `${t.id}|${i + 1}`,
+            label: `${t.name} x${i + 1}`,
+        })),
+    }))
     const router = useRouter()
     const [formData, setFormData] = useState<{
         subject: string
@@ -60,6 +39,8 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
         students: 1,
         tools: [],
     })
+    const [subject, setSubject] = useState('')
+    const [practice_name, setPracticeName] = useState('')
     const [selectedTool, setSelectedTool] = useState('')
 
     let hour = props.date.getHours()
@@ -101,13 +82,14 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
     return (
         <form
             action={async e => {
-                const response = await props.action({
+                const response = await registerProcedure({
                     subject: formData.subject,
                     practice_name: formData.practice_name,
                     start_date: new Date(formData.date),
+                    // @ts-ignore
                     end_date: new Date(
                         new Date(formData.date).getTime() +
-                            formData.out * 1000 * 60 * 60,
+                            formData.out * 60 * 60 * 1000,
                     ),
                     lab_id: props.lab_id,
                     submiter_id: props.user_id,
@@ -130,16 +112,16 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 type="text"
                 name="subject"
                 placeholder="Asignatura"
-                value={formData.subject}
-                onChange={handleInputChange}
+                value={subject}
+                onChange={e => setSubject(e.target.value)}
                 required
             />
             <Input
                 type="text"
                 name="practice_name"
                 placeholder="Practica"
-                value={formData.practice_name}
-                onChange={handleInputChange}
+                value={practice_name}
+                onChange={e => setPracticeName(e.target.value)}
                 required
             />
             <Input
@@ -147,7 +129,11 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 name="date"
                 placeholder="Fecha"
                 value={formData.date}
-                onChange={handleInputChange}
+                onChange={e => {
+                    console.log(typeof e.target.value, e.target.value)
+
+                    handleInputChange(e)
+                }}
                 required
                 step={3600000}
                 defaultValue={`${startDate.getFullYear()}-${(

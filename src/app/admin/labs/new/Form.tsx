@@ -1,63 +1,46 @@
-'use client';
+'use client'
 
-import { Input, SubmitPrimaryInput } from "@/components/Input";
-import { useState } from "react";
+import { registerLaboratory } from '@/actions/labs'
+import { Input, SubmitPrimaryInput } from '@/components/Input'
+import { useState } from 'react'
 
-export type FormSubmitFunction = (props: {
-    name: string;
-    open_date: string;
-    close_date: string;
-}) => Promise<{ status: 'error' | 'success', message: string }>;
-
-export function Form({ submit }: { submit: FormSubmitFunction }) {
-    const [formData, setFormData] = useState({
-        name: "",
-        open_date: "07:00",
-        close_date: "07:00",
-    });
-    const [errorName, setErrorName] = useState<string>('');
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!formData.name || !formData.open_date || !formData.close_date) return alert("Porfavor llena todos los campos");
-        if (formData.open_date >= formData.close_date) return alert("La hora de cierre debe ser mayor a la de apertura");
-        const response = await submit(formData);
-        if (response.status === 'error') {
-            if (response.message.includes("Lab ya existe")) setErrorName("Lab ya existe");
-            alert(response.message);
-        } else window.location.href = "/admin";
-    };
+export function Form() {
+    const [name, setName] = useState<string>('')
+    const [open_date, setOpenDate] = useState<string>('07:00')
+    const [close_date, setCloseDate] = useState<string>('19:00')
+    const [errorName, setErrorName] = useState<string>('')
 
     return (
         <form
             className="w-72 p-4 border border-black rounded-lg flex flex-col"
-            onSubmit={handleSubmit}
+            action={async () => {
+                const response = await registerLaboratory({
+                    close_date,
+                    name,
+                    open_date,
+                })
+                if (response.status === 'error') alert(response.message)
+                else window.location.href = '/admin'
+            }}
         >
             <Input
-                type='text'
-                placeholder='Nombre del laboratorio'
+                type="text"
+                placeholder="Nombre del laboratorio"
                 name="name"
-                value={formData.name}
+                value={name}
                 onChange={e => {
-                    handleChange(e);
-                    setErrorName('');
+                    setName(e.target.value)
+                    setErrorName('')
                 }}
-                required
                 error={errorName}
+                required
             />
             <Input
                 type="time"
                 placeholder="Hora de apertura"
                 name="open_date"
-                value={formData.open_date}
-                onChange={handleChange}
+                value={open_date}
+                onChange={e => setOpenDate(e.target.value)}
                 step={3600000}
                 required
             />
@@ -66,11 +49,11 @@ export function Form({ submit }: { submit: FormSubmitFunction }) {
                 placeholder="Hora de cierre"
                 step={3600000}
                 name="close_date"
-                value={formData.close_date}
-                onChange={handleChange}
+                value={close_date}
+                onChange={e => setCloseDate(e.target.value)}
                 required
             />
             <SubmitPrimaryInput value="Registrar" />
         </form>
-    );
+    )
 }

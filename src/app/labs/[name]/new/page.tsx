@@ -1,74 +1,57 @@
-import { Nav } from "@/components/Nav";
-import { getVerifiedUser } from "@/lib/auth";
-import { prisma } from "@/lib/db";
-import { redirect } from "next/navigation";
-import { NewProcedureAction, NewProcedureForm } from "./NewProcedureForm";
-import { snowflake } from "@/lib/constants";
+import { Nav } from '@/components/Nav'
+import { getVerifiedUser } from '@/lib/auth'
+import { prisma } from '@/lib/db'
+import { redirect } from 'next/navigation'
+import { NewProcedureForm } from './NewProcedureForm'
 
 interface LabsNewPageProps {
     params: {
-        slug: string;
+        slug: string
     }
     searchParams: {
-        date?: string;
+        date?: string
     }
 }
 export default async function LabsNewPage(props: LabsNewPageProps) {
-    const labs = await prisma.laboratory.findMany({});
-    const lab = await prisma.laboratory.findFirst({ 
-        where: { 
-            id: props.params.slug 
+    const labs = await prisma.laboratory.findMany({})
+    const lab = await prisma.laboratory.findFirst({
+        where: {
+            id: props.params.slug,
         },
         include: {
-            tools: true
-        }
-    });
-    if (!lab) redirect('/labs');
-    const user = await getVerifiedUser();
-    const today = new Date();
+            tools: true,
+        },
+    })
+    if (!lab) redirect('/labs')
+    const user = await getVerifiedUser()
+    const today = new Date()
     const searchDate = new Date(parseInt(props.searchParams.date!) || today)
-    const minimumDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), lab.open_date.getHours());
-    
-    const createProcedure: NewProcedureAction = async (data) => {
-        'use server'        
-        const response = await prisma.procedure.create({
-            data: {
-                end_date: data.end_date,
-                lab_id: data.lab_id,
-                practice_name: data.practice_name,
-                start_date: data.start_date,
-                students: data.students,
-                subject: data.subject,
-                submiter_id: data.submiter_id,
-                UsedTool: data.UsedTool.length ? {
-                    createMany: {
-                        data: data.UsedTool
-                    }
-                } : undefined,
-                id: snowflake.generate().toString(),
-            }
-        });
-        return {
-            status: 'succes',
-            message: 'Procedimiento creado'
-        }
-    } 
-    
+    const minimumDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        lab.open_date.getHours(),
+    )
+
     return (
         <>
-            <Nav labs={labs.map(l => ({ ...l, active: l.id === props.params.slug }))} isAdmin={user.admin} />
+            <Nav
+                labs={labs.map(l => ({
+                    ...l,
+                    active: l.id === props.params.slug,
+                }))}
+                isAdmin={user.admin}
+            />
             <main className="flex flex-col flex-1 justify-center items-center">
-                <NewProcedureForm 
-                    action={createProcedure} 
-                    user_id={user.id} 
-                    date={searchDate} 
-                    open_date={lab.open_date} 
-                    close_date={lab.close_date} 
+                <NewProcedureForm
+                    user_id={user.id}
+                    date={searchDate}
+                    open_date={lab.open_date}
+                    close_date={lab.close_date}
                     tools={lab.tools}
                     lab_id={lab.id}
                 />
             </main>
         </>
-
     )
 }

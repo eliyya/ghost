@@ -37,6 +37,7 @@ export default async function login() {
         cookies().set({
             expires,
             name: COOKIES.SESSION,
+            path: '/',
             value: await new SignJWT({
                 id: user.id,
                 name: user.name,

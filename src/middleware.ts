@@ -32,7 +32,7 @@ async function haandlerAdminRoute(request: NextRequest) {
     const next = () => injectPathname(request, NextResponse.next())
     if (request.nextUrl.pathname === root.admin.new()) {
         const count: { count: number } = await fetch(
-            new URL(root.api.labs.count(), request.nextUrl),
+            new URL(root.api.user.count(), request.nextUrl),
         ).then(res => res.json())
         if (count.count !== 0) {
             const response = NextResponse.redirect(
@@ -42,7 +42,11 @@ async function haandlerAdminRoute(request: NextRequest) {
             return response
         } else return next()
     }
-    const req = await fetch(new URL(root.api.user(), request.nextUrl))
+    const req = await fetch(new URL(root.api.user(), request.nextUrl), {
+        headers: {
+            cookie: request.headers.get('cookie') || '',
+        },
+    })
     if (req.status !== 200) {
         const response = redirect(request, root.login())
         response.cookies.delete(COOKIES.SESSION)

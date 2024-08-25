@@ -1,20 +1,12 @@
 'use client'
 
+import { registerUser } from '@/actions/users'
 import { Input, SubmitPrimaryInput } from '@/components/Input'
 import { parseName } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-export interface NewAdminFormSubmitFunction {
-    (props: { name: string; username: string; password: string }): Promise<{
-        status: 'error' | 'succes'
-        message: string
-    }>
-}
-export interface NewAdminFormProps {
-    submit: NewAdminFormSubmitFunction
-}
-export function NewAdminForm(props: NewAdminFormProps) {
+export function NewAdminForm() {
     const [name, setName] = useState<string>('')
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
@@ -52,12 +44,13 @@ export function NewAdminForm(props: NewAdminFormProps) {
         if (password != password2)
             return setPassword2Error('Las contrasenias no coinciden')
         // check username
-        const response = await props.submit({
+        const response = await registerUser({
             name: name,
             username: username,
             password: password,
+            admin: true,
         })
-        router.push('/admin/docentes')
+        if (response.status === 'succes') return router.push('/admin/docentes')
     }
 
     return (

@@ -6,7 +6,7 @@
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
     "dev": "next dev --turbo",
-    "build": "prisma generate && npx @eliyya/type-routes && next build",
+    "build": "npx @eliyya/type-routes && next build",
     "start": "next start",
     "lint": "next lint"
   },
