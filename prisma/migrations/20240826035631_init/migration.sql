@@ -1,17 +1,19 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "username" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "ne" TEXT NOT NULL
+    "admin" BOOLEAN
 );
 
 -- CreateTable
 CREATE TABLE "labs" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
-    "open_date" DATETIME NOT NULL,
-    "close_date" DATETIME NOT NULL
+    "open_hour" INTEGER NOT NULL,
+    "close_hour" INTEGER NOT NULL,
+    "available_days" INTEGER NOT NULL DEFAULT 62
 );
 
 -- CreateTable
@@ -19,7 +21,8 @@ CREATE TABLE "procedures" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "submiter_id" TEXT NOT NULL,
     "lab_id" TEXT NOT NULL,
-    "date" DATETIME NOT NULL,
+    "start_date" DATETIME NOT NULL,
+    "end_date" DATETIME NOT NULL,
     "subject" TEXT NOT NULL,
     "practice_name" TEXT NOT NULL,
     "students" INTEGER NOT NULL,
@@ -29,24 +32,27 @@ CREATE TABLE "procedures" (
 );
 
 -- CreateTable
-CREATE TABLE "subjects" (
+CREATE TABLE "tools" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL
+    "lab_id" TEXT NOT NULL,
+    "stock" INTEGER NOT NULL DEFAULT 1,
+    CONSTRAINT "tools_lab_id_fkey" FOREIGN KEY ("lab_id") REFERENCES "labs" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "admin_labs" (
-    "user_id" TEXT NOT NULL,
-    "lab_id" TEXT NOT NULL,
+CREATE TABLE "used_tools" (
+    "procedure_id" TEXT NOT NULL,
+    "tool_id" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL,
 
-    PRIMARY KEY ("user_id", "lab_id"),
-    CONSTRAINT "admin_labs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "admin_labs_lab_id_fkey" FOREIGN KEY ("lab_id") REFERENCES "labs" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    PRIMARY KEY ("procedure_id", "tool_id"),
+    CONSTRAINT "used_tools_procedure_id_fkey" FOREIGN KEY ("procedure_id") REFERENCES "procedures" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "used_tools_tool_id_fkey" FOREIGN KEY ("tool_id") REFERENCES "tools" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_ne_key" ON "users"("ne");
+CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "labs_name_key" ON "labs"("name");

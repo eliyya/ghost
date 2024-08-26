@@ -60,8 +60,8 @@ export async function registerProcedure(data: {
 
 export async function registerLaboratory(props: {
     name: string
-    open_date: string
-    close_date: string
+    openHour: number
+    closeHour: number
 }) {
     try {
         const lab = await prisma.laboratory.findUnique({
@@ -75,20 +75,8 @@ export async function registerLaboratory(props: {
             data: {
                 id: snowflake.generate().toString(),
                 name: parseName(props.name),
-                open_date: new Date(
-                    2024,
-                    1,
-                    1,
-                    Number(props.open_date.split(':')[0]),
-                    Number(props.open_date.split(':')[1]),
-                ),
-                close_date: new Date(
-                    2024,
-                    1,
-                    1,
-                    Number(props.close_date.split(':')[0]),
-                    Number(props.close_date.split(':')[1]),
-                ),
+                open_hour: props.openHour,
+                close_hour: props.closeHour,
             },
         })
         return { status: 'success', message: 'Lab creado con éxito' }

@@ -28,8 +28,8 @@ model User {
 model Laboratory {
   id             String      @id
   name           String      @unique
-  open_date      DateTime
-  close_date     DateTime
+  open_hour      Int
+  close_hour     Int
   available_days Int         @default(62)
   procedures     Procedure[]
   tools          Tool[]
