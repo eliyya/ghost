@@ -30,7 +30,7 @@ export default async function ToolExistPage(prop: NewToolsPageProps) {
             />
             <main className="flex-1 flex justify-center align-middle items-center py-4">
                 <form
-                    action={async e => {
+                    action={async () => {
                         'use server'
                         await prisma.tool.update({
                             where: {

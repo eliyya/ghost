@@ -26,7 +26,7 @@ export async function registerProcedure(data: {
     const end_date = new Date(data.start_date)
     end_date.setMinutes(end_date.getMinutes() + data.duration)
     try {
-        const response = await prisma.procedure.create({
+        await prisma.procedure.create({
             data: {
                 id: snowflake.generate().toString(),
                 practice_name: data.practice_name,

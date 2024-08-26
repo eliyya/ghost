@@ -75,7 +75,7 @@ export function NewAdminForm() {
                 onChange={e => setUsername(e.target.value)}
                 onBlur={e =>
                     setUsername(
-                        e.target.value.toLowerCase().replace(/[@ \!\\\/]/g, ''),
+                        e.target.value.toLowerCase().replace(/[@ !\\/]/g, ''),
                     )
                 }
             />

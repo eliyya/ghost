@@ -1,6 +1,6 @@
 'use client'
 
-import { Prisma, Procedure } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { useRef } from 'react'
 
 export function ProcedureDetailsButton(props: {

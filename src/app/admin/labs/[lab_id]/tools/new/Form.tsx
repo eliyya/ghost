@@ -2,8 +2,6 @@
 
 import { Input, SubmitPrimaryInput } from '@/components/Input'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-
 export interface FormSubmitFunction {
     (
         props: FormData,

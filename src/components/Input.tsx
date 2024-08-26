@@ -10,7 +10,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export function Input(props: InputProps) {
     const id = props.id || `input-${Math.random().toString(36).substring(2)}` // Generar un id si no existe
-    const bg = props.className?.match(/(bg-[^\ ])/g)?.[0] ?? 'bg-white'
+    const bg = props.className?.match(/(bg-[^ ])/g)?.[0] ?? 'bg-white'
 
     return (
         <div

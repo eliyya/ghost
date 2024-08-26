@@ -8,7 +8,7 @@ export interface EditableInputProps
 }
 export function RetornableInput(props: EditableInputProps) {
     const defaultValue = props.defaultValue ?? ''
-    const bg = props.className?.match(/(bg-[^\ ])/g)?.[0] ?? 'bg-white'
+    const bg = props.className?.match(/(bg-[^ ])/g)?.[0] ?? 'bg-white'
     const [value, setValue] = useState<typeof props.defaultValue>(defaultValue)
     const [isChanged, setIsChanged] = useState<boolean>(false)
 
@@ -21,7 +21,7 @@ export function RetornableInput(props: EditableInputProps) {
         >
             <div className="flex">
                 <input
-                    onSubmit={e => {}}
+                    onSubmit={() => {}}
                     value={value}
                     onChange={e => {
                         setValue(e.target.value)
@@ -39,7 +39,7 @@ export function RetornableInput(props: EditableInputProps) {
                 />
                 <button
                     type="button"
-                    onClick={e => {
+                    onClick={() => {
                         setValue(defaultValue)
                         setIsChanged(false)
                     }}

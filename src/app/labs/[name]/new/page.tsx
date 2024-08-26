@@ -33,12 +33,12 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
     const user = await getVerifiedUser()
     const today = new Date()
     const searchDate = new Date(parseInt(props.searchParams.date!) || today)
-    const minimumDate = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate(),
-        lab.open_date.getHours(),
-    )
+    // const minimumDate = new Date(
+    //     today.getFullYear(),
+    //     today.getMonth(),
+    //     today.getDate(),
+    //     lab.open_date.getHours(),
+    // )
 
     return (
         <>

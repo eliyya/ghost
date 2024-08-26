@@ -2,7 +2,6 @@ import { ButtonPrimaryLink } from '@/components/Buttons'
 import { Nav } from '@/components/Nav'
 import { prisma } from '@/lib/db'
 import { verifyAdmin } from '@/lib/auth'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ToolCard } from './ToolCard'
 

@@ -29,7 +29,9 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
         })
         try {
             await rm(`./storage/tools/${tool_id}.png`)
-        } catch (error) {}
+        } catch (error) {
+            // console.log(error)
+        }
         redirect(`/admin/labs/${lab_id}/tools`)
     }
     return (

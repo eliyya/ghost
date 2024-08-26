@@ -1,7 +1,7 @@
 'use client'
 
 import { Input, SubmitPrimaryInput } from '@/components/Input'
-import { useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 export interface FormSubmitFunction {
     (props: {
@@ -21,7 +21,7 @@ export function Form(props: FormProps) {
     const [passwordError, setPasswordError] = useState<string>('')
     const [password2Error, setPassword2Error] = useState<string>('')
 
-    const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const submit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const target = event.target as typeof event.target & {
             name: { value: string }

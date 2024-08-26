@@ -43,12 +43,6 @@ export async function getVerifiedUser() {
     const alcualURL = headers().get('pathname') ?? '/'
 
     if (!cookie) redirect('/login?redirect=' + alcualURL)
-    let user: {
-        id: string
-        name: string
-        username: string
-        admin: boolean
-    }
     try {
         const payload = await jwtVerify<{
             id: string
@@ -88,12 +82,6 @@ export async function getPosibleUser(cookie?: string) {
     cookie ??= cookies().get(COOKIES.SESSION)?.value
 
     if (!cookie) return null
-    let user: {
-        id: string
-        name: string
-        username: string
-        admin: boolean
-    }
     try {
         const payload = await jwtVerify<{
             id: string

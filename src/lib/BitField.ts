@@ -159,7 +159,7 @@ export default class BitField<
      * @param {...*} hasParams Additional parameters for the has method, if any
      * @returns {Object}
      */
-    serialize(...hasParams: any[]): { [K in Flags]: boolean } {
+    serialize(): { [K in Flags]: boolean } {
         const serialized: { [K in Flags]: boolean } = {} as {
             [K in Flags]: boolean
         }
@@ -175,7 +175,7 @@ export default class BitField<
      * @param {...*} hasParams Additional parameters for the has method, if any
      * @returns {string[]}
      */
-    toArray(...hasParams: any[]) {
+    toArray() {
         return [...this[Symbol.iterator]()]
     }
 

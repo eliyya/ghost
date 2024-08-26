@@ -81,7 +81,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
 
     return (
         <form
-            action={async e => {
+            action={async () => {
                 const response = await registerProcedure({
                     subject: formData.subject,
                     practice_name: formData.practice_name,

@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/db'
 import { verifyAdmin } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { NextResponse } from 'next/server'
 import { ButtonSecondaryLink } from '@/components/Buttons'
 import { SubmitPrimaryInput } from '@/components/Input'
 import { Nav } from '@/components/Nav'
