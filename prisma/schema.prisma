@@ -20,6 +20,7 @@ model User {
   name       String
   password   String
   admin      Boolean?
+  created_at DateTime    @default(now())
   procedures Procedure[]
 
   @@map("users")
@@ -31,6 +32,7 @@ model Laboratory {
   open_hour      Int
   close_hour     Int
   available_days Int         @default(62)
+  created_at     DateTime    @default(now())
   procedures     Procedure[]
   tools          Tool[]
 
@@ -42,7 +44,8 @@ model Procedure {
   submiter_id   String
   lab_id        String
   start_date    DateTime
-  end_date      DateTime
+  // duration in minutes
+  duration      Int        @default(1)
   subject       String
   practice_name String
   students      Int
@@ -55,12 +58,13 @@ model Procedure {
 }
 
 model Tool {
-  id       String     @id
-  name     String
-  lab_id   String
-  stock    Int        @default(1)
-  lab      Laboratory @relation(fields: [lab_id], references: [id])
-  UsedTool UsedTool[]
+  id         String     @id
+  name       String
+  lab_id     String
+  stock      Int        @default(1)
+  created_at DateTime   @default(now())
+  lab        Laboratory @relation(fields: [lab_id], references: [id])
+  UsedTool   UsedTool[]
 
   @@map("tools")
 }
@@ -69,6 +73,7 @@ model UsedTool {
   procedure_id String
   tool_id      String
   quantity     Int
+  created_at   DateTime  @default(now())
   procedure    Procedure @relation(fields: [procedure_id], references: [id])
   tool         Tool      @relation(fields: [tool_id], references: [id])
 

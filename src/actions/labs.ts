@@ -22,8 +22,6 @@ export async function registerProcedure(data: {
         quantity: number
     }[]
 }) {
-    const end_date = new Date(data.start_date)
-    end_date.setMinutes(end_date.getMinutes() + data.duration)
     try {
         await prisma.procedure.create({
             data: {
@@ -31,7 +29,7 @@ export async function registerProcedure(data: {
                 practice_name: data.practice_name,
                 lab_id: data.lab_id,
                 start_date: data.start_date,
-                end_date: end_date,
+                duration: data.duration,
                 students: data.students,
                 subject: data.subject,
                 submiter_id: data.submiter_id,

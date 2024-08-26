@@ -48,14 +48,11 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     subject: subject,
                     practice_name: practice_name,
                     start_date: new Date(date),
-                    // @ts-ignore
-                    end_date: new Date(
-                        new Date(date).getTime() + hours * 60 * 60 * 1000,
-                    ),
+                    duration: hours * 60,
                     lab_id: props.lab.id,
                     submiter_id: props.user_id,
                     students: students,
-                    UsedTool: selectedTools.map(tool => ({
+                    used_tools: selectedTools.map(tool => ({
                         tool_id: tool.split('|')[0],
                         quantity: Number(tool.split('|')[1]),
                     })),
