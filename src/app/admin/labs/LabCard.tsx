@@ -1,9 +1,10 @@
+import { hourToTime } from '@/lib/utils'
 import Link from 'next/link'
 
 export interface LabCardProps {
     name: string
-    open_date: Date
-    close_date: Date
+    open_hour: number
+    close_hour: number
     id: string
 }
 export function LabCard(props: LabCardProps) {
@@ -18,8 +19,8 @@ export function LabCard(props: LabCardProps) {
             <div className="flex gap-2 items-baseline">
                 <h2 className="text-lg">{props.name}</h2>
                 <span className="text-xs">
-                    Horario: {props.open_date.getUTCHours()}-
-                    {props.close_date.getUTCHours()}
+                    Horario: {hourToTime(props.open_hour)} -
+                    {hourToTime(props.close_hour)}
                 </span>
             </div>
             <div className="flex gap-4 items-center">

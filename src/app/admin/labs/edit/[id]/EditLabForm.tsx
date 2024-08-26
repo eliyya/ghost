@@ -2,6 +2,7 @@
 import { ButtonSecondaryLink } from '@/components/Buttons'
 import { RetornableInput } from '@/components/EditableInput'
 import { SubmitPrimaryInput } from '@/components/Input'
+import { hourToTime } from '@/lib/utils'
 import { useState } from 'react'
 
 export interface EditLabAction {
@@ -21,11 +22,6 @@ export interface EditLabFormProps {
 }
 export function EditLabForm(props: EditLabFormProps) {
     const [usernameError, setUsernameError] = useState('')
-    const hourToTime = (date: number) => {
-        const hours = Math.floor(date / 3600)
-        const minutes = Math.floor((date % 3600) / 60)
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
-    }
 
     return (
         <form

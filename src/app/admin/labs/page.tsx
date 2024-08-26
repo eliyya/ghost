@@ -2,11 +2,9 @@ import { prisma } from '@/lib/db'
 import { LabCard } from './LabCard'
 import Link from 'next/link'
 import { Nav } from '@/components/Nav'
-import { verifyAdmin } from '@/lib/auth'
 import { ButtonPrimaryLink } from '@/components/Buttons'
 
 export default async function AdminLabsPage() {
-    await verifyAdmin()
     const labs = await prisma.laboratory.findMany({})
 
     return (
@@ -37,8 +35,8 @@ export default async function AdminLabsPage() {
                         {labs.map(lab => (
                             <LabCard
                                 name={lab.name}
-                                open_date={lab.open_date}
-                                close_date={lab.close_date}
+                                open_hour={lab.open_hour}
+                                close_hour={lab.close_hour}
                                 id={lab.id}
                                 key={lab.id}
                             />
