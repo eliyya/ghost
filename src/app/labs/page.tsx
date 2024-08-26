@@ -27,7 +27,7 @@ export default async function LabsPage() {
                 <p className="text-xl">
                     Parece que no existen laboratorios registrados en el sistema
                 </p>
-                {user?.admin ? (
+                {user?.admin ?
                     <>
                         <p>
                             Para hacer uso de este sistema debe haber al menos 1
@@ -39,12 +39,11 @@ export default async function LabsPage() {
                             </ButtonPrimaryLink>
                         </div>
                     </>
-                ) : (
-                    <p>
+                :   <p>
                         Porfavor pidele a un administrador que registre uno
                         antes de volver aqui
                     </p>
-                )}
+                }
             </main>
         </>
     )

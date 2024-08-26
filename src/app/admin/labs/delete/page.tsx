@@ -1,9 +1,7 @@
-import { verifyAdmin } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { verifyAdmin } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
-
-
-export default  function page() {
+export default function page() {
     verifyAdmin()
-    redirect("/admin/labs")
+    redirect('/admin/labs')
 }

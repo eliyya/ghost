@@ -1,5 +1,5 @@
 'use client'
-import { InputHTMLAttributes, useState } from "react";
+import { InputHTMLAttributes, useState } from 'react'
 
 export interface EditableInputProps
     extends InputHTMLAttributes<HTMLInputElement> {
@@ -17,14 +17,13 @@ export function RetornableInput(props: EditableInputProps) {
             className={`my-2 flex flex-col z-10 ${bg} ${props.disabled ? 'border-opacity-50' : ''}
                 ${props.className ?? ''}
                 ${props.type === 'hidden' ? 'hidden' : ''}
-            `} 
+            `}
         >
-            <div className="flex" >
+            <div className="flex">
                 <input
-                    onSubmit={(e) => {
-                    }}
+                    onSubmit={e => {}}
                     value={value}
-                    onChange={(e) => {
+                    onChange={e => {
                         setValue(e.target.value)
                         if (e.target.value !== defaultValue) setIsChanged(true)
                     }}
@@ -49,17 +48,18 @@ export function RetornableInput(props: EditableInputProps) {
                         ${isChanged ? 'border-green-600' : ''}
                     `}
                 >
-                    <svg viewBox="0 0 48 48" >
+                    <svg viewBox="0 0 48 48">
                         <path d="M10,22v2c0,7.72,6.28,14,14,14s14-6.28,14-14s-6.28-14-14-14h-6.662l3.474-4.298l-3.11-2.515L10.577,12l7.125,8.813 l3.11-2.515L17.338,14H24c5.514,0,10,4.486,10,10s-4.486,10-10,10s-10-4.486-10-10v-2H10z" />
                     </svg>
                 </button>
             </div>
-            <label className={`
+            <label
+                className={`
                 absolute transition-all ${bg} leading-3  ${props.disabled ? 'text-gray-700' : ''}
                 p-0 ml-1 -translate-y-2 z-10 text-sm rounded-sm
                 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:p-2 peer-placeholder-shown:z-0 peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:rounded-md
                 ${props.error ? 'text-red-600' : ''}
-            `} 
+            `}
             >
                 {props.placeholder ?? props.name}
             </label>
@@ -78,5 +78,5 @@ export function RetornableInput(props: EditableInputProps) {
                 {props.error ?? 'error'}
             </small>
         </div>
-    );
+    )
 }

@@ -1,4 +1,4 @@
-import { AvailableDaysBitfield } from './BitField';
+import { AvailableDaysBitfield } from './BitField'
 
 import { PrismaClient } from '@prisma/client'
 
@@ -12,19 +12,20 @@ const prismaClientSingleton = () => {
                         available_days: true,
                     },
                     compute(data) {
-                        return new AvailableDaysBitfield(data.available_days).toArray() as (keyof AvailableDaysBitfield['Flags'])[]
+                        return new AvailableDaysBitfield(
+                            data.available_days,
+                        ).toArray() as (keyof AvailableDaysBitfield['Flags'])[]
                     },
-                }
-            }
-        }
+                },
+            },
+        },
     })
 }
 
 declare const globalThis: {
-    prismaGlobal: ReturnType<typeof prismaClientSingleton>;
-} & typeof global;
+    prismaGlobal: ReturnType<typeof prismaClientSingleton>
+} & typeof global
 
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 export { prisma }
-

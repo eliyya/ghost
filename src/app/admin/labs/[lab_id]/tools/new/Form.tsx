@@ -1,11 +1,13 @@
 'use client'
 
-import { Input, SubmitPrimaryInput } from "@/components/Input"
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Input, SubmitPrimaryInput } from '@/components/Input'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export interface FormSubmitFunction {
-    (props: FormData): Promise<{ status: 'error' | 'succes', message: string, data?: any }>;
+    (
+        props: FormData,
+    ): Promise<{ status: 'error' | 'succes'; message: string; data?: any }>
     // (props: {
     //     name: string;
     //     stock?: number;
@@ -25,16 +27,14 @@ export function Form(props: FormProps) {
             action={async e => {
                 const response = await props.action(e)
                 if (response.status == 'error') {
-                    return router.push(`/admin/labs/${lab_id}/tools/${response.data}/more`)
+                    return router.push(
+                        `/admin/labs/${lab_id}/tools/${response.data}/more`,
+                    )
                 }
                 router.push(`/admin/labs/${lab_id}/tools`)
             }}
         >
-            <Input
-                type='text'
-                placeholder='Nombre del Material'
-                name="name"
-            />
+            <Input type="text" placeholder="Nombre del Material" name="name" />
             <Input
                 type="number"
                 min={1}
@@ -42,10 +42,7 @@ export function Form(props: FormProps) {
                 defaultValue={1}
                 placeholder="Cantidad"
             />
-            <Input
-                type="file"
-                name="image"
-            />
+            <Input type="file" name="image" />
             <SubmitPrimaryInput value="Registrar"></SubmitPrimaryInput>
         </form>
     )

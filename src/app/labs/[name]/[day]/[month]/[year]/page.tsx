@@ -179,65 +179,86 @@ function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
         Sunday: {
             ...lab.procedures
                 .filter(p => p.start_date.getDay() === 0)
-                .reduce((acc, p) => {
-                    const hour = p.start_date.getUTCHours()
-                    if (!acc[hour]) acc[hour] = p
-                    return acc
-                }, {} as Record<string, (typeof lab.procedures)[0]>),
+                .reduce(
+                    (acc, p) => {
+                        const hour = p.start_date.getUTCHours()
+                        if (!acc[hour]) acc[hour] = p
+                        return acc
+                    },
+                    {} as Record<string, (typeof lab.procedures)[0]>,
+                ),
         },
         Monday: {
             ...lab.procedures
                 .filter(p => p.start_date.getDay() === 1)
-                .reduce((acc, p) => {
-                    const hour = p.start_date.getUTCHours()
-                    if (!acc[hour]) acc[hour] = p
-                    return acc
-                }, {} as Record<string, (typeof lab.procedures)[0]>),
+                .reduce(
+                    (acc, p) => {
+                        const hour = p.start_date.getUTCHours()
+                        if (!acc[hour]) acc[hour] = p
+                        return acc
+                    },
+                    {} as Record<string, (typeof lab.procedures)[0]>,
+                ),
         },
         Tuesday: {
             ...lab.procedures
                 .filter(p => p.start_date.getDay() === 2)
-                .reduce((acc, p) => {
-                    const hour = p.start_date.getUTCHours()
-                    if (!acc[hour]) acc[hour] = p
-                    return acc
-                }, {} as Record<string, (typeof lab.procedures)[0]>),
+                .reduce(
+                    (acc, p) => {
+                        const hour = p.start_date.getUTCHours()
+                        if (!acc[hour]) acc[hour] = p
+                        return acc
+                    },
+                    {} as Record<string, (typeof lab.procedures)[0]>,
+                ),
         },
         Wednesday: {
             ...lab.procedures
                 .filter(p => p.start_date.getDay() === 3)
-                .reduce((acc, p) => {
-                    const hour = p.start_date.getUTCHours()
-                    if (!acc[hour]) acc[hour] = p
-                    return acc
-                }, {} as Record<string, (typeof lab.procedures)[0]>),
+                .reduce(
+                    (acc, p) => {
+                        const hour = p.start_date.getUTCHours()
+                        if (!acc[hour]) acc[hour] = p
+                        return acc
+                    },
+                    {} as Record<string, (typeof lab.procedures)[0]>,
+                ),
         },
         Thursday: {
             ...lab.procedures
                 .filter(p => p.start_date.getDay() === 4)
-                .reduce((acc, p) => {
-                    const hour = p.start_date.getUTCHours()
-                    if (!acc[hour]) acc[hour] = p
-                    return acc
-                }, {} as Record<string, (typeof lab.procedures)[0]>),
+                .reduce(
+                    (acc, p) => {
+                        const hour = p.start_date.getUTCHours()
+                        if (!acc[hour]) acc[hour] = p
+                        return acc
+                    },
+                    {} as Record<string, (typeof lab.procedures)[0]>,
+                ),
         },
         Friday: {
             ...lab.procedures
                 .filter(p => p.start_date.getDay() === 5)
-                .reduce((acc, p) => {
-                    const hour = p.start_date.getUTCHours()
-                    if (!acc[hour]) acc[hour] = p
-                    return acc
-                }, {} as Record<string, (typeof lab.procedures)[0]>),
+                .reduce(
+                    (acc, p) => {
+                        const hour = p.start_date.getUTCHours()
+                        if (!acc[hour]) acc[hour] = p
+                        return acc
+                    },
+                    {} as Record<string, (typeof lab.procedures)[0]>,
+                ),
         },
         Saturday: {
             ...lab.procedures
                 .filter(p => p.start_date.getDay() === 6)
-                .reduce((acc, p) => {
-                    const hour = p.start_date.getUTCHours()
-                    if (!acc[hour]) acc[hour] = p
-                    return acc
-                }, {} as Record<string, (typeof lab.procedures)[0]>),
+                .reduce(
+                    (acc, p) => {
+                        const hour = p.start_date.getUTCHours()
+                        if (!acc[hour]) acc[hour] = p
+                        return acc
+                    },
+                    {} as Record<string, (typeof lab.procedures)[0]>,
+                ),
         },
     }
 

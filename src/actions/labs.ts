@@ -36,13 +36,14 @@ export async function registerProcedure(data: {
                 students: data.students,
                 subject: data.subject,
                 submiter_id: data.submiter_id,
-                UsedTool: data.used_tools.length
-                    ? {
-                          createMany: {
-                              data: data.used_tools,
-                          },
-                      }
-                    : undefined,
+                UsedTool:
+                    data.used_tools.length ?
+                        {
+                            createMany: {
+                                data: data.used_tools,
+                            },
+                        }
+                    :   undefined,
             },
         })
         return {
