@@ -62,7 +62,7 @@ export default async function LabsNamePage(props: LabsNameProps) {
     if (!lab) redirect('/labs')
 
     // const hours = lab.close_date.getHours() - lab.open_date.getHours()
-    const hours = Math.floor(lab.close_hour - lab.open_hour / 3600)
+    const hours = Math.floor((lab.close_hour - lab.open_hour) / 3600)
     const startHour = Math.floor(lab.open_hour / 3600)
     const daysToRender = lab.available_days_array
     const schedule = getSchedule(lab)

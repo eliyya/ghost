@@ -1,4 +1,4 @@
-import { hourToTime } from '@/lib/utils'
+import { secondsToHHMM } from '@/lib/utils'
 import Link from 'next/link'
 
 export interface LabCardProps {
@@ -19,8 +19,8 @@ export function LabCard(props: LabCardProps) {
             <div className="flex gap-2 items-baseline">
                 <h2 className="text-lg">{props.name}</h2>
                 <span className="text-xs">
-                    Horario: {hourToTime(props.open_hour)} -
-                    {hourToTime(props.close_hour)}
+                    Horario: {secondsToHHMM(props.open_hour)} -
+                    {secondsToHHMM(props.close_hour)}
                 </span>
             </div>
             <div className="flex gap-4 items-center">

@@ -69,6 +69,7 @@ export function NewAdminForm() {
             <Input
                 type="text"
                 name="username"
+                // TODO: CammelCase
                 placeholder="Usuario Clave"
                 prefix="@"
                 value={username}

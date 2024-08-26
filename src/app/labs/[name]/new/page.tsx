@@ -3,6 +3,7 @@ import { getVerifiedUser } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { NewProcedureForm } from './NewProcedureForm'
+import { wrapper } from '@/lib/utils'
 
 interface LabsNewPageProps {
     params: {
@@ -26,19 +27,26 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
         where: {
             id,
         },
-        include: {
+        select: {
+            close_hour: true,
+            open_hour: true,
             tools: true,
+            id: true,
         },
     }))!
     const user = await getVerifiedUser()
-    const today = new Date()
-    const searchDate = new Date(parseInt(props.searchParams.date!) || today)
-    // const minimumDate = new Date(
-    //     today.getFullYear(),
-    //     today.getMonth(),
-    //     today.getDate(),
-    //     lab.open_date.getHours(),
-    // )
+    const searchDate =
+        wrapper(() => new Date(parseInt(props.searchParams.date!))) ||
+        new Date()
+    searchDate.setMilliseconds(0)
+    searchDate.setSeconds(0)
+    searchDate.setMinutes(0)
+    if (searchDate.getHours() < Math.floor(lab.open_hour / 3600)) {
+        searchDate.setHours(Math.floor(lab.open_hour / 3600))
+    }
+    if (searchDate.getHours() > Math.floor(lab.close_hour / 3600)) {
+        searchDate.setHours(Math.floor(lab.close_hour / 3600))
+    }
 
     return (
         <>
@@ -54,11 +62,8 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
             <main className="flex flex-col flex-1 justify-center items-center">
                 <NewProcedureForm
                     user_id={user.id}
-                    date={searchDate}
-                    open_date={lab.open_date}
-                    close_date={lab.close_date}
-                    tools={lab.tools}
-                    lab_id={lab.id}
+                    date={searchDate.getTime()}
+                    lab={lab}
                 />
             </main>
         </>

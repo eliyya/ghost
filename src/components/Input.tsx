@@ -1,5 +1,5 @@
 'use client'
-import { InputHTMLAttributes } from 'react'
+import { InputHTMLAttributes, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 // import Select from 'react-select'
 
@@ -58,45 +58,6 @@ export function Input(props: InputProps) {
     )
 }
 
-// export function Input(props: InputProps) {
-//   const bg = props.className?.match(/(bg-[^\ ])/g)?.[0] ?? 'bg-white'
-//   return (
-//     <div
-//       className={`my-2 flex flex-col z-10 ${bg} ${props.disabled ? 'border-opacity-50' : ''}
-//       ${props.className ?? ''}
-//       ${props.type === 'hidden' ? 'hidden' : ''}`} >
-//       <input
-//         className={`p-2 w-full bg-transparent border border-black rounded-md peer z-10
-//           ${props.disabled ? 'text-gray-700' : ''}
-//           ${props.error ? 'border-red-600' : ''}
-//           ${props.prefix ? 'pl-6' : ''}`}
-//         {...props}
-//         placeholder=" "
-//       />
-//       <label className={`
-//           absolute transition-all ${bg} leading-3  ${props.disabled ? 'text-gray-700' : ''}
-//           p-0 ml-1 -translate-y-2 z-10 text-sm rounded-sm
-//           peer-placeholder-shown:translate-y-0 peer-placeholder-shown:p-2 peer-placeholder-shown:z-0 peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:rounded-md
-//           ${props.error ? 'text-red-600' : ''}`} >
-//         {props.placeholder ?? props.name}
-//       </label>
-//       {props.prefix && (
-//         <span
-//           className={`absolute py-2 pl-2 text-gray-700
-//           peer-placeholder-shown:hidden`}
-//         >
-//           {props.prefix}
-//         </span>
-//       )}
-//       <small
-//         className={`relative transition-all ease-in-out px-2 text-red-600 text-[0.6rem]
-//         ${props.error ? '' : 'hidden'}`} >
-//         {props.error ?? 'error'}
-//       </small>
-//     </div>
-//   );
-// }
-
 export function SubmitPrimaryInput(props: InputProps) {
     const { pending } = useFormStatus()
     return (
@@ -127,104 +88,102 @@ export function SubmitSecondaryInput(props: InputProps) {
     )
 }
 
-// export function DropdownInputMultipleSelect(props: DropdownInputMultipleSelectProps) {
-//   const [options, setOptions] = useState(props.options);
+// @ts-ignore
+interface DropdownInputMultipleSelectProps
+    extends InputHTMLAttributes<HTMLInputElement> {
+    options: { label: string; options: { value: string; label: string }[] }[]
+    onChange?: (selectedOptions: string[]) => void
+}
+export function DropdownInputMultipleSelect(
+    props: DropdownInputMultipleSelectProps,
+) {
+    const [selectedOption, setSelectedOption] = useState('')
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([])
 
-//   const handleChange = (selectedOptions: any) => {
-//     const selectedValues = selectedOptions.map((option: any) => option.value.replace(/\|\d*/g, ''));
-//     setOptions(options.map(group => ({
-//       ...group,
-//       options: group.options.map(option => ({
-//         ...option,
-//         isDisabled: selectedValues.some(value => value === option.value.replace(/\|\d*/g, ''))
-//       }))
-//     })));
-//   };
+    useEffect(() => {
+        props.onChange?.(selectedOptions)
+    }, [selectedOptions, props])
 
-//   return (
-//     <Select
-//       className="border-black"
-//       isMulti
-//       options={options}
-//       closeMenuOnSelect={false}
-//       name={props.name}
-//       onChange={handleChange}
-//       placeholder={props.placeholder ?? props.name}
-//       styles={{
-//         control: (styles) => ({
-//           ...styles,
-//           borderColor: 'black',
-//           borderRadius: '0.375rem',
-//         }),
-//         groupHeading: (styles, { data }) => ({
-//           ...styles,
-//           padding: '0.25rem',
-//           display: 'flex',
-//           alignItems: 'center',
-//           '::before': {
-//             content: '""',
-//             display: 'block',
-//             height: '25px',
-//             width: '25px',
-//             marginRight: '0.5rem',
-//             backgroundImage: `url(/images/tools/${data.options[0].value.replace(/\|\d*/g, '')}.png)`,
-//             backgroundSize: 'contain',
-//           },
-//         }),
-//       }}
-//     />
-//   );
-// }
+    return (
+        <div className="flex flex-col gap-2">
+            <div className="flex  items-center gap-2">
+                <select
+                    className="min-w-40"
+                    value={selectedOption}
+                    onChange={e => setSelectedOption(e.target.value)}
+                >
+                    <option value="" disabled>
+                        Selecciona una herramienta
+                    </option>
+                    {props.options
+                        .flatMap(tool => tool.options)
+                        .filter(
+                            t =>
+                                !selectedOptions
+                                    .map(t => t.split('|')[0])
+                                    .includes(t.value.split('|')[0]),
+                        )
+                        .map(tool => (
+                            <option key={tool.value} value={tool.value}>
+                                {tool.label}
+                            </option>
+                        ))}
+                </select>
+                <button
+                    type="button"
+                    onClick={() => {
+                        if (
+                            selectedOption &&
+                            !selectedOptions.includes(selectedOption)
+                        ) {
+                            setSelectedOptions([
+                                ...selectedOptions,
+                                selectedOption,
+                            ])
+                            setSelectedOption('') // Resetea el valor seleccionado
+                        }
+                    }}
+                    className="px-2 py-1 bg-blue-500 text-white rounded"
+                >
+                    Añadir
+                </button>
+            </div>
 
-// interface DropdownInputMultipleSelectProps extends InputHTMLAttributes<HTMLInputElement> {
-//   options: { label: string, options: { value: string, label: string, isDisabled?: boolean }[] }[]
-// }
-// export function DropdownInputMultipleSelect(props: DropdownInputMultipleSelectProps) {
-//   const [options, setOptions] = useState(props.options)
-
-//   return (
-//     <Select
-//       className="border-black"
-//       isMulti
-//       options={options}
-//       closeMenuOnSelect={false}
-//       name={props.name}
-//       onChange={e => {
-//         setOptions([...options.map(g => ({
-//           ...g,
-//           options: g.options.map(o => ({
-//             ...o,
-//             // @ts-ignore
-//             isDisabled: e.map(o => o.value.replace(/\|\d*/g, '')).some(eo => eo === o.value.replace(/\|\d*/g, ''))
-//           }))
-//         }))])
-//       }}
-//       placeholder={props.placeholder ?? props.name}
-//       styles={{
-//         control: (styles) => ({
-//           ...styles,
-//           borderColor: 'black',
-//           borderRadius: '0.375rem',
-//         }),
-//         groupHeading: (styles, { data }) => {
-//           return ({
-//             ...styles,
-//             padding: '0.25rem',
-//             alignItems: 'center',
-//             display: 'flex',
-//             '::before': {
-//               content: '""',
-//               display: 'block',
-//               height: '25px',
-//               width: '25px',
-//               marginRight: '0.5rem',
-//               // @ts-ignore
-//               backgroundImage: `url(/images/tools/${data.options[0].value.replace(/\|\d*/g, '')}.png)`,
-//               backgroundSize: 'contain',
-//             }
-//           })
-//         },
-//       }}
-//     />
-//   );
-// }
+            {/* Lista de herramientas seleccionadas ay detalles soluciones en proceso */}
+            {selectedOptions.length > 0 && (
+                <div className="mt-4">
+                    <h4 className="font-semibold mb-2">
+                        Herramientas seleccionadas:
+                    </h4>
+                    <ul>
+                        {selectedOptions.map((tool, index) => (
+                            <li
+                                key={index}
+                                className="flex justify-between items-center mb-1"
+                            >
+                                {
+                                    props.options
+                                        .flatMap(tool => tool.options)
+                                        .find(t => t.value === tool)?.label
+                                }
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setSelectedOptions(
+                                            selectedOptions.filter(
+                                                t => t !== tool,
+                                            ),
+                                        )
+                                    }
+                                    className="ml-4 text-red-500"
+                                >
+                                    Eliminar
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    )
+}

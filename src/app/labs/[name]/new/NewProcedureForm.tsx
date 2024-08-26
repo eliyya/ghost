@@ -1,22 +1,32 @@
 'use client'
 
-import { ChangeEventHandler, useState } from 'react'
-import { Input, SubmitPrimaryInput } from '@/components/Input'
-import { Laboratory, Tool, User } from '@prisma/client'
+import { useState } from 'react'
+import {
+    DropdownInputMultipleSelect,
+    Input,
+    SubmitPrimaryInput,
+} from '@/components/Input'
+import { Laboratory, Prisma, Tool, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { registerProcedure } from '@/actions/labs'
+import { formatDateToInputFormat } from '@/lib/utils'
 
 interface NewProcedureFormProps {
-    date: Date
-    open_date: Date
-    close_date: Date
+    date: number
     user_id: User['id']
-    tools?: Tool[]
-    lab_id: Laboratory['id']
+    lab: Prisma.LaboratoryGetPayload<{
+        select: {
+            id: true
+            tools: true
+            open_hour: true
+            close_hour: true
+        }
+    }>
 }
 
 export function NewProcedureForm(props: NewProcedureFormProps) {
-    const tools = (props.tools || []).map(t => ({
+    const sugestedDate = new Date(props.date)
+    const toolsOptions = (props.lab.tools || []).map(t => ({
         label: t.name,
         options: Array.from({ length: t.stock }, (_, i) => ({
             value: `${t.id}|${i + 1}`,
@@ -24,55 +34,12 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
         })),
     }))
     const router = useRouter()
-    const [formData, setFormData] = useState<{
-        date: string
-        out: number
-        tools: string[]
-    }>({
-        date: '',
-        out: 1,
-        tools: [],
-    })
     const [subject, setSubject] = useState('')
     const [practice_name, setPracticeName] = useState('')
-    const [selectedTool, setSelectedTool] = useState('')
     const [students, setStudents] = useState(1)
-
-    let hour = props.date.getHours()
-    if (hour < props.open_date.getHours()) hour = props.open_date.getHours()
-    if (hour > props.close_date.getHours())
-        hour = props.close_date.getHours() - 1
-
-    const startDate = new Date(
-        props.date.getFullYear(),
-        props.date.getMonth(),
-        props.date.getDate(),
-        hour,
-    )
-
-    const handleInputChange: ChangeEventHandler<HTMLInputElement> = e => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        })
-    }
-
-    const handleAddTool = () => {
-        if (selectedTool && !formData.tools.includes(selectedTool)) {
-            setFormData({
-                ...formData,
-                tools: [...formData.tools, selectedTool], // Añade la herramienta seleccionada a la lista
-            })
-            setSelectedTool('') // Resetea el valor seleccionado
-        }
-    }
-
-    const handleRemoveTool = (tools: string) => {
-        setFormData({
-            ...formData,
-            tools: formData.tools.filter(t => t !== tools), // Remueve la lista
-        })
-    }
+    const [date, setDate] = useState(formatDateToInputFormat(sugestedDate))
+    const [hours, setHours] = useState(1)
+    const [selectedTools, setSelectedTools] = useState<string[]>([])
 
     return (
         <form
@@ -80,16 +47,15 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 const response = await registerProcedure({
                     subject: subject,
                     practice_name: practice_name,
-                    start_date: new Date(formData.date),
+                    start_date: new Date(date),
                     // @ts-ignore
                     end_date: new Date(
-                        new Date(formData.date).getTime() +
-                            formData.out * 60 * 60 * 1000,
+                        new Date(date).getTime() + hours * 60 * 60 * 1000,
                     ),
-                    lab_id: props.lab_id,
+                    lab_id: props.lab.id,
                     submiter_id: props.user_id,
                     students: students,
-                    UsedTool: formData.tools.map(tool => ({
+                    UsedTool: selectedTools.map(tool => ({
                         tool_id: tool.split('|')[0],
                         quantity: Number(tool.split('|')[1]),
                     })),
@@ -123,32 +89,24 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 type="datetime-local"
                 name="date"
                 placeholder="Fecha"
-                value={formData.date}
-                onChange={e => {
-                    console.log(typeof e.target.value, e.target.value)
-
-                    handleInputChange(e)
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                onBlur={e => {
+                    const d = new Date(e.target.value)
+                    d.setMinutes(0)
+                    d.setSeconds(0)
+                    d.setMilliseconds(0)
+                    setDate(formatDateToInputFormat(d))
                 }}
                 required
-                step={3600000}
-                defaultValue={`${startDate.getFullYear()}-${(
-                    startDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${startDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T${startDate
-                    .getHours()
-                    .toString()
-                    .padStart(2, '0')}:00`}
+                step={3600_000}
             />
             <Input
                 type="number"
-                name="out"
+                name="hours"
                 placeholder="Horas de practica"
-                value={formData.out}
-                onChange={handleInputChange}
+                value={hours}
+                onChange={e => setHours(Number(e.target.value))}
                 min={1}
                 required
                 step={1}
@@ -163,90 +121,12 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 required
                 step={1}
             />
-
-            {tools.length > 0 && (
-                <>
-                    {/* Selección de herramientas muchos detalles planificando estilos*/}
-                    {props.tools?.length && (
-                        <div className="flex flex-col gap-2">
-                            <div className="flex  items-center gap-2">
-                                <select
-                                    className="min-w-40"
-                                    value={selectedTool}
-                                    onChange={e =>
-                                        setSelectedTool(e.target.value)
-                                    }
-                                >
-                                    <option value="" disabled>
-                                        Selecciona una herramienta
-                                    </option>
-                                    {tools
-                                        .flatMap(tool => tool.options)
-                                        .filter(
-                                            t =>
-                                                !formData.tools
-                                                    .map(t => t.split('|')[0])
-                                                    .includes(
-                                                        t.value.split('|')[0],
-                                                    ),
-                                        )
-                                        .map(tool => (
-                                            <option
-                                                key={tool.value}
-                                                value={tool.value}
-                                            >
-                                                {tool.label}
-                                            </option>
-                                        ))}
-                                </select>
-                                <button
-                                    type="button"
-                                    onClick={handleAddTool}
-                                    className="px-2 py-1 bg-blue-500 text-white rounded"
-                                >
-                                    Añadir
-                                </button>
-                            </div>
-
-                            {/* Lista de herramientas seleccionadas ay detalles soluciones en proceso */}
-                            {formData.tools.length > 0 && (
-                                <div className="mt-4">
-                                    <h4 className="font-semibold mb-2">
-                                        Herramientas seleccionadas:
-                                    </h4>
-                                    <ul>
-                                        {formData.tools.map((tool, index) => (
-                                            <li
-                                                key={index}
-                                                className="flex justify-between items-center mb-1"
-                                            >
-                                                {
-                                                    (props.tools || []).find(
-                                                        t =>
-                                                            t.id ===
-                                                            tool.split('|')[0],
-                                                    )?.name
-                                                }{' '}
-                                                x {tool.split('|')[1]}
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        handleRemoveTool(tool)
-                                                    }
-                                                    className="ml-4 text-red-500"
-                                                >
-                                                    Eliminar
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </>
+            {toolsOptions.length > 0 && (
+                <DropdownInputMultipleSelect
+                    options={toolsOptions}
+                    onChange={e => setSelectedTools(e)}
+                />
             )}
-
             <SubmitPrimaryInput className="mt-2" value="Reservar" />
         </form>
     )

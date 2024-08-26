@@ -2,7 +2,7 @@
 import { ButtonSecondaryLink } from '@/components/Buttons'
 import { RetornableInput } from '@/components/EditableInput'
 import { SubmitPrimaryInput } from '@/components/Input'
-import { hourToTime } from '@/lib/utils'
+import { secondsToHHMM } from '@/lib/utils'
 import { useState } from 'react'
 
 export interface EditLabAction {
@@ -65,7 +65,7 @@ export function EditLabForm(props: EditLabFormProps) {
                 type="time"
                 name="open_hour"
                 error={usernameError}
-                defaultValue={hourToTime(props.lab.open_hour)}
+                defaultValue={secondsToHHMM(props.lab.open_hour)}
                 // TODO: validate that open_date is before close_date and in horary range of the lab
                 placeholder="Hora de Aperetura"
                 required
@@ -74,9 +74,9 @@ export function EditLabForm(props: EditLabFormProps) {
                 type="time"
                 name="close_hour"
                 error={usernameError}
-                defaultValue={hourToTime(props.lab.close_hour)}
+                defaultValue={secondsToHHMM(props.lab.close_hour)}
                 // TODO: validate that close_date is after open_date and in horary range of the lab
-                min={hourToTime(props.lab.open_hour)}
+                min={secondsToHHMM(props.lab.open_hour)}
                 placeholder="Hora de Cierre"
                 required
             />
