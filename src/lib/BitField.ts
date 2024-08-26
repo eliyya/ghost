@@ -73,6 +73,7 @@ export default class BitField<
         // @ts-ignore
         return (
             ((this.bitfield as number) &
+                // @ts-ignore
                 (this.constructor.resolve(bit) as number)) !==
             this.DefaultBit
         )
@@ -105,8 +106,8 @@ export default class BitField<
      * @param {...*} hasParams Additional parameters for the has method, if any
      * @returns {string[]}
      */
-    missing(bits: BitFieldResolvable<Flags, Type>, ...hasParams: any[]) {
-        return new BitField(bits).remove(this).toArray(...hasParams)
+    missing(bits: BitFieldResolvable<Flags, Type>) {
+        return new BitField(bits).remove(this).toArray()
     }
 
     /**

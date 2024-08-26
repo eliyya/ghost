@@ -5,17 +5,7 @@ import { prisma } from '@/lib/db'
 import { parseName } from '@/lib/utils'
 import { Prisma } from '@prisma/client'
 import { hash } from 'bcrypt'
-
-export enum ErrorMessages {
-    TakenUsername = 'Username already in use',
-    InvalidName = 'Invalid Name',
-    InvalidPassword = 'Invalid Password',
-    Internal = 'Internal Server Error',
-}
-
-export enum SuccessMessages {
-    UserCreated = 'User Created',
-}
+import { ErrorMessages, SuccessMessages } from './types/users'
 
 export async function registerUser(props: {
     name: string

@@ -25,23 +25,18 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
     }))
     const router = useRouter()
     const [formData, setFormData] = useState<{
-        subject: string
-        practice_name: string
         date: string
         out: number
-        students: number
         tools: string[]
     }>({
-        subject: '',
-        practice_name: '',
         date: '',
         out: 1,
-        students: 1,
         tools: [],
     })
     const [subject, setSubject] = useState('')
     const [practice_name, setPracticeName] = useState('')
     const [selectedTool, setSelectedTool] = useState('')
+    const [students, setStudents] = useState(1)
 
     let hour = props.date.getHours()
     if (hour < props.open_date.getHours()) hour = props.open_date.getHours()
@@ -83,8 +78,8 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
         <form
             action={async () => {
                 const response = await registerProcedure({
-                    subject: formData.subject,
-                    practice_name: formData.practice_name,
+                    subject: subject,
+                    practice_name: practice_name,
                     start_date: new Date(formData.date),
                     // @ts-ignore
                     end_date: new Date(
@@ -93,7 +88,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     ),
                     lab_id: props.lab_id,
                     submiter_id: props.user_id,
-                    students: Number(formData.students),
+                    students: students,
                     UsedTool: formData.tools.map(tool => ({
                         tool_id: tool.split('|')[0],
                         quantity: Number(tool.split('|')[1]),
@@ -162,8 +157,8 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 type="number"
                 name="students"
                 placeholder="Cantidad de Alumnos"
-                value={formData.students}
-                onChange={handleInputChange}
+                value={students}
+                onChange={e => setStudents(Number(e.target.value))}
                 min={1}
                 required
                 step={1}
