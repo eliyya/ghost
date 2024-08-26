@@ -2,7 +2,6 @@
 
 import { snowflake } from '@/lib/constants'
 import { prisma } from '@/lib/db'
-import { parseName } from '@/lib/utils'
 
 export async function registerProcedure(data: {
     lab_id: string
@@ -74,7 +73,7 @@ export async function registerLaboratory(props: {
         await prisma.laboratory.create({
             data: {
                 id: snowflake.generate().toString(),
-                name: parseName(props.name),
+                name: props.name,
                 open_hour: props.openHour,
                 close_hour: props.closeHour,
             },

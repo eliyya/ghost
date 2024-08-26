@@ -29,8 +29,8 @@ export default async function AdminDocentesEditPage(
             where: { id },
             data: {
                 name: data.name,
-                open_date: data.open_date,
-                close_date: data.close_date,
+                open_hour: data.openHour,
+                close_hour: data.closeHour,
             },
         })
 
