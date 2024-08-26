@@ -37,6 +37,7 @@ export interface LabsNameProps {
     }
 }
 
+// TODO: pre-render this page
 export default async function LabsNamePage(props: LabsNameProps) {
     const user = await getPosibleUser()
     const requestedDate = validateDateRangeAdmin(
@@ -59,6 +60,7 @@ export default async function LabsNamePage(props: LabsNameProps) {
         lastDay,
         name: props.params.name,
     })
+
     if (!lab) redirect('/labs')
 
     // const hours = lab.close_date.getHours() - lab.open_date.getHours()
@@ -194,7 +196,7 @@ function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
                 .filter(p => p.start_date.getDay() === 1)
                 .reduce(
                     (acc, p) => {
-                        const hour = p.start_date.getUTCHours()
+                        const hour = p.start_date.getHours()
                         if (!acc[hour]) acc[hour] = p
                         return acc
                     },
@@ -267,23 +269,14 @@ function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
         let currentHour = startHour
 
         while (currentHour < endHour) {
-            // @ts-ignore
-            if (!schedule[day][currentHour]) {
-                // @ts-ignore
-                schedule[day][currentHour] = null // Si no hay nada en la hora, rellena con un objeto vacío
+            if (!schedule[day as keyof typeof schedule][currentHour]) {
+                schedule[day as keyof typeof schedule][currentHour] = null // Si no hay nada en la hora, rellena con un objeto vacío
                 currentHour++
-            } else {
-                // @ts-ignore
-                const startDate = new Date(
-                    // @ts-ignore
-                    schedule[day][currentHour].start_date,
-                )
-                // @ts-ignore
-                const endDate = new Date(schedule[day][currentHour].end_date)
-                // @ts-ignore
-                const duration = (endDate - startDate) / (1000 * 60 * 60) // Duración en horas
-                currentHour += duration // Salta las horas ocupadas por la sesión
-            }
+            } else
+                currentHour += Math.floor(
+                    schedule[day as keyof typeof schedule][currentHour]!
+                        .duration / 60,
+                ) // Salta las horas ocupadas por la sesión
         }
     }
 

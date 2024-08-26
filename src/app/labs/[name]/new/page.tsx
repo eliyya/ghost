@@ -32,6 +32,7 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
             open_hour: true,
             tools: true,
             id: true,
+            available_days: true,
         },
     }))!
     const user = await getVerifiedUser()

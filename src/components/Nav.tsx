@@ -12,6 +12,8 @@ export interface NavProps {
      */
     redirect?: string
 }
+// TODO: make independent
+// TODO: make vertical
 export async function Nav(props: NavProps) {
     const labs = await prisma.laboratory.findMany({})
 

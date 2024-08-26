@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     DropdownInputMultipleSelect,
     Input,
@@ -20,6 +20,7 @@ interface NewProcedureFormProps {
             tools: true
             open_hour: true
             close_hour: true
+            available_days: true
         }
     }>
 }
@@ -38,8 +39,24 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
     const [practice_name, setPracticeName] = useState('')
     const [students, setStudents] = useState(1)
     const [date, setDate] = useState(formatDateToInputFormat(sugestedDate))
+    const [dateError, setDateError] = useState('')
     const [hours, setHours] = useState(1)
     const [selectedTools, setSelectedTools] = useState<string[]>([])
+    const [maxHours, setMaxHours] = useState(24)
+    const [errorHours, setErrorHours] = useState('')
+
+    useEffect(() => {
+        const d = new Date(date)
+        d.setMinutes(0)
+        d.setSeconds(0)
+        d.setMilliseconds(0)
+        const maxHours = Math.floor(props.lab.close_hour / 3600) - d.getHours()
+        setMaxHours(maxHours)
+        if (hours > maxHours)
+            setErrorHours(
+                `La duración excede el horario de ${Math.floor(props.lab.open_hour / 3600)} a ${Math.floor(props.lab.close_hour / 3600)}`,
+            )
+    }, [date, props.lab, hours])
 
     return (
         <form
@@ -87,24 +104,54 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 name="date"
                 placeholder="Fecha"
                 value={date}
-                onChange={e => setDate(e.target.value)}
+                onChange={e => {
+                    setDateError('')
+                    setDate(e.target.value)
+                }}
+                error={dateError}
                 onBlur={e => {
                     const d = new Date(e.target.value)
                     d.setMinutes(0)
                     d.setSeconds(0)
                     d.setMilliseconds(0)
+                    // validate day of week in range of lab open days
+                    if (
+                        adjustDateToActiveDay(d, props.lab.available_days) !== d
+                    )
+                        setDateError(
+                            'El laboratorio no está disponible en este día',
+                        )
+                    // validate hour in range of lab open hours
+                    if (d.getHours() < Math.floor(props.lab.open_hour / 3600)) {
+                        setDateError(
+                            `El laboratorio abre a las ${Math.floor(props.lab.open_hour / 3600)}`,
+                        )
+                    }
+                    if (
+                        d.getHours() >
+                        Math.floor(props.lab.close_hour / 3600) - 1
+                    ) {
+                        setDateError(
+                            `El laboratorio cierra a las ${Math.floor(props.lab.close_hour / 3600)}`,
+                        )
+                    }
                     setDate(formatDateToInputFormat(d))
                 }}
+                step={3600}
                 required
-                step={3600_000}
             />
             <Input
                 type="number"
                 name="hours"
                 placeholder="Horas de practica"
                 value={hours}
-                onChange={e => setHours(Number(e.target.value))}
+                onChange={e => {
+                    setHours(Number(e.target.value))
+                    setErrorHours('')
+                }}
                 min={1}
+                max={maxHours}
+                error={errorHours}
                 required
                 step={1}
             />
@@ -127,4 +174,26 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
             <SubmitPrimaryInput className="mt-2" value="Reservar" />
         </form>
     )
+}
+
+function adjustDateToActiveDay(date: Date, activeDays: number): Date {
+    const dayOfWeek = date.getDay() // Obtiene el día de la semana (0=domingo, 1=lunes, ..., 6=sábado)
+
+    // Verifica si el día de la semana actual está activo en el binario
+    if ((activeDays & (1 << dayOfWeek)) !== 0) {
+        return date // El día es válido, retorna la fecha original
+    }
+
+    // Si el día no está activo, busca el primer día activo
+    for (let i = 0; i < 7; i++) {
+        if ((activeDays & (1 << i)) !== 0) {
+            // Ajusta la fecha al primer día activo encontrado
+            const adjustedDate = new Date(date)
+            adjustedDate.setDate(date.getDate() + ((i - dayOfWeek + 7) % 7))
+            return adjustedDate
+        }
+    }
+
+    // En caso de que no haya días activos, retorna la fecha original (esto no debería ocurrir)
+    return date
 }
