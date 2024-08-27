@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { ButtonSecondaryLink } from '@/components/Buttons'
 import { SubmitPrimaryInput } from '@/components/Input'
 import { Nav } from '@/components/Nav'
-
+import { root } from '@eliyya/type-routes'
 export interface DeleteLabsPageProps {
     params: {
         id: string
@@ -15,7 +15,7 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
 
     const id = props.params.id
     const lab = await prisma.laboratory.findFirst({ where: { id } })
-    if (!lab) redirect('/admin/labs')
+    if (!lab) redirect(root.admin.labs())
 
     const deleteLab = async () => {
         'use server'
@@ -24,7 +24,7 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
                 id,
             },
         })
-        redirect('/admin/labs')
+        redirect(root.admin.labs())
     }
     return (
         <>

@@ -10,6 +10,7 @@ import { Laboratory, Prisma, Tool, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { registerProcedure } from '@/actions/labs'
 import { formatDateToInputFormat } from '@/lib/utils'
+import { AvailableDaysBitfield, AvailableDaysFlags } from '@/lib/BitField'
 
 interface NewProcedureFormProps {
     date: number
@@ -179,8 +180,9 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
 function adjustDateToActiveDay(date: Date, activeDays: number): Date {
     const dayOfWeek = date.getDay() // Obtiene el día de la semana (0=domingo, 1=lunes, ..., 6=sábado)
 
+    const avivableBit = new AvailableDaysBitfield(activeDays)
     // Verifica si el día de la semana actual está activo en el binario
-    if ((activeDays & (1 << dayOfWeek)) !== 0) {
+    if (avivableBit.has(1 << dayOfWeek)) {
         return date // El día es válido, retorna la fecha original
     }
 

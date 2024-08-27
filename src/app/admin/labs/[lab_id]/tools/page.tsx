@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db'
 import { verifyAdmin } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { ToolCard } from './ToolCard'
+import { root } from '@eliyya/type-routes'
 
 interface ToolsPageProps {
     params: {
@@ -18,7 +19,7 @@ export default async function ToolsPage(prop: ToolsPageProps) {
             id: lab_id,
         },
     })
-    if (!lab) redirect('/admin/labs')
+    if (!lab) redirect(root.admin.labs())
     const tools = await prisma.tool.findMany({
         where: {
             lab_id,

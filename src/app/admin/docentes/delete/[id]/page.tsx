@@ -4,22 +4,23 @@ import { Nav } from '@/components/Nav'
 import { prisma } from '@/lib/db'
 import { verifyAdmin } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-
+import { root } from '@eliyya/type-routes'
 interface DeleteTeacherPageProps {
     params: {
         id: string
     }
 }
+
 export default async function DeleteTeacherPage(props: DeleteTeacherPageProps) {
     const admin = await verifyAdmin()
     const id = props.params.id
-    if (admin.id === id) redirect('/admin/docentes')
+    if (admin.id === id) redirect(root.admin.docentes())
     const user = await prisma.user.findFirst({
         where: {
             id,
         },
     })
-    if (!user) redirect('/admin/docentes')
+    if (!user) redirect(root.admin.docentes())
 
     const deleteUser = async () => {
         'use server'
@@ -28,7 +29,7 @@ export default async function DeleteTeacherPage(props: DeleteTeacherPageProps) {
                 id,
             },
         })
-        redirect('/admin/docentes')
+        redirect(root.admin.docentes())
     }
 
     return (

@@ -6,6 +6,7 @@ import { SubmitPrimaryInput } from '@/components/Input'
 import { Nav } from '@/components/Nav'
 import Image from 'next/image'
 import { rm } from 'node:fs/promises'
+import { root } from '@eliyya/type-routes'
 
 export interface DeleteLabsPageProps {
     params: {
@@ -18,7 +19,7 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
     const { tool_id, lab_id } = props.params
     const id = props.params.tool_id
     const tool = await prisma.tool.findFirst({ where: { id } })
-    if (!tool) redirect('/admin/labs')
+    if (!tool) redirect(root.admin.labs())
 
     const deleteTool = async () => {
         'use server'
@@ -32,7 +33,7 @@ export default async function Deletelabs(props: DeleteLabsPageProps) {
         } catch (error) {
             // console.log(error)
         }
-        redirect(`/admin/labs/${lab_id}/tools`)
+        redirect(root.admin.labs.$lab_id.tools(lab_id))
     }
     return (
         <>

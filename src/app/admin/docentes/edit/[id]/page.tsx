@@ -4,6 +4,7 @@ import { verifyAdmin } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { EditUserForm, EditUserAction } from './EditUserForm'
 import { hash } from 'bcrypt'
+import { root } from '@eliyya/type-routes'
 
 interface AdminDocentesEditPageProps {
     params: {
@@ -15,9 +16,9 @@ export default async function AdminDocentesEditPage(
 ) {
     const admin = await verifyAdmin()
     const id = props.params.id
-    if (admin.id === id) redirect('/admin/docentes')
+    if (admin.id === id) redirect(root.admin.docentes())
     const user = await prisma.user.findFirst({ where: { id } })
-    if (!user) redirect('/admin/docentes')
+    if (!user) redirect(root.admin.docentes())
 
     const editUser: EditUserAction = async data => {
         'use server'

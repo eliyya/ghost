@@ -1,13 +1,13 @@
 export interface RecursiveReadonlyArray<ItemType>
-    extends ReadonlyArray<ItemType | RecursiveReadonlyArray<ItemType>> {}
+    extends ReadonlyArray<ItemType | RecursiveReadonlyArray<ItemType>> { }
 
 export type BitFieldResolvable<
     Flags extends string,
     Type extends number | bigint,
 > =
     | RecursiveReadonlyArray<
-          Flags | Type | `${bigint}` | Readonly<BitField<Flags, Type>>
-      >
+        Flags | Type | `${bigint}` | Readonly<BitField<Flags, Type>>
+    >
     | Flags
     | Type
     | `${bigint}`
@@ -182,8 +182,8 @@ export default class BitField<
 
     toJSON() {
         return typeof this.bitfield === 'number' ?
-                this.bitfield
-            :   this.bitfield.toString()
+            this.bitfield
+            : this.bitfield.toString()
     }
 
     valueOf() {
@@ -237,8 +237,8 @@ export default class BitField<
         if (typeof bit === 'string') {
             if (!isNaN(Number(bit)))
                 return typeof DefaultBit === 'bigint' ?
-                        BigInt(bit)
-                    :   Number(bit)
+                    BigInt(bit)
+                    : Number(bit)
             // @ts-ignore
             if (this.Flags[bit] !== undefined) return this.Flags[bit]
         }

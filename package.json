@@ -6,7 +6,7 @@
         "migrate": "prisma migrate dev",
         "generate": "prisma generate",
         "dev": "next dev --turbo",
-        "build": "npx @eliyya/type-routes && next build",
+        "build": "npx prisma generate && npx @eliyya/type-routes && next build",
         "start": "next start",
         "lint": "next lint",
         "format:check": "prettier --check .",
@@ -19,7 +19,6 @@
         "ghost": "./cli/cli.mjs"
     },
     "dependencies": {
-        "@eliyya/inquirer-fs-selector": "^0.3.2",
         "@inquirer/prompts": "^5.3.8",
         "@prisma/client": "^5.18.0",
         "@sapphire/snowflake": "^3.5.3",
