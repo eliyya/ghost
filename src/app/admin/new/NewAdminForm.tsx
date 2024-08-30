@@ -2,6 +2,7 @@
 
 import { registerUser } from '@/actions/users'
 import { Input, SubmitPrimaryInput } from '@/components/Input'
+import { RegisterUserErrorMessages } from '@/lib/constants'
 import { parseName } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -13,6 +14,7 @@ export function NewAdminForm() {
     const [password2, setPassword2] = useState<string>('')
     const [passwordError, setPasswordError] = useState<string>('')
     const [password2Error, setPassword2Error] = useState<string>('')
+    const [usernameError, setUsernameError] = useState<string>('')
     const router = useRouter()
 
     const submit = async () => {

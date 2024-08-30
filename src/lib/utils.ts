@@ -21,11 +21,11 @@ export function hhmmToSeconds(time: string): number {
     return totalSeconds
 }
 
-export function wrapper<T>(fn: () => T): T | undefined {
+export function wrapper<T>(fn: () => T): [unknown, undefined] | [undefined, T] {
     try {
-        return fn()
-    } catch {
-        // nothing
+        return [, fn()]
+    } catch (error) {
+        return [error, undefined]
     }
 }
 

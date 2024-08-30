@@ -5,30 +5,40 @@ import { prisma } from '@/lib/db'
 import { parseName } from '@/lib/utils'
 import { Prisma } from '@prisma/client'
 import { hash } from 'bcrypt'
-import { ErrorMessages, SuccessMessages } from './types/users'
+import {
+    RegisterUserErrorMessages,
+    RegisterUserSuccessMessages,
+} from '@/lib/constants'
 
 export async function registerUser(props: {
     name: string
     username: string
     password: string
     admin: boolean
-}): Promise<{
-    status: 'error' | 'succes'
-    message: ErrorMessages | SuccessMessages
-    data: null | Prisma.UserGetPayload<{
-        select: {
-            id: true
-            name: true
-            username: true
-            admin: true
-        }
-    }>
-}> {
+}): Promise<
+    | {
+          status: 'succes'
+          message: RegisterUserSuccessMessages
+          data: Prisma.UserGetPayload<{
+              select: {
+                  id: true
+                  name: true
+                  username: true
+                  admin: true
+              }
+          }>
+      }
+    | {
+          status: 'error'
+          message: RegisterUserErrorMessages
+          data: null
+      }
+> {
     const parsedName = parseName(props.name)
     if (!parsedName)
         return {
             status: 'error',
-            message: ErrorMessages.InvalidName,
+            message: RegisterUserErrorMessages.InvalidName,
             data: null,
         }
 
@@ -39,7 +49,7 @@ export async function registerUser(props: {
     ) {
         return {
             status: 'error',
-            message: ErrorMessages.InvalidPassword,
+            message: RegisterUserErrorMessages.InvalidPassword,
             data: null,
         }
     }
@@ -62,17 +72,21 @@ export async function registerUser(props: {
         })
         return {
             status: 'succes',
-            message: SuccessMessages.UserCreated,
+            message: RegisterUserSuccessMessages.UserCreated,
             data: admin,
         }
     } catch (error) {
         if ((error as any).message.includes('Unique constraint failed')) {
             return {
                 status: 'error',
-                message: ErrorMessages.TakenUsername,
+                message: RegisterUserErrorMessages.TakenUsername,
                 data: null,
             }
         }
-        return { status: 'error', message: ErrorMessages.Internal, data: null }
+        return {
+            status: 'error',
+            message: RegisterUserErrorMessages.Internal,
+            data: null,
+        }
     }
 }

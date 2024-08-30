@@ -6,11 +6,11 @@ import {
     Input,
     SubmitPrimaryInput,
 } from '@/components/Input'
-import { Laboratory, Prisma, Tool, User } from '@prisma/client'
+import { Prisma, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { registerProcedure } from '@/actions/labs'
 import { formatDateToInputFormat } from '@/lib/utils'
-import { AvailableDaysBitfield, AvailableDaysFlags } from '@/lib/BitField'
+import { AvailableDaysBitfield } from '@/lib/BitField'
 
 interface NewProcedureFormProps {
     date: number
@@ -79,6 +79,8 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 if (response.status === 'succes') {
                     router.push('/labs')
                 } else {
+                    console.log(response)
+
                     alert('Error al enviar el formulario')
                 }
             }}
@@ -136,6 +138,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                             `El laboratorio cierra a las ${Math.floor(props.lab.close_hour / 3600)}`,
                         )
                     }
+                    // TODO: validar que el horario no se cruce con otro procedimiento
                     setDate(formatDateToInputFormat(d))
                 }}
                 step={3600}

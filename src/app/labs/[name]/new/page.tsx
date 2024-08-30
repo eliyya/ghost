@@ -36,9 +36,10 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
         },
     }))!
     const user = await getVerifiedUser()
-    const searchDate =
+    let [, searchDate] =
         wrapper(() => new Date(parseInt(props.searchParams.date!))) ||
         new Date()
+    searchDate ??= new Date()
     searchDate.setMilliseconds(0)
     searchDate.setSeconds(0)
     searchDate.setMinutes(0)

@@ -1,30 +1,20 @@
 'use client'
 
+import { login } from '@/actions/login'
 import { Input } from '@/components/Input'
-import { FormEventHandler } from 'react'
 
-export interface LoginFormProps {
-    submit: (data: {
-        username: string
-        password: string
-    }) => Promise<{ error?: string }>
-}
-export function LoginForm(props: LoginFormProps) {
-    const submitForm: FormEventHandler<HTMLFormElement> = async e => {
-        e.preventDefault()
-        const formData = new FormData(e.currentTarget)
-        const r = await props.submit({
-            username: formData.get('username') as string,
-            password: formData.get('password') as string,
-        })
-        if (r?.error) {
-            alert(r.error)
-        }
-    }
-
+export function LoginForm() {
     return (
         <form
-            onSubmit={submitForm}
+            action={async formData => {
+                const r = await login({
+                    username: formData.get('username') as string,
+                    password: formData.get('password') as string,
+                })
+                if (r?.error) {
+                    alert(r.error)
+                }
+            }}
             className="w-72 p-4 border border-black rounded-lg flex flex-col"
             method="post"
         >

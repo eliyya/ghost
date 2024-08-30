@@ -17,6 +17,7 @@ export function Input(props: InputProps) {
         inputRef.current?.setCustomValidity(props.error ?? '')
     }, [inputRef, props.error])
 
+    // use jsx style
     return (
         <div
             className={`my-2 flex flex-col z-10 ${bg} ${
@@ -32,6 +33,7 @@ export function Input(props: InputProps) {
           ${props.prefix ? 'pl-6' : ''}`}
                 {...props}
                 placeholder=" "
+                disabled={props.disabled}
                 aria-invalid={!!props.error}
                 aria-describedby={props.error ? `${id}-error` : undefined}
             />
@@ -45,6 +47,7 @@ export function Input(props: InputProps) {
           peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:rounded-md
           ${props.error ? 'text-red-600' : ''}`}
             >
+                {/* TODO: make active when focusable */}
                 {props.placeholder ?? props.name}
             </label>
             {props.prefix && (
