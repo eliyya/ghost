@@ -9,7 +9,7 @@ import {
 import { Prisma, Procedure, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { registerProcedure } from '@/actions/labs'
-import { formatDateToInputFormat } from '@/lib/utils'
+import { DateToInputFormat } from '@/lib/utils'
 import { AvailableDaysBitfield } from '@/lib/BitField'
 import { getProcedures } from '@/actions/procedures'
 
@@ -40,7 +40,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
     const [subject, setSubject] = useState('')
     const [practice_name, setPracticeName] = useState('')
     const [students, setStudents] = useState(1)
-    const [date, setDate] = useState(formatDateToInputFormat(sugestedDate))
+    const [date, setDate] = useState(DateToInputFormat(sugestedDate))
     const [dateError, setDateError] = useState('')
     const [hours, setHours] = useState(1)
     const [selectedTools, setSelectedTools] = useState<string[]>([])
@@ -49,7 +49,11 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
     const [proceduresCache, setProceduresCache] = useState<
         Record<string, Procedure[]>
     >({})
-
+    const minumumDate = new Date()
+    minumumDate.setHours(
+        Math.floor(props.lab.open_hour_in_minutes / 60),
+        props.lab.open_hour_in_minutes % 60,
+    )
     useEffect(() => {
         const d = new Date(date)
         d.setMinutes(0)
@@ -84,8 +88,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                 if (response.status === 'succes') {
                     router.push('/labs')
                 } else {
-                    console.log(response)
-
+                    console.error(response)
                     alert('Error al enviar el formulario')
                 }
             }}
@@ -122,6 +125,10 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     d.setMinutes(0)
                     d.setSeconds(0)
                     d.setMilliseconds(0)
+                    if (d < minumumDate)
+                        setDateError(
+                            `No se puede reservar un dia anterior a hoy`,
+                        )
                     // validate day of week in range of lab open days
                     if (
                         adjustDateToActiveDay(d, props.lab.available_days) !== d
@@ -133,29 +140,26 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     if (
                         d.getHours() <
                         Math.floor(props.lab.open_hour_in_minutes / 60)
-                    ) {
+                    )
                         setDateError(
                             `El laboratorio abre a las ${Math.floor(props.lab.open_hour_in_minutes / 60)}`,
                         )
-                    }
+
                     if (
                         d.getHours() >
                         Math.floor(props.lab.close_hour_in_minutes / 60) - 1
-                    ) {
+                    )
                         setDateError(
                             `El laboratorio cierra a las ${Math.floor(props.lab.close_hour_in_minutes / 60)}`,
                         )
-                    }
-                    // TODO: validar que el horario no se cruce con otro procedimiento
-                    // crear una acción que obtenga los procedimientos de un laboratorio en un día
-                    // y validar que no se cruce con ninguno
-                    // cachear los procedimientos de un laboratorio en un día
+                    // validar que el horario no se cruce con otro procedimiento
                     let procedures = proceduresCache[d.toLocaleDateString()]
                     if (!procedures) {
                         procedures = await getProcedures(props.lab.id, {
                             start: d.toString(),
                             end: d.toString(),
                         })
+                        // cachear los procedimientos de un laboratorio en un día
                         setProceduresCache({
                             ...proceduresCache,
                             [d.toLocaleDateString()]: procedures,
@@ -163,11 +167,15 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     }
                     const start = d.getHours() * 60 + d.getMinutes()
                     const end = start + hours * 60
+                    console.log({ procedures }) // TODO: Don't works
+
                     const isOverlapping = procedures.some(p => {
                         const pStart =
                             p.start_date.getHours() * 60 +
                             p.start_date.getMinutes()
                         const pEnd = pStart + p.duration_in_minutes
+                        console.log({ start, end, pStart, pEnd })
+
                         return (
                             (start >= pStart && start < pEnd) ||
                             (end > pStart && end <= pEnd)
@@ -178,7 +186,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                             'El horario se cruza con otro procedimiento',
                         )
                     }
-                    setDate(formatDateToInputFormat(d))
+                    setDate(DateToInputFormat(d))
                 }}
                 step={3600}
                 required
@@ -216,6 +224,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
             )}
             <SubmitPrimaryInput className="mt-2" value="Reservar" />
         </form>
+        // TODO: Mostrar procedimientos del dia en el que se está creando el procedimiento
     )
 }
 

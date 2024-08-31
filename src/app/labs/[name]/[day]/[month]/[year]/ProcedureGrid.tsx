@@ -67,6 +67,7 @@ export function ProcedureGrid({
                                     )
                                 else
                                     return (
+                                        // TODO: solo disponible si no es una hora pasada
                                         <Link
                                             key={indexDay + '-' + i}
                                             className="px-2 py-1 border border-black text-center"
@@ -77,7 +78,7 @@ export function ProcedureGrid({
                                                 startHour + i,
                                             ).getTime()}`}
                                         >
-                                            libre
+                                            Disponible
                                         </Link>
                                     )
                             })}

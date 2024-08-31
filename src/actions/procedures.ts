@@ -31,8 +31,8 @@ export async function getProcedures(
         where: {
             lab_id: labId,
             start_date: {
-                gte: between.start,
-                lt: between.end,
+                gte: new Date(between.start),
+                lt: new Date(between.end),
             },
         },
     })

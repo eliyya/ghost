@@ -266,12 +266,9 @@ function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
                 ),
         },
     }
-    console.log(schedule)
 
     for (const day in schedule) {
         let currentHour = startHour
-        console.log(currentHour)
-
         while (currentHour < endHour) {
             if (!schedule[day as keyof typeof schedule][currentHour]) {
                 schedule[day as keyof typeof schedule][currentHour] = null // Si no hay nada en la hora, rellena con un objeto vacío
