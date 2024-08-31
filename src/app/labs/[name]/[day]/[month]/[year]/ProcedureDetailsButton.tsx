@@ -30,7 +30,7 @@ export function ProcedureDetailsButton(props: {
                 onClick={() => dialogRef.current?.showModal()}
                 className="px-2 py-1 row-span-3 border border-black text-center"
                 style={{
-                    gridRow: `span ${Math.floor(props.procedure.duration / 60)} / span ${Math.floor(props.procedure.duration / 60)}`,
+                    gridRow: `span ${Math.floor(props.procedure.duration_in_minutes / 60)} / span ${Math.floor(props.procedure.duration_in_minutes / 60)}`,
                 }}
             >
                 {props.procedure.practice_name}
@@ -61,7 +61,10 @@ export function ProcedureDetailsButton(props: {
                         })}
                     </p>
                     <span className="text-right">Duración:</span>
-                    <p>{Math.floor(props.procedure.duration / 60)} horas</p>
+                    <p>
+                        {Math.floor(props.procedure.duration_in_minutes / 60)}{' '}
+                        horas
+                    </p>
                     {props.procedure.UsedTool.length ?
                         <div className="col-span-2">
                             {props.procedure.UsedTool.map(t => (

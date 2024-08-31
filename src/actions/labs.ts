@@ -2,7 +2,7 @@
 
 import { snowflake } from '@/lib/constants'
 import { prisma } from '@/lib/db'
-
+// TODO: pasar todo a actions separadas
 export async function registerProcedure(data: {
     lab_id: string
     submiter_id: string
@@ -29,7 +29,7 @@ export async function registerProcedure(data: {
                 practice_name: data.practice_name,
                 lab_id: data.lab_id,
                 start_date: data.start_date,
-                duration: data.duration,
+                duration_in_minutes: data.duration,
                 students: data.students,
                 subject: data.subject,
                 submiter_id: data.submiter_id,
@@ -72,8 +72,8 @@ export async function registerLaboratory(props: {
             data: {
                 id: snowflake.generate().toString(),
                 name: props.name,
-                open_hour: props.openHour,
-                close_hour: props.closeHour,
+                open_hour_in_minutes: props.openHour,
+                close_hour_in_minutes: props.closeHour,
             },
         })
         return { status: 'success', message: 'Lab creado con éxito' }

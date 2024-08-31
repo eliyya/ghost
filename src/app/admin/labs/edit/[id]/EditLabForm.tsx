@@ -2,7 +2,8 @@
 import { ButtonSecondaryLink } from '@/components/Buttons'
 import { RetornableInput } from '@/components/EditableInput'
 import { SubmitPrimaryInput } from '@/components/Input'
-import { secondsToHHMM } from '@/lib/utils'
+import { minutesToHHMM } from '@/lib/utils'
+import { Prisma } from '@prisma/client'
 import { useState } from 'react'
 
 export interface EditLabAction {
@@ -13,11 +14,13 @@ export interface EditLabAction {
     }): Promise<{ status: 'error' | 'succes'; message: string }>
 }
 export interface EditLabFormProps {
-    lab: {
-        name: string
-        open_hour: number
-        close_hour: number
-    }
+    lab: Prisma.LaboratoryGetPayload<{
+        select: {
+            name: true
+            open_hour_in_minutes: true
+            close_hour_in_minutes: true
+        }
+    }>
     action: EditLabAction
 }
 export function EditLabForm(props: EditLabFormProps) {
@@ -65,7 +68,7 @@ export function EditLabForm(props: EditLabFormProps) {
                 type="time"
                 name="open_hour"
                 error={usernameError}
-                defaultValue={secondsToHHMM(props.lab.open_hour)}
+                defaultValue={minutesToHHMM(props.lab.open_hour_in_minutes)}
                 // TODO: validate that open_date is before close_date and in horary range of the lab
                 placeholder="Hora de Aperetura"
                 required
@@ -74,9 +77,9 @@ export function EditLabForm(props: EditLabFormProps) {
                 type="time"
                 name="close_hour"
                 error={usernameError}
-                defaultValue={secondsToHHMM(props.lab.close_hour)}
+                defaultValue={minutesToHHMM(props.lab.close_hour_in_minutes)}
                 // TODO: validate that close_date is after open_date and in horary range of the lab
-                min={secondsToHHMM(props.lab.open_hour)}
+                min={minutesToHHMM(props.lab.open_hour_in_minutes)}
                 placeholder="Hora de Cierre"
                 required
             />

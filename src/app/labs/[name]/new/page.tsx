@@ -28,8 +28,8 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
             id,
         },
         select: {
-            close_hour: true,
-            open_hour: true,
+            close_hour_in_minutes: true,
+            open_hour_in_minutes: true,
             tools: true,
             id: true,
             available_days: true,
@@ -43,11 +43,11 @@ export default async function LabsNewPage(props: LabsNewPageProps) {
     searchDate.setMilliseconds(0)
     searchDate.setSeconds(0)
     searchDate.setMinutes(0)
-    if (searchDate.getHours() < Math.floor(lab.open_hour / 3600)) {
-        searchDate.setHours(Math.floor(lab.open_hour / 3600))
+    if (searchDate.getHours() < Math.floor(lab.open_hour_in_minutes / 60)) {
+        searchDate.setHours(Math.floor(lab.open_hour_in_minutes / 60))
     }
-    if (searchDate.getHours() > Math.floor(lab.close_hour / 3600)) {
-        searchDate.setHours(Math.floor(lab.close_hour / 3600))
+    if (searchDate.getHours() > Math.floor(lab.close_hour_in_minutes / 60)) {
+        searchDate.setHours(Math.floor(lab.close_hour_in_minutes / 60))
     }
 
     return (

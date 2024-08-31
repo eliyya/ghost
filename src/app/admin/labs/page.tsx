@@ -35,8 +35,10 @@ export default async function AdminLabsPage() {
                         {labs.map(lab => (
                             <LabCard
                                 name={lab.name}
-                                open_hour={lab.open_hour}
-                                close_hour={lab.close_hour}
+                                open_hour_in_minutes={lab.open_hour_in_minutes}
+                                close_hour_in_minutes={
+                                    lab.close_hour_in_minutes
+                                }
                                 id={lab.id}
                                 key={lab.id}
                             />

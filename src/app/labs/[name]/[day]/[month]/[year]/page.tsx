@@ -64,8 +64,10 @@ export default async function LabsNamePage(props: LabsNameProps) {
     if (!lab) redirect('/labs')
 
     // const hours = lab.close_date.getHours() - lab.open_date.getHours()
-    const hours = Math.floor((lab.close_hour - lab.open_hour) / 3600)
-    const startHour = Math.floor(lab.open_hour / 3600)
+    const hours = Math.floor(
+        (lab.close_hour_in_minutes - lab.open_hour_in_minutes) / 60,
+    )
+    const startHour = Math.floor(lab.open_hour_in_minutes / 60)
     const daysToRender = lab.available_days_array
     const schedule = getSchedule(lab)
 
@@ -175,8 +177,8 @@ export default async function LabsNamePage(props: LabsNameProps) {
 }
 
 function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
-    const startHour = Math.floor(lab.open_hour / 3600)
-    const endHour = Math.floor(lab.close_hour / 3600)
+    const startHour = Math.floor(lab.open_hour_in_minutes / 60)
+    const endHour = Math.floor(lab.close_hour_in_minutes / 60)
 
     const schedule: Schedule = {
         Sunday: {
@@ -264,9 +266,11 @@ function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
                 ),
         },
     }
+    console.log(schedule)
 
     for (const day in schedule) {
         let currentHour = startHour
+        console.log(currentHour)
 
         while (currentHour < endHour) {
             if (!schedule[day as keyof typeof schedule][currentHour]) {
@@ -275,7 +279,7 @@ function getSchedule(lab: LabWitSchedulesWithSubmiter): Schedule {
             } else
                 currentHour += Math.floor(
                     schedule[day as keyof typeof schedule][currentHour]!
-                        .duration / 60,
+                        .duration_in_minutes / 60,
                 ) // Salta las horas ocupadas por la sesión
         }
     }
@@ -347,6 +351,7 @@ function getLimitsDatesOfWeek(date: Date): { firstDay: Date; lastDay: Date } {
  * Returns the laboratory info with the procedures of the week
  */
 async function getLaboratoryInfo(query: {
+    // TODO: regresar a id en vez de nombre o usar fullTextSearch https://www.prisma.io/docs/orm/prisma-client/queries/full-text-search#full-text-search-with-raw-sql
     firstDay: Date
     lastDay: Date
     name: string

@@ -6,11 +6,12 @@ import {
     Input,
     SubmitPrimaryInput,
 } from '@/components/Input'
-import { Prisma, User } from '@prisma/client'
+import { Prisma, Procedure, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { registerProcedure } from '@/actions/labs'
 import { formatDateToInputFormat } from '@/lib/utils'
 import { AvailableDaysBitfield } from '@/lib/BitField'
+import { getProcedures } from '@/actions/procedures'
 
 interface NewProcedureFormProps {
     date: number
@@ -19,8 +20,8 @@ interface NewProcedureFormProps {
         select: {
             id: true
             tools: true
-            open_hour: true
-            close_hour: true
+            open_hour_in_minutes: true
+            close_hour_in_minutes: true
             available_days: true
         }
     }>
@@ -45,17 +46,21 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
     const [selectedTools, setSelectedTools] = useState<string[]>([])
     const [maxHours, setMaxHours] = useState(24)
     const [errorHours, setErrorHours] = useState('')
+    const [proceduresCache, setProceduresCache] = useState<
+        Record<string, Procedure[]>
+    >({})
 
     useEffect(() => {
         const d = new Date(date)
         d.setMinutes(0)
         d.setSeconds(0)
         d.setMilliseconds(0)
-        const maxHours = Math.floor(props.lab.close_hour / 3600) - d.getHours()
+        const maxHours =
+            Math.floor(props.lab.close_hour_in_minutes / 60) - d.getHours()
         setMaxHours(maxHours)
         if (hours > maxHours)
             setErrorHours(
-                `La duración excede el horario de ${Math.floor(props.lab.open_hour / 3600)} a ${Math.floor(props.lab.close_hour / 3600)}`,
+                `La duración excede el horario de ${Math.floor(props.lab.open_hour_in_minutes / 60)} a ${Math.floor(props.lab.close_hour_in_minutes / 60)}`,
             )
     }, [date, props.lab, hours])
 
@@ -112,7 +117,7 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                     setDate(e.target.value)
                 }}
                 error={dateError}
-                onBlur={e => {
+                onBlur={async e => {
                     const d = new Date(e.target.value)
                     d.setMinutes(0)
                     d.setSeconds(0)
@@ -125,20 +130,54 @@ export function NewProcedureForm(props: NewProcedureFormProps) {
                             'El laboratorio no está disponible en este día',
                         )
                     // validate hour in range of lab open hours
-                    if (d.getHours() < Math.floor(props.lab.open_hour / 3600)) {
+                    if (
+                        d.getHours() <
+                        Math.floor(props.lab.open_hour_in_minutes / 60)
+                    ) {
                         setDateError(
-                            `El laboratorio abre a las ${Math.floor(props.lab.open_hour / 3600)}`,
+                            `El laboratorio abre a las ${Math.floor(props.lab.open_hour_in_minutes / 60)}`,
                         )
                     }
                     if (
                         d.getHours() >
-                        Math.floor(props.lab.close_hour / 3600) - 1
+                        Math.floor(props.lab.close_hour_in_minutes / 60) - 1
                     ) {
                         setDateError(
-                            `El laboratorio cierra a las ${Math.floor(props.lab.close_hour / 3600)}`,
+                            `El laboratorio cierra a las ${Math.floor(props.lab.close_hour_in_minutes / 60)}`,
                         )
                     }
                     // TODO: validar que el horario no se cruce con otro procedimiento
+                    // crear una acción que obtenga los procedimientos de un laboratorio en un día
+                    // y validar que no se cruce con ninguno
+                    // cachear los procedimientos de un laboratorio en un día
+                    let procedures = proceduresCache[d.toLocaleDateString()]
+                    if (!procedures) {
+                        procedures = await getProcedures(props.lab.id, {
+                            start: d.toString(),
+                            end: d.toString(),
+                        })
+                        setProceduresCache({
+                            ...proceduresCache,
+                            [d.toLocaleDateString()]: procedures,
+                        })
+                    }
+                    const start = d.getHours() * 60 + d.getMinutes()
+                    const end = start + hours * 60
+                    const isOverlapping = procedures.some(p => {
+                        const pStart =
+                            p.start_date.getHours() * 60 +
+                            p.start_date.getMinutes()
+                        const pEnd = pStart + p.duration_in_minutes
+                        return (
+                            (start >= pStart && start < pEnd) ||
+                            (end > pStart && end <= pEnd)
+                        )
+                    })
+                    if (isOverlapping) {
+                        setDateError(
+                            'El horario se cruza con otro procedimiento',
+                        )
+                    }
                     setDate(formatDateToInputFormat(d))
                 }}
                 step={3600}

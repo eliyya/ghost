@@ -27,32 +27,31 @@ model User {
 }
 
 model Laboratory {
-  id             String      @id
-  name           String      @unique
-  open_hour      Int
-  close_hour     Int
-  available_days Int         @default(62)
-  created_at     DateTime    @default(now())
-  procedures     Procedure[]
-  tools          Tool[]
+  id                    String      @id
+  name                  String      @unique
+  open_hour_in_minutes  Int         @map("open_hour")
+  close_hour_in_minutes Int         @map("close_hour")
+  available_days        Int         @default(62)
+  created_at            DateTime    @default(now())
+  procedures            Procedure[]
+  tools                 Tool[]
 
   @@map("labs")
 }
 
 model Procedure {
-  id            String     @id
-  submiter_id   String
-  lab_id        String
-  start_date    DateTime
-  // duration in minutes
-  duration      Int        @default(1)
-  subject       String
-  practice_name String
-  students      Int
-  created_at    DateTime   @default(now())
-  submiter      User       @relation(fields: [submiter_id], references: [id])
-  lab           Laboratory @relation(fields: [lab_id], references: [id])
-  UsedTool      UsedTool[]
+  id                  String     @id
+  submiter_id         String
+  lab_id              String
+  start_date          DateTime
+  duration_in_minutes Int        @default(1) @map("duration")
+  subject             String
+  practice_name       String
+  students            Int
+  created_at          DateTime   @default(now())
+  submiter            User       @relation(fields: [submiter_id], references: [id])
+  lab                 Laboratory @relation(fields: [lab_id], references: [id])
+  UsedTool            UsedTool[]
 
   @@map("procedures")
 }

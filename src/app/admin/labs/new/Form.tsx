@@ -2,7 +2,7 @@
 
 import { registerLaboratory } from '@/actions/labs'
 import { Input, SubmitPrimaryInput } from '@/components/Input'
-import { hhmmToSeconds } from '@/lib/utils'
+import { hhmmToMinutes } from '@/lib/utils'
 import { useState } from 'react'
 
 export function Form() {
@@ -15,8 +15,8 @@ export function Form() {
         <form
             className="w-72 p-4 border border-black rounded-lg flex flex-col"
             action={async () => {
-                const openHour = hhmmToSeconds(open_date)
-                const closeHour = hhmmToSeconds(close_date)
+                const openHour = hhmmToMinutes(open_date)
+                const closeHour = hhmmToMinutes(close_date)
                 const response = await registerLaboratory({
                     closeHour,
                     name,

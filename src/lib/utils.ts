@@ -3,22 +3,19 @@ export function parseName(name: string, trim = true) {
     return n.replace(/ +/g, ' ').toLowerCase()
 }
 
-export function secondsToHHMM(seconds: number) {
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-
-    const formattedHours = String(hours).padStart(2, '0')
-    const formattedMinutes = String(minutes).padStart(2, '0')
+export function minutesToHHMM(minutes: number) {
+    const formattedHours = String(Math.floor(minutes / 60)).padStart(2, '0')
+    const formattedMinutes = String(Math.floor(minutes % 60)).padStart(2, '0')
 
     return `${formattedHours}:${formattedMinutes}`
 }
 
-export function hhmmToSeconds(time: string): number {
+export function hhmmToMinutes(time: string): number {
     const [hours, minutes] = time.split(':').map(Number)
 
-    const totalSeconds = hours * 3600 + minutes * 60
+    const totalHours = hours * 60 + minutes
 
-    return totalSeconds
+    return totalHours
 }
 
 export function wrapper<T>(fn: () => T): [unknown, undefined] | [undefined, T] {
