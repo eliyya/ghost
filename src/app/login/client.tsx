@@ -18,7 +18,12 @@ export function LoginForm() {
             className="w-72 p-4 border border-black rounded-lg flex flex-col"
             method="post"
         >
-            <Input type="text" name="username" placeholder="usuario" />
+            <Input
+                type="text"
+                name="username"
+                placeholder="usuario"
+                prefix="@"
+            />
             <Input type="password" name="password" placeholder="Contraseña" />
             <Input
                 className="bg-black text-white p-2 rounded-md cursor-pointer hover:bg-gray-900"
