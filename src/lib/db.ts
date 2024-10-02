@@ -11,6 +11,7 @@ const prismaClientSingleton = () => {
                     needs: {
                         available_days: true,
                     },
+                    // @ts-ignore
                     compute(data) {
                         return new AvailableDaysBitfield(
                             data.available_days,

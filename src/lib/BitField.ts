@@ -177,6 +177,7 @@ export default class BitField<
      * @returns {string[]}
      */
     toArray() {
+        // @ts-ignore
         return [...this[Symbol.iterator]()]
     }
 

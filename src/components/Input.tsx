@@ -1,7 +1,6 @@
 'use client'
 import { InputHTMLAttributes, useEffect, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
-// import Select from 'react-select'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     error?: string
