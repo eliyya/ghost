@@ -3,8 +3,9 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "migrate": "prisma migrate dev",
-        "generate": "prisma generate",
+        "db:migrate": "prisma migrate dev",
+        "db:deploy": "prisma migrate deploy",
+        "db:generate": "prisma generate",
         "dev": "next dev --turbo",
         "build": "npx prisma generate && npx @eliyya/type-routes && next build",
         "start": "next start",
@@ -20,19 +21,18 @@
     },
     "dependencies": {
         "@inquirer/prompts": "^5.3.8",
-        "@prisma/client": "^5.18.0",
+        "@prisma/client": "^5.20.0",
         "@sapphire/snowflake": "^3.5.3",
         "@types/bcrypt": "^5.0.2",
-        "babel-plugin-react-compiler": "^0.0.0-experimental-48eb8f4-20240822",
         "bcrypt": "^5.1.1",
         "canvas": "^2.11.2",
         "chalk": "^5.3.0",
         "dotenv": "^16.4.5",
         "inquirer-fs-selector": "github:eliyya/inquirer-fs-selector",
         "jose": "^5.6.3",
-        "next": "15.0.0-rc.0",
-        "react": "19.0.0-rc-f994737d14-20240522",
-        "react-dom": "19.0.0-rc-f994737d14-20240522"
+        "next": "^14",
+        "react": "^18",
+        "react-dom": "^18"
     },
     "devDependencies": {
         "@eliyya/type-routes": "^1.0.4",
@@ -40,11 +40,11 @@
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
         "eslint": "^8.57.0",
-        "eslint-config-next": "^15.0.0-rc.0",
+        "eslint-config-next": "14.2.14",
         "eslint-config-prettier": "^9.1.0",
         "postcss": "^8.4.41",
         "prettier": "^3.3.3",
-        "prisma": "^5.18.0",
+        "prisma": "^5.20.0",
         "tailwindcss": "^3.4.9",
         "typescript": "^5.5.4"
     }

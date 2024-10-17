@@ -1,5 +1,5 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from 'next/server'
-import { COOKIES, HEADERS, JWT_SECRET } from './lib/constants'
+import { COOKIES, HEADERS, JWT_SECRET } from '@/lib/constants'
 import { jwtVerify } from 'jose'
 import { root } from '@eliyya/type-routes'
 
